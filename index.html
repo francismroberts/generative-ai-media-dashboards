@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Week 1 Study Dashboard v11 — Generative AI &amp; the Media</title>
+<title>Week 1 Study Dashboard v12 — Generative AI &amp; the Media</title>
 <style>
   :root{
     --bg:#f7f4ef;
@@ -174,6 +174,69 @@
     .content{padding:13px 14px 16px}
     .materials-table{min-width:1000px}
   }
+
+
+  /* v12 mobile navigation refinement */
+  section.card{scroll-margin-top:18px}
+  .mobile-bottom-nav,
+  .mobile-nav-backdrop,
+  .mobile-drawer{display:none}
+
+  @media (max-width:900px){
+    html{scroll-padding-bottom:96px}
+    body.mobile-nav-open{overflow:hidden}
+    aside{display:none}
+    main{padding-bottom:calc(92px + env(safe-area-inset-bottom, 0px))}
+    section.card{scroll-margin-top:14px}
+
+    .mobile-bottom-nav{
+      position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom, 0px));z-index:60;
+      display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;
+      padding:7px;border:1px solid rgba(230,222,210,.95);border-radius:20px;
+      background:rgba(255,253,248,.94);box-shadow:0 10px 30px rgba(60,47,35,.16);
+      backdrop-filter:blur(14px);
+    }
+    .mobile-bottom-nav button{
+      min-height:46px;border:0;border-radius:14px;background:transparent;color:#4f4740;
+      font-size:.78rem;font-weight:850;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+      padding:5px 4px;cursor:pointer;
+    }
+    .mobile-bottom-nav button:active,
+    .mobile-bottom-nav button:hover{background:var(--soft);text-decoration:none}
+    .mobile-bottom-nav .nav-icon{font-size:1.05rem;line-height:1}
+
+    .mobile-nav-backdrop{
+      position:fixed;inset:0;z-index:70;background:rgba(37,34,31,.32);
+      opacity:0;pointer-events:none;transition:opacity .2s ease;display:block;
+    }
+    body.mobile-nav-open .mobile-nav-backdrop{opacity:1;pointer-events:auto}
+
+    .mobile-drawer{
+      position:fixed;top:0;bottom:0;left:0;z-index:80;width:min(88vw,380px);
+      display:flex;flex-direction:column;padding:calc(14px + env(safe-area-inset-top, 0px)) 14px calc(18px + env(safe-area-inset-bottom, 0px));
+      background:rgba(255,253,248,.98);border-right:1px solid var(--line);box-shadow:18px 0 40px rgba(60,47,35,.18);
+      transform:translateX(-105%);transition:transform .22s ease;overflow:auto;-webkit-overflow-scrolling:touch;
+    }
+    body.mobile-nav-open .mobile-drawer{transform:translateX(0)}
+    .mobile-drawer-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}
+    .mobile-drawer-head h2{font-size:1rem;margin:0 0 4px}
+    .mobile-drawer-head p{font-size:.82rem;color:var(--muted);margin:0;line-height:1.35}
+    .mobile-close{min-width:42px;min-height:42px;border:1px solid var(--line);border-radius:14px;background:#fff;font-weight:900;cursor:pointer}
+    .mobile-progress-card{background:var(--soft);border:1px solid var(--line);border-radius:16px;padding:12px;margin-bottom:12px}
+    .mobile-progress-card .bar{background:#dfe8de}
+    .mobile-progress-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .mobile-progress-actions .btn{min-height:40px}
+    .mobile-drawer nav{display:grid;gap:4px;overflow:visible;padding:0 0 8px}
+    .mobile-drawer nav a{display:flex;align-items:center;min-height:42px;padding:9px 10px;margin:0;border-radius:12px;color:var(--muted);font-size:.91rem;font-weight:760}
+    .mobile-drawer nav a.active,
+    .mobile-drawer nav a:hover{background:var(--soft);color:var(--ink);text-decoration:none}
+    .toast{bottom:calc(88px + env(safe-area-inset-bottom, 0px));right:12px}
+  }
+
+  @media (min-width:901px){
+    .mobile-bottom-nav,.mobile-nav-backdrop,.mobile-drawer{display:none !important}
+  }
+
 </style>
 </head>
 <body>
@@ -181,7 +244,7 @@
 <aside>
 <div class="brand">
 <h1>📘 Week 1 Dashboard</h1>
-<p>Generative AI &amp; the Media<br/>Execution-first version · v11</p>
+<p>Generative AI &amp; the Media<br/>Execution-first version · v12</p>
 </div>
 <div class="progress-card">
 <strong>Progress</strong>
@@ -190,7 +253,7 @@
 <button class="btn primary" id="nextBtn">Next unchecked task</button>
 <button class="btn small" id="resetBtn" style="margin-top:8px">Reset checks</button>
 </div>
-<nav id="nav">
+<nav id="nav" class="side-nav" aria-label="Section navigation">
 <a href="#s1">1. 🧭 Mode</a>
 <a href="#s2">2. 🔎 Inputs check</a>
 <a href="#s3">3. ✅ Deliverables</a>
@@ -803,6 +866,52 @@ Optional: 🎥 Course Launch Zoom recording / transcript review → Due [not lis
 </div></details></section>
 </main>
 </div>
+
+<div class="mobile-nav-backdrop" id="mobileNavBackdrop" aria-hidden="true"></div>
+<aside class="mobile-drawer" id="mobileDrawer" aria-label="Mobile section navigation" aria-hidden="true">
+  <div class="mobile-drawer-head">
+    <div>
+      <h2>📘 Week 1 Dashboard</h2>
+      <p>Jump to a section or your next task.</p>
+    </div>
+    <button class="mobile-close" id="mobileCloseBtn" aria-label="Close menu">×</button>
+  </div>
+  <div class="mobile-progress-card">
+    <strong>Progress</strong>
+    <div class="bar"><span class="mobile-bar"></span></div>
+    <p class="meta"><span class="mobile-done-count">0</span> of <span class="mobile-total-count">0</span> Section 5 tasks checked</p>
+    <div class="mobile-progress-actions">
+      <button class="btn primary" id="mobileDrawerNextBtn">Next unchecked</button>
+      <button class="btn small" id="mobileDrawerResetBtn">Reset checks</button>
+    </div>
+  </div>
+  <nav id="mobileNav" aria-label="Mobile section links">
+<a href="#s1">1. 🧭 Mode</a>
+<a href="#s2">2. 🔎 Inputs check</a>
+<a href="#s3">3. ✅ Deliverables</a>
+<a href="#s4">4. 🧪 Assignment workback</a>
+<a href="#s5">5. 📌 Ordered checklist</a>
+<a href="#s6">6. 🗂️ Materials</a>
+<a href="#s7">7. 🛠️ AI workflow</a>
+<a href="#s8">8. 📆 Workback plan</a>
+<a href="#s9">9. 🧠 Big ideas</a>
+<a href="#s10">10. 📓 Master notes</a>
+<a href="#s11">11. 🤖 NotebookLM prompts</a>
+<a href="#s12">12. 🧩 Activities</a>
+<a href="#s13">13. 💬 Peer response</a>
+<a href="#s14">14. 🚀 First 3 actions</a>
+<a href="#s15">15. ✅ Google Tasks</a>
+<a href="#s16">16. 📝 Memo angles</a>
+<a href="#s17">17. 🌐 Outside resource</a>
+  </nav>
+</aside>
+<nav class="mobile-bottom-nav" aria-label="Mobile quick navigation">
+  <button type="button" id="mobileMenuBtn"><span class="nav-icon">☰</span><span>Menu</span></button>
+  <button type="button" id="mobileProgressBtn"><span class="nav-icon">📌</span><span>Progress</span></button>
+  <button type="button" id="mobileNextBtn"><span class="nav-icon">✅</span><span>Next</span></button>
+  <button type="button" id="mobileTopBtn"><span class="nav-icon">↑</span><span>Top</span></button>
+</nav>
+
 <div class="toast" id="toast">Copied</div>
 <script>
 (function(){
@@ -832,9 +941,13 @@ Optional: 🎥 Course Launch Zoom recording / transcript review → Due [not lis
   }
   function updateProgress(){
     const done = checks.filter(c => c.checked).length;
+    const pct = checks.length ? (done/checks.length*100) + '%' : '0%';
     totalCount.textContent = checks.length;
     doneCount.textContent = done;
-    bar.style.width = checks.length ? (done/checks.length*100) + '%' : '0%';
+    bar.style.width = pct;
+    document.querySelectorAll('.mobile-total-count').forEach(el => el.textContent = checks.length);
+    document.querySelectorAll('.mobile-done-count').forEach(el => el.textContent = done);
+    document.querySelectorAll('.mobile-bar').forEach(el => el.style.width = pct);
   }
   checks.forEach(c => {
     c.addEventListener('change', () => {
@@ -863,16 +976,43 @@ Optional: 🎥 Course Launch Zoom recording / transcript review → Due [not lis
     updateProgress();
   });
 
-  document.getElementById('nextBtn').addEventListener('click', () => {
+  function closeMobileNav(){
+    document.body.classList.remove('mobile-nav-open');
+    document.getElementById('mobileDrawer')?.setAttribute('aria-hidden','true');
+  }
+  function openMobileNav(){
+    document.body.classList.add('mobile-nav-open');
+    document.getElementById('mobileDrawer')?.setAttribute('aria-hidden','false');
+  }
+  function goToNextUnchecked(){
     const next = checks.find(c => !c.checked);
     if(next){
+      closeMobileNav();
       next.closest('details')?.setAttribute('open','open');
       next.scrollIntoView({behavior:'smooth', block:'center'});
       next.focus({preventScroll:true});
     } else {
       showToast('All Section 5 tasks checked');
     }
-  });
+  }
+  function jumpToSection(selector){
+    const target = document.querySelector(selector);
+    if(target){
+      closeMobileNav();
+      target.closest('details')?.setAttribute('open','open');
+      target.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  }
+  document.getElementById('nextBtn').addEventListener('click', goToNextUnchecked);
+  document.getElementById('mobileMenuBtn')?.addEventListener('click', openMobileNav);
+  document.getElementById('mobileCloseBtn')?.addEventListener('click', closeMobileNav);
+  document.getElementById('mobileNavBackdrop')?.addEventListener('click', closeMobileNav);
+  document.getElementById('mobileNextBtn')?.addEventListener('click', goToNextUnchecked);
+  document.getElementById('mobileDrawerNextBtn')?.addEventListener('click', goToNextUnchecked);
+  document.getElementById('mobileProgressBtn')?.addEventListener('click', () => jumpToSection('#s5'));
+  document.getElementById('mobileTopBtn')?.addEventListener('click', () => { closeMobileNav(); window.scrollTo({top:0, behavior:'smooth'}); });
+  document.getElementById('mobileDrawerResetBtn')?.addEventListener('click', () => document.getElementById('resetBtn')?.click());
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') closeMobileNav(); });
 
   function showToast(msg){
     const toast = document.getElementById('toast');
@@ -899,8 +1039,15 @@ Optional: 🎥 Course Launch Zoom recording / transcript review → Due [not lis
     });
   });
 
-  const links = [...document.querySelectorAll('nav a')];
-  const sections = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const links = [...document.querySelectorAll('nav a[href^="#"]')];
+  links.forEach(a => {
+    a.addEventListener('click', () => {
+      const target = document.querySelector(a.getAttribute('href'));
+      target?.closest('details')?.setAttribute('open','open');
+      closeMobileNav();
+    });
+  });
+  const sections = [...new Set(links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean))];
   const obs = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if(entry.isIntersecting){
