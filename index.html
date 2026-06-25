@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Week 1 Study Dashboard v13 — Generative AI &amp; the Media</title>
+<title>Week 1 Study Dashboard v14 — Generative AI &amp; the Media</title>
 <style>
   :root{
     --bg:#f7f4ef;
@@ -256,6 +256,31 @@
     .check-table{min-width:1020px}
     .standard-table-wrap table{min-width:680px}
   }
+
+
+  /* v14 mobile single-page-first table refinement */
+  @media (max-width:900px){
+    /* Default mobile behavior: fit and wrap simple tables instead of forcing side scroll. */
+    .table-wrap::before{display:none}
+    .standard-table-wrap{overflow-x:visible;touch-action:auto;overscroll-behavior-x:auto}
+    .standard-table-wrap table{min-width:0 !important;width:100%;table-layout:auto}
+    .standard-table-wrap th,
+    .standard-table-wrap td{white-space:normal;overflow-wrap:anywhere;word-break:normal}
+
+    /* Preserve intentional side scroll only for genuinely wide study/workflow tables. */
+    .checklist-wrap,
+    .materials-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;touch-action:pan-x pan-y}
+    .checklist-wrap::before,
+    .materials-wrap::before{display:block;position:sticky;left:0;z-index:2}
+    .check-table{min-width:1040px}
+    .materials-wrap .materials-table{min-width:1000px}
+  }
+  @media (max-width:560px){
+    .standard-table-wrap table{min-width:0 !important;width:100%}
+    .check-table{min-width:1020px}
+    .materials-wrap .materials-table{min-width:980px}
+  }
+
 </style>
 </head>
 <body>
@@ -263,7 +288,7 @@
 <aside>
 <div class="brand">
 <h1>📘 Week 1 Dashboard</h1>
-<p>Generative AI &amp; the Media<br/>Execution-first version · v12</p>
+<p>Generative AI &amp; the Media<br/>Execution-first version · v14</p>
 </div>
 <div class="progress-card">
 <strong>Progress</strong>
@@ -388,7 +413,7 @@
 </div></details></section>
 <section class="card" id="s6"><details><summary>6. 🗂️ Materials Classification <span class="chev">›</span></summary><div class="content">
 <div class="section-note"><strong>Study rule:</strong> do not study everything equally. Prioritize the lecture, Nature, BBC, Bloomberg, and Assignment 1 prompt for desk attention. The other materials are useful, but they should not become a rabbit hole.</div>
-<div class="table-wrap">
+<div class="table-wrap materials-wrap">
 <table class="materials-table">
 <thead>
 <tr>
