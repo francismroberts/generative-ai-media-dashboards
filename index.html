@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Week 1 Study Dashboard v12 — Generative AI &amp; the Media</title>
+<title>Week 1 Study Dashboard v13 — Generative AI &amp; the Media</title>
 <style>
   :root{
     --bg:#f7f4ef;
@@ -237,6 +237,25 @@
     .mobile-bottom-nav,.mobile-nav-backdrop,.mobile-drawer{display:none !important}
   }
 
+
+
+  /* v13 mobile table audit/refinement */
+  .table-wrap{max-width:100%}
+  .table-wrap table{border:0;border-radius:0}
+  .standard-table-wrap table{min-width:720px}
+  .check-table{min-width:1080px;table-layout:auto}
+  .check-table th:nth-child(1), .check-table td:nth-child(1){width:58px;text-align:center}
+  .check-table th:nth-child(2), .check-table td:nth-child(2){width:48px;text-align:center}
+  .check-table th:nth-child(7), .check-table td:nth-child(7){white-space:nowrap}
+  @media (max-width:900px){
+    .checklist-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;touch-action:pan-x pan-y}
+    .check-table{min-width:1040px}
+    .standard-table-wrap table{min-width:720px}
+  }
+  @media (max-width:560px){
+    .check-table{min-width:1020px}
+    .standard-table-wrap table{min-width:680px}
+  }
 </style>
 </head>
 <body>
@@ -253,7 +272,7 @@
 <button class="btn primary" id="nextBtn">Next unchecked task</button>
 <button class="btn small" id="resetBtn" style="margin-top:8px">Reset checks</button>
 </div>
-<nav id="nav" class="side-nav" aria-label="Section navigation">
+<nav aria-label="Section navigation" class="side-nav" id="nav">
 <a href="#s1">1. 🧭 Mode</a>
 <a href="#s2">2. 🔎 Inputs check</a>
 <a href="#s3">3. ✅ Deliverables</a>
@@ -292,7 +311,7 @@
 <p><strong>What I am intentionally not overbuilding:</strong> No separate weekly NotebookLM notebook, no separate spreadsheet tracker, no visible dashboard-generation section, and no copy blocks that repeat instructions already inside the main NotebookLM prompt.</p>
 </div></details></section>
 <section class="card" id="s2"><details open=""><summary>2. 🔎 Missing Materials / Better Inputs Check <span class="chev">›</span></summary><div class="content">
-<table>
+<div class="table-wrap standard-table-wrap"><table>
 <thead><tr><th>Input</th><th>Status</th><th>Priority</th><th>How to use it</th></tr></thead>
 <tbody>
 <tr><td>Syllabus / Week 1 schedule</td><td>Available</td><td>Required</td><td>Use as the official roadmap and source of links.</td></tr>
@@ -302,11 +321,11 @@
 <tr><td>Full external reading text</td><td>Partial</td><td>Helpful</td><td>Proceed using official links and uploaded PDFs where available.</td></tr>
 <tr><td>Your memo angle + outside resource</td><td>Not chosen yet</td><td>Needed by Friday</td><td>Choose after lecture + Nature/BBC/Bloomberg.</td></tr>
 </tbody>
-</table>
+</table></div>
 <div class="section-note"><strong>Proceed now.</strong> You have enough to complete Week 1. The remaining missing pieces are choices, not blockers.</div>
 </div></details></section>
 <section class="card" id="s3"><details open=""><summary>3. ✅ Weekly Deliverables and Deadlines <span class="chev">›</span></summary><div class="content">
-<table>
+<div class="table-wrap standard-table-wrap"><table>
 <thead><tr><th>Deliverable</th><th>What it is</th><th>Due</th></tr></thead>
 <tbody>
 <tr><td><a href="https://canvas.northwestern.edu/courses/253956/assignments/1781924" rel="noopener" target="_blank">📝 Reading Response Memo</a></td><td>~300-word synthesis/reflection memo with substantive question and one outside resource.</td><td>Sun Jun 28, 11:59pm</td></tr>
@@ -317,8 +336,8 @@
 <tr><td><a href="https://canvas.northwestern.edu/courses/253956/assignments/1781910" rel="noopener" target="_blank">🧪 Assignment 1: NotebookLM Curation and Critique</a></td><td>Assigned now; start topic and source curation this week.</td><td>Sun Jul 5</td></tr>
 <tr><td>⚪ Course Launch Zoom</td><td>Optional recording/session review.</td><td>Optional</td></tr>
 </tbody>
-</table>
-<div class="section-note"><strong>Progress tracking moved to Section 5.</strong> Section 3 is now only the due-date reference table.</div>
+</table></div>
+
 </div></details></section>
 <section class="card" id="s4"><details><summary>4. 🧪 Assignment Workback <span class="chev">›</span></summary><div class="content">
 <h3>Assignment 1: NotebookLM Curation and Critique</h3>
@@ -351,7 +370,7 @@
 </div></details></section>
 <section class="card" id="s5"><details open=""><summary>5. 📌 Ordered Assignment / Submission Checklist <span class="chev">›</span></summary><div class="content">
 <p><strong>Use this as the main execution checklist.</strong> These are the 9 meaningful tasks counted in the progress tracker.</p>
-<table class="check-table">
+<div class="table-wrap checklist-wrap"><table class="check-table">
 <thead><tr><th>Done</th><th>#</th><th>Task / assignment</th><th>Produce / submit</th><th>Best timing</th><th>Why it comes in this order</th><th>Effort</th><th>Required?</th></tr></thead>
 <tbody>
 <tr><td><input data-check="" id="s5-1" type="checkbox"/></td><td>1</td><td><a href="https://canvas.northwestern.edu/courses/253956/discussion_topics/1843951" rel="noopener" target="_blank">Activity 1: Introductions</a></td><td>Short intro post</td><td>First</td><td>Fastest required win; lowers friction</td><td>15m</td><td>Required</td></tr>
@@ -365,7 +384,7 @@
 <tr><td><input data-check="" id="s5-9" type="checkbox"/></td><td>9</td><td><a href="https://canvas.northwestern.edu/courses/253956/assignments/1781924" rel="noopener" target="_blank">Peer response/comment + final Canvas check</a></td><td>One substantive reply + confirmation everything is posted</td><td>Sat / Sun</td><td>Wait for classmates, then verify submission status</td><td>30–45m</td><td>Required</td></tr>
 </tbody>
 <tfoot><tr><td colspan="6"><strong>Total estimated active work time</strong></td><td colspan="2"><strong>About 7 hr 15 min – 9 hr 35 min</strong></td></tr></tfoot>
-</table>
+</table></div>
 </div></details></section>
 <section class="card" id="s6"><details><summary>6. 🗂️ Materials Classification <span class="chev">›</span></summary><div class="content">
 <div class="section-note"><strong>Study rule:</strong> do not study everything equally. Prioritize the lecture, Nature, BBC, Bloomberg, and Assignment 1 prompt for desk attention. The other materials are useful, but they should not become a rabbit hole.</div>
@@ -374,8 +393,6 @@
 <thead>
 <tr>
 <th>Material</th>
-
-
 <th>Depth</th>
 <th>Why this mode</th>
 <th>How to consume it</th>
@@ -387,8 +404,6 @@
 <tbody>
 <tr>
 <td><a href="https://canvas.northwestern.edu/courses/253956/files?preview=25085271" rel="noopener" target="_blank">Week 1 Lecture</a> <span aria-label="Lecture" class="material-type-emoji" title="Lecture">🎙️</span></td>
-
-
 <td>Careful</td>
 <td><span aria-label="🖥️ Desk mode first" class="why-mode-emoji" title="🖥️ Desk mode first">🖥️</span> Main conceptual frame for the week: capabilities, limitations, hallucination, bias, benchmarks, and responsible use.</td>
 <td>Watch/read at desk first. Then use NotebookLM or notes to compress into 4–5 core concepts.</td>
@@ -398,8 +413,6 @@
 </tr>
 <tr>
 <td><a href="https://www.youtube.com/watch?app=desktop&amp;v=LPZh9BOjkQs" rel="noopener" target="_blank">Large Language Models Briefly Explained</a> <span aria-label="Video" class="material-type-emoji" title="Video">🎥</span></td>
-
-
 <td>Normal</td>
 <td><span aria-label="🔁 Flexible mode" class="why-mode-emoji" title="🔁 Flexible mode">🔁</span> Good basic grounding; not worth overprocessing unless LLM mechanics feel fuzzy.</td>
 <td>Watch once. Desk review only if you cannot explain LLMs in plain English after the lecture.</td>
@@ -409,8 +422,6 @@
 </tr>
 <tr>
 <td><a href="https://www.youtube.com/watch?v=_6R7Ym6Vy_I" rel="noopener" target="_blank">What is generative AI and how does it work? – Turing Lectures</a> <span aria-label="Video" class="material-type-emoji" title="Video">🎥</span></td>
-
-
 <td>Skim/normal</td>
 <td><span aria-label="🚗 Move-friendly" class="why-mode-emoji" title="🚗 Move-friendly">🚗</span> Useful broad explainer; can be listened to while moving.</td>
 <td>Use as a first-pass explainer during a walk/drive. Capture only what clarifies the lecture.</td>
@@ -420,8 +431,6 @@
 </tr>
 <tr>
 <td><a href="https://www.youtube.com/watch?v=eXdVDhOGqoE" rel="noopener" target="_blank">AI Is Dangerous, but Not for the Reasons You Think</a> <span aria-label="Video" class="material-type-emoji" title="Video">🎥</span></td>
-
-
 <td>Normal</td>
 <td><span aria-label="🚶 Move-friendly" class="why-mode-emoji" title="🚶 Move-friendly">🚶</span> Useful risk framing; listen for non-obvious risks beyond sci-fi fear.</td>
 <td>Listen while moving. Do not take detailed notes unless it connects to your memo angle.</td>
@@ -431,8 +440,6 @@
 </tr>
 <tr>
 <td><a href="https://www.ted.com/talks/advait_sarkar_how_to_stop_ai_from_killing_your_critical_thinking" rel="noopener" target="_blank">How to stop AI from killing your critical thinking</a> <span aria-label="Video" class="material-type-emoji" title="Video">🎥</span></td>
-
-
 <td>Normal</td>
 <td><span aria-label="🚶 Move-friendly" class="why-mode-emoji" title="🚶 Move-friendly">🚶</span> Good reflection support for overreliance, learning, and active judgment.</td>
 <td>Listen while walking or doing chores. Save one practical habit.</td>
@@ -442,8 +449,6 @@
 </tr>
 <tr>
 <td><a href="https://ig.ft.com/generative-ai" rel="noopener" target="_blank">Financial Times: Generative AI exists because of the transformer</a> <span aria-label="Interactive reading" class="material-type-emoji" title="Interactive reading">📖</span></td>
-
-
 <td>Skim</td>
 <td><span aria-label="🖥️ Desk skim" class="why-mode-emoji" title="🖥️ Desk skim">🖥️</span> Transformer basics help, but this can become a technical rabbit hole.</td>
 <td>Skim at desk. Stop once you can complete the sentence “Transformers matter because…”</td>
@@ -453,8 +458,6 @@
 </tr>
 <tr>
 <td><a href="https://www.technologyreview.com/2026/01/07/1130795/what-even-is-a-parameter/" rel="noopener" target="_blank">MIT Technology Review: LLMs contain a lot of parameters</a> <span aria-label="Reading" class="material-type-emoji" title="Reading">📖</span></td>
-
-
 <td>Reference</td>
 <td><span aria-label="🗂️ Reference" class="why-mode-emoji" title="🗂️ Reference">🗂️</span> Helpful vocabulary support, but not a core memo source unless writing about technical literacy.</td>
 <td>Skim if “parameters” is unclear. Otherwise save for lookup.</td>
@@ -464,8 +467,6 @@
 </tr>
 <tr>
 <td><a href="https://www.nature.com/articles/d41586-025-00068-5" rel="noopener" target="_blank">Nature: AI hallucinations can’t be stopped</a> <span aria-label="Reading" class="material-type-emoji" title="Reading">📖</span></td>
-
-
 <td>Careful</td>
 <td><span aria-label="🖥️ Desk mode" class="why-mode-emoji" title="🖥️ Desk mode">🖥️</span> Strongest anchor for limitations, verification, and responsible use.</td>
 <td>Read at desk. Pull one example, one risk, and one mitigation strategy.</td>
@@ -475,8 +476,6 @@
 </tr>
 <tr>
 <td><a href="https://www.bloomberg.com/graphics/2023-generative-ai-bias/" rel="noopener" target="_blank">Bloomberg: Humans are Biased. Generative AI is Even Worse</a> <span aria-label="Interactive article" class="material-type-emoji" title="Interactive article">📖</span></td>
-
-
 <td>Careful / active</td>
 <td><span aria-label="🖥️ Desk mode" class="why-mode-emoji" title="🖥️ Desk mode">🖥️</span> Directly supports model-bias testing and Activity 3.</td>
 <td>Read at desk, then design your Activity 3 prompts from the patterns you notice.</td>
@@ -486,8 +485,6 @@
 </tr>
 <tr>
 <td><a href="https://www.bbc.co.uk/editorialguidelines/guidance/use-of-artificial-intelligence" rel="noopener" target="_blank">BBC Editorial Policy: The use of Artificial Intelligence</a> <span aria-label="Policy reading" class="material-type-emoji" title="Policy reading">🧾</span></td>
-
-
 <td>Careful</td>
 <td><span aria-label="🖥️ Desk mode" class="why-mode-emoji" title="🖥️ Desk mode">🖥️</span> Direct support for Activity 2 and the responsible-use memo angle.</td>
 <td>Read at desk. Translate the policy into your own permitted/caution/not-permitted buckets.</td>
@@ -497,8 +494,6 @@
 </tr>
 <tr>
 <td><a href="https://docs.google.com/document/d/1RKIpOdNUUM8vLOCXR2_trlzCoCjxor6DUBE0heIDVK0/edit" rel="noopener" target="_blank">Demystifying the Jargon of Generative AI</a> <span aria-label="Reference doc" class="material-type-emoji" title="Reference doc">🧠</span></td>
-
-
 <td>Reference</td>
 <td><span aria-label="🗂️ Reference" class="why-mode-emoji" title="🗂️ Reference">🗂️</span> Useful lookup tool; not worth reading straight through first.</td>
 <td>Use only when a term slows you down.</td>
@@ -520,7 +515,7 @@
 <p><strong>Skip this week:</strong> Notion/Airtable setup, extra dashboards, separate weekly notebooks, or trying to master every model.</p>
 </div></details></section>
 <section class="card" id="s8"><details><summary>8. 📆 Weekly Workback Plan <span class="chev">›</span></summary><div class="content">
-<table>
+<div class="table-wrap standard-table-wrap"><table>
 <thead><tr><th>Day</th><th>Target</th><th>Desk work</th><th>Move-friendly work</th></tr></thead>
 <tbody>
 <tr><td>Wed / first session</td><td>Create momentum</td><td>Activity 1, Assignment 1 prompt, Week 1 lecture</td><td>One broad explainer</td></tr>
@@ -529,7 +524,7 @@
 <tr><td>Sat</td><td>Engagement</td><td>Peer response, optional Assignment 1 source narrowing</td><td>Audio Overview if useful</td></tr>
 <tr><td>Sun</td><td>Buffer only</td><td>Final Canvas check and any missed item</td><td>None required</td></tr>
 </tbody>
-</table>
+</table></div>
 <h4>Minimum viable submission path</h4>
 <ol>
 <li>Post Activity 1.</li>
@@ -851,7 +846,7 @@ Optional: 🎥 Course Launch Zoom recording / transcript review → Due [not lis
 </div>
 </div></details></section>
 <section class="card" id="s17"><details><summary>17. 🌐 Outside Resource Directions <span class="chev">›</span></summary><div class="content">
-<table>
+<div class="table-wrap standard-table-wrap"><table>
 <thead><tr><th>Direction</th><th>Best for</th><th>Search terms</th></tr></thead>
 <tbody>
 <tr><td>Media organization AI policy</td><td>Responsible use / supervision angle</td><td>newsroom generative AI policy human oversight disclosure; AP generative AI policy journalism; Reuters AI policy newsroom</td></tr>
@@ -860,32 +855,31 @@ Optional: 🎥 Course Launch Zoom recording / transcript review → Due [not lis
 <tr><td>AI search and publisher trust</td><td>Media-system angle</td><td>AI search publishers trust attribution generative AI</td></tr>
 <tr><td>Critical thinking and AI overreliance</td><td>Learning/reflection angle</td><td>AI overreliance critical thinking education generative AI</td></tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Safest/strongest direction:</strong> a media organization AI policy. It connects directly to responsible use, human oversight, disclosure, verification, and your professional context.</p>
 <p><strong>Avoid:</strong> vendor marketing posts, unsourced LinkedIn takes, generic hype pieces, or sources that do not connect to media, communication, education, or platform trust.</p>
 </div></details></section>
 </main>
 </div>
-
-<div class="mobile-nav-backdrop" id="mobileNavBackdrop" aria-hidden="true"></div>
-<aside class="mobile-drawer" id="mobileDrawer" aria-label="Mobile section navigation" aria-hidden="true">
-  <div class="mobile-drawer-head">
-    <div>
-      <h2>📘 Week 1 Dashboard</h2>
-      <p>Jump to a section or your next task.</p>
-    </div>
-    <button class="mobile-close" id="mobileCloseBtn" aria-label="Close menu">×</button>
-  </div>
-  <div class="mobile-progress-card">
-    <strong>Progress</strong>
-    <div class="bar"><span class="mobile-bar"></span></div>
-    <p class="meta"><span class="mobile-done-count">0</span> of <span class="mobile-total-count">0</span> Section 5 tasks checked</p>
-    <div class="mobile-progress-actions">
-      <button class="btn primary" id="mobileDrawerNextBtn">Next unchecked</button>
-      <button class="btn small" id="mobileDrawerResetBtn">Reset checks</button>
-    </div>
-  </div>
-  <nav id="mobileNav" aria-label="Mobile section links">
+<div aria-hidden="true" class="mobile-nav-backdrop" id="mobileNavBackdrop"></div>
+<aside aria-hidden="true" aria-label="Mobile section navigation" class="mobile-drawer" id="mobileDrawer">
+<div class="mobile-drawer-head">
+<div>
+<h2>📘 Week 1 Dashboard</h2>
+<p>Jump to a section or your next task.</p>
+</div>
+<button aria-label="Close menu" class="mobile-close" id="mobileCloseBtn">×</button>
+</div>
+<div class="mobile-progress-card">
+<strong>Progress</strong>
+<div class="bar"><span class="mobile-bar"></span></div>
+<p class="meta"><span class="mobile-done-count">0</span> of <span class="mobile-total-count">0</span> Section 5 tasks checked</p>
+<div class="mobile-progress-actions">
+<button class="btn primary" id="mobileDrawerNextBtn">Next unchecked</button>
+<button class="btn small" id="mobileDrawerResetBtn">Reset checks</button>
+</div>
+</div>
+<nav aria-label="Mobile section links" id="mobileNav">
 <a href="#s1">1. 🧭 Mode</a>
 <a href="#s2">2. 🔎 Inputs check</a>
 <a href="#s3">3. ✅ Deliverables</a>
@@ -903,15 +897,14 @@ Optional: 🎥 Course Launch Zoom recording / transcript review → Due [not lis
 <a href="#s15">15. ✅ Google Tasks</a>
 <a href="#s16">16. 📝 Memo angles</a>
 <a href="#s17">17. 🌐 Outside resource</a>
-  </nav>
-</aside>
-<nav class="mobile-bottom-nav" aria-label="Mobile quick navigation">
-  <button type="button" id="mobileMenuBtn"><span class="nav-icon">☰</span><span>Menu</span></button>
-  <button type="button" id="mobileProgressBtn"><span class="nav-icon">📌</span><span>Progress</span></button>
-  <button type="button" id="mobileNextBtn"><span class="nav-icon">✅</span><span>Next</span></button>
-  <button type="button" id="mobileTopBtn"><span class="nav-icon">↑</span><span>Top</span></button>
 </nav>
-
+</aside>
+<nav aria-label="Mobile quick navigation" class="mobile-bottom-nav">
+<button id="mobileMenuBtn" type="button"><span class="nav-icon">☰</span><span>Menu</span></button>
+<button id="mobileProgressBtn" type="button"><span class="nav-icon">📌</span><span>Progress</span></button>
+<button id="mobileNextBtn" type="button"><span class="nav-icon">✅</span><span>Next</span></button>
+<button id="mobileTopBtn" type="button"><span class="nav-icon">↑</span><span>Top</span></button>
+</nav>
 <div class="toast" id="toast">Copied</div>
 <script>
 (function(){
