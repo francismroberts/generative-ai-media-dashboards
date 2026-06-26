@@ -97,7 +97,7 @@
   .materials-table td{padding:15px 12px;line-height:1.48;border-bottom:1px solid var(--line);white-space:normal;overflow-wrap:break-word;word-break:normal;vertical-align:top}
   .materials-table tr:nth-child(even) td{background:#fffdf8}
   .material-type-emoji{display:inline-block;margin-left:6px;font-size:1.05rem;vertical-align:-.08em;white-space:nowrap}
-  .why-mode-emoji{display:inline-block;margin-right:6px;font-size:1.12rem;vertical-align:-.08em;white-space:nowrap}
+  .why-mode-emoji{display:inline-block;margin-right:0;font-size:1.12rem;vertical-align:-.08em;white-space:nowrap}
   .icon-only,.status-dot{display:inline-flex;align-items:center;justify-content:center;font-size:1.24rem;line-height:1;min-width:1.6rem;min-height:1.6rem}
   .status-dot{font-size:1.12rem}
   .mode-label{display:inline-flex;align-items:center;gap:6px;font-weight:800;border-radius:999px;padding:4px 8px;background:#f7f4ef;white-space:normal}
@@ -282,8 +282,14 @@
   }
 
 
-  .task-emoji{display:inline-block;margin-right:.4rem;min-width:1.35em;text-align:center}
+  .task-emoji{display:inline-block;margin-right:0;min-width:1.35em;text-align:center}
   .page-subtitle{font-size:1.02rem;color:var(--muted);margin-top:-.35rem;margin-bottom:.75rem}
+
+  .week-switcher{margin-top:12px}
+  .week-switcher label{display:block;font-size:.72rem;font-weight:850;color:var(--muted);margin:0 0 5px;letter-spacing:.01em}
+  .week-switcher select{width:100%;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);padding:9px 10px;font-weight:800;font-size:.9rem;box-shadow:0 2px 8px rgba(0,0,0,.035)}
+  .week-switcher select:focus{outline:2px solid rgba(107,143,113,.22);border-color:var(--accent)}
+  .mobile-drawer .week-switcher{margin-top:8px;max-width:230px}
 </style>
 <link href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Ctext%20y%3D%27.9em%27%20font-size%3D%2790%27%3E%F0%9F%93%8B%3C/text%3E%3C/svg%3E" rel="icon"/></head>
 <body>
@@ -292,7 +298,7 @@
 <div class="brand">
 <h1>📋 Francis Roberts</h1>
 <p>GenAI &amp; the Media<br/>Week 1 Study Dashboard</p>
-</div>
+<div class="week-switcher"><label for="weekSelect">Week</label><select data-week-switch="" id="weekSelect"><option selected="" value="index.html">Week 1</option><option disabled="" value="">Week 2 — coming soon</option><option disabled="" value="">Week 3 — coming soon</option><option disabled="" value="">Week 4 — coming soon</option><option disabled="" value="">Week 5 — coming soon</option></select></div></div>
 <div class="progress-card">
 <strong>Progress</strong>
 <div class="bar"><span id="bar"></span></div>
@@ -399,7 +405,7 @@
 <p><strong>Use this as the main execution checklist.</strong> These are the 18 required or required-soon tasks counted in the progress tracker. Required materials are split into separate checkable tasks, even when the recommended depth is skim or reference.</p>
 <div class="table-wrap checklist-wrap"><table class="check-table">
 <thead><tr><th>Done</th><th>#</th><th>Task / assignment</th><th>Produce / submit</th><th>Best timing</th><th>Why it comes in this order</th><th>Effort</th><th>Required?</th></tr></thead>
-<tbody><tr><td><input data-check="" id="s5-1" type="checkbox"/></td><td>1</td><td><span aria-hidden="true" class="task-emoji">✏️</span> <a href="https://canvas.northwestern.edu/courses/253956/discussion_topics/1843951" rel="noopener" target="_blank">Activity 1: Introductions</a></td><td>Short intro post</td><td>First</td><td>Fastest required win; lowers friction</td><td>15m</td><td>Required</td></tr><tr><td><input data-check="" id="s5-2" type="checkbox"/></td><td>2</td><td><span aria-hidden="true" class="task-emoji">✏️</span> <a href="https://canvas.northwestern.edu/courses/253956/assignments/1781910" rel="noopener" target="_blank">Assignment 1 prompt + source setup</a></td><td>Topic direction + 6–8 candidate sources</td><td>Early / Fri</td><td>Due July 5; source curation and NotebookLM testing need runway</td><td>75–90m</td><td>Required soon</td></tr><tr><td><input data-check="" id="s5-3" type="checkbox"/></td><td>3</td><td><span aria-hidden="true" class="task-emoji">🎥</span> <a href="https://canvas.northwestern.edu/courses/253956/files?preview=25085271" rel="noopener" target="_blank">Week 1 Lecture</a></td><td>Core concept notes</td><td>Early</td><td>Gives the week’s frame for all activities and the memo</td><td>45–60m</td><td>Required material</td></tr><tr><td><input data-check="" id="s5-4" type="checkbox"/></td><td>4</td><td><span aria-hidden="true" class="task-emoji">🎥</span> <a href="https://www.youtube.com/watch?app=desktop&amp;v=LPZh9BOjkQs" rel="noopener" target="_blank">Large Language Models Briefly Explained</a></td><td>One plain-English LLM definition</td><td>Early</td><td>Basic grounding for how LLMs work and why they can be confidently wrong</td><td>10–15m</td><td>Required material</td></tr><tr><td><input data-check="" id="s5-5" type="checkbox"/></td><td>5</td><td><span aria-hidden="true" class="task-emoji">🎥</span> <a href="https://www.youtube.com/watch?v=_6R7Ym6Vy_I" rel="noopener" target="_blank">Turing Lectures: What is generative AI and how does it work?</a></td><td>Broad GenAI concept notes</td><td>Early / move-friendly</td><td>Useful first-pass explainer; capture only what clarifies the lecture</td><td>30–45m</td><td>Required material</td></tr><tr><td><input data-check="" id="s5-6" type="checkbox"/></td><td>6</td><td><span aria-hidden="true" class="task-emoji">🎥</span> <a href="https://www.youtube.com/watch?v=eXdVDhOGqoE" rel="noopener" target="_blank">AI Is Dangerous, but Not for the Reasons You Think</a></td><td>One non-obvious AI risk</td><td>Early / move-friendly</td><td>Supports risk framing beyond sci-fi fear</td><td>15–25m</td><td>Required material</td></tr><tr><td><input data-check="" id="s5-7" type="checkbox"/></td><td>7</td><td><span aria-hidden="true" class="task-emoji">🎥</span> <a href="https://www.ted.com/talks/advait_sarkar_how_to_stop_ai_from_killing_your_critical_thinking" rel="noopener" target="_blank">How to stop AI from killing your critical thinking</a></td><td>One practical critical-thinking habit</td><td>Early / move-friendly</td><td>Supports reflection on overreliance and responsible learning</td><td>15–20m</td><td>Required material</td></tr><tr><td><input data-check="" id="s5-8" type="checkbox"/></td><td>8</td><td><span aria-hidden="true" class="task-emoji">📖</span> <a href="https://ig.ft.com/generative-ai" rel="noopener" target="_blank">Financial Times: Generative AI exists because of the transformer</a></td><td>One simple transformer explanation</td><td>Midweek</td><td>Required technical background; skim enough to explain why transformers matter</td><td>20–30m</td><td>Required material</td></tr><tr><td><input data-check="" id="s5-9" type="checkbox"/></td><td>9</td><td><span aria-hidden="true" class="task-emoji">📖</span> <a href="https://www.technologyreview.com/2026/01/07/1130795/what-even-is-a-parameter/" rel="noopener" target="_blank">MIT Technology Review: LLMs contain a lot of parameters</a></td><td>One simple parameter definition</td><td>Midweek</td><td>Required vocabulary support; reference-level depth is still checkable work</td><td>10–15m</td><td>Required material</td></tr><tr><td><input data-check="" id="s5-10" type="checkbox"/></td><td>10</td><td><span aria-hidden="true" class="task-emoji">📖</span> <a href="https://www.nature.com/articles/d41586-025-00068-5" rel="noopener" target="_blank">Nature: AI hallucinations can’t be stopped</a></td><td>Hallucination, risk, and mitigation notes</td><td>Early / midweek</td><td>Strongest anchor for limitations, verification, and responsible use</td><td>35–45m</td><td>Required material</td></tr><tr><td><input data-check="" id="s5-11" type="checkbox"/></td><td>11</td><td><span aria-hidden="true" class="task-emoji">📖</span> <a href="https://www.bloomberg.com/graphics/2023-generative-ai-bias/" rel="noopener" target="_blank">Bloomberg: Humans are Biased. Generative AI is Even Worse</a></td><td>One bias pattern to test</td><td>Midweek</td><td>Directly supports Activity 3 model-bias testing</td><td>30–45m</td><td>Required material</td></tr><tr><td><input data-check="" id="s5-12" type="checkbox"/></td><td>12</td><td><span aria-hidden="true" class="task-emoji">📖</span> <a href="https://www.bbc.co.uk/editorialguidelines/guidance/use-of-artificial-intelligence" rel="noopener" target="_blank">BBC Editorial Policy: The use of Artificial Intelligence</a></td><td>Three policy rules to adopt</td><td>Midweek</td><td>Direct support for Activity 2 and responsible-use framing</td><td>25–35m</td><td>Required material</td></tr><tr><td><input data-check="" id="s5-13" type="checkbox"/></td><td>13</td><td><span aria-hidden="true" class="task-emoji">📖</span> <a href="https://docs.google.com/document/d/1RKIpOdNUUM8vLOCXR2_trlzCoCjxor6DUBE0heIDVK0/edit" rel="noopener" target="_blank">Demystifying the Jargon of Generative AI</a></td><td>Check unfamiliar terms</td><td>As needed</td><td>Required reference material; open it and use it when a term slows you down</td><td>10m</td><td>Required material</td></tr><tr><td><input data-check="" id="s5-14" type="checkbox"/></td><td>14</td><td><span aria-hidden="true" class="task-emoji">✏️</span> <a href="https://canvas.northwestern.edu/courses/253956/discussion_topics/1843953" rel="noopener" target="_blank">Activity 2: AI Policy Design</a></td><td>Personal AI-use policy post</td><td>Midweek</td><td>Easier after BBC + hallucination frame</td><td>30–40m</td><td>Required</td></tr><tr><td><input data-check="" id="s5-15" type="checkbox"/></td><td>15</td><td><span aria-hidden="true" class="task-emoji">✏️</span> <a href="https://canvas.northwestern.edu/courses/253956/discussion_topics/1843954" rel="noopener" target="_blank">Activity 3: Exploring AI Model Bias</a></td><td>Prompt tests + screenshots + response post</td><td>Midweek / Fri</td><td>Requires tool testing and evidence capture</td><td>60–75m</td><td>Required</td></tr><tr><td><input data-check="" id="s5-16" type="checkbox"/></td><td>16</td><td><span aria-hidden="true" class="task-emoji">✏️</span> <a href="https://canvas.northwestern.edu/courses/253956/assignments/1781924" rel="noopener" target="_blank">Memo angle + outside resource</a></td><td>Claim + one outside source</td><td>Friday</td><td>Needed before writing the memo</td><td>30–45m</td><td>Required</td></tr><tr><td><input data-check="" id="s5-17" type="checkbox"/></td><td>17</td><td><span aria-hidden="true" class="task-emoji">✏️</span> <a href="https://canvas.northwestern.edu/courses/253956/assignments/1781924" rel="noopener" target="_blank">Week 1 Reading Response Memo</a></td><td>~300-word memo + question + outside resource</td><td>Friday</td><td>Main weekly synthesis task</td><td>60–90m</td><td>Required</td></tr><tr><td><input data-check="" id="s5-18" type="checkbox"/></td><td>18</td><td><span aria-hidden="true" class="task-emoji">✏️</span> <a href="https://canvas.northwestern.edu/courses/253956/assignments/1781924" rel="noopener" target="_blank">Peer response/comment + final Canvas check</a></td><td>One substantive reply + confirmation everything is posted</td><td>Sat / Sun</td><td>Wait for classmates, then verify submission status</td><td>30–45m</td><td>Required</td></tr></tbody>
+<tbody><tr><td><input data-check="" id="s5-1" type="checkbox"/></td><td>1</td><td><span aria-hidden="true" class="task-emoji">✏️</span><a href="https://canvas.northwestern.edu/courses/253956/discussion_topics/1843951" rel="noopener" target="_blank">Activity 1: Introductions</a></td><td>Short intro post</td><td>First</td><td>Fastest required win; lowers friction</td><td>15m</td><td>Required</td></tr><tr><td><input data-check="" id="s5-2" type="checkbox"/></td><td>2</td><td><span aria-hidden="true" class="task-emoji">✏️</span><a href="https://canvas.northwestern.edu/courses/253956/assignments/1781910" rel="noopener" target="_blank">Assignment 1 prompt + source setup</a></td><td>Topic direction + 6–8 candidate sources</td><td>Early / Fri</td><td>Due July 5; source curation and NotebookLM testing need runway</td><td>75–90m</td><td>Required soon</td></tr><tr><td><input data-check="" id="s5-3" type="checkbox"/></td><td>3</td><td><span aria-hidden="true" class="task-emoji">🎥</span><a href="https://canvas.northwestern.edu/courses/253956/files?preview=25085271" rel="noopener" target="_blank">Week 1 Lecture</a></td><td>Core concept notes</td><td>Early</td><td>Gives the week’s frame for all activities and the memo</td><td>45–60m</td><td>Required material</td></tr><tr><td><input data-check="" id="s5-4" type="checkbox"/></td><td>4</td><td><span aria-hidden="true" class="task-emoji">🎥</span><a href="https://www.youtube.com/watch?app=desktop&amp;v=LPZh9BOjkQs" rel="noopener" target="_blank">Large Language Models Briefly Explained</a></td><td>One plain-English LLM definition</td><td>Early</td><td>Basic grounding for how LLMs work and why they can be confidently wrong</td><td>10–15m</td><td>Required material</td></tr><tr><td><input data-check="" id="s5-5" type="checkbox"/></td><td>5</td><td><span aria-hidden="true" class="task-emoji">🎥</span><a href="https://www.youtube.com/watch?v=_6R7Ym6Vy_I" rel="noopener" target="_blank">Turing Lectures: What is generative AI and how does it work?</a></td><td>Broad GenAI concept notes</td><td>Early / move-friendly</td><td>Useful first-pass explainer; capture only what clarifies the lecture</td><td>30–45m</td><td>Required material</td></tr><tr><td><input data-check="" id="s5-6" type="checkbox"/></td><td>6</td><td><span aria-hidden="true" class="task-emoji">🎥</span><a href="https://www.youtube.com/watch?v=eXdVDhOGqoE" rel="noopener" target="_blank">AI Is Dangerous, but Not for the Reasons You Think</a></td><td>One non-obvious AI risk</td><td>Early / move-friendly</td><td>Supports risk framing beyond sci-fi fear</td><td>15–25m</td><td>Required material</td></tr><tr><td><input data-check="" id="s5-7" type="checkbox"/></td><td>7</td><td><span aria-hidden="true" class="task-emoji">🎥</span><a href="https://www.ted.com/talks/advait_sarkar_how_to_stop_ai_from_killing_your_critical_thinking" rel="noopener" target="_blank">How to stop AI from killing your critical thinking</a></td><td>One practical critical-thinking habit</td><td>Early / move-friendly</td><td>Supports reflection on overreliance and responsible learning</td><td>15–20m</td><td>Required material</td></tr><tr><td><input data-check="" id="s5-8" type="checkbox"/></td><td>8</td><td><span aria-hidden="true" class="task-emoji">📖</span><a href="https://ig.ft.com/generative-ai" rel="noopener" target="_blank">Financial Times: Generative AI exists because of the transformer</a></td><td>One simple transformer explanation</td><td>Midweek</td><td>Required technical background; skim enough to explain why transformers matter</td><td>20–30m</td><td>Required material</td></tr><tr><td><input data-check="" id="s5-9" type="checkbox"/></td><td>9</td><td><span aria-hidden="true" class="task-emoji">📖</span><a href="https://www.technologyreview.com/2026/01/07/1130795/what-even-is-a-parameter/" rel="noopener" target="_blank">MIT Technology Review: LLMs contain a lot of parameters</a></td><td>One simple parameter definition</td><td>Midweek</td><td>Required vocabulary support; reference-level depth is still checkable work</td><td>10–15m</td><td>Required material</td></tr><tr><td><input data-check="" id="s5-10" type="checkbox"/></td><td>10</td><td><span aria-hidden="true" class="task-emoji">📖</span><a href="https://www.nature.com/articles/d41586-025-00068-5" rel="noopener" target="_blank">Nature: AI hallucinations can’t be stopped</a></td><td>Hallucination, risk, and mitigation notes</td><td>Early / midweek</td><td>Strongest anchor for limitations, verification, and responsible use</td><td>35–45m</td><td>Required material</td></tr><tr><td><input data-check="" id="s5-11" type="checkbox"/></td><td>11</td><td><span aria-hidden="true" class="task-emoji">📖</span><a href="https://www.bloomberg.com/graphics/2023-generative-ai-bias/" rel="noopener" target="_blank">Bloomberg: Humans are Biased. Generative AI is Even Worse</a></td><td>One bias pattern to test</td><td>Midweek</td><td>Directly supports Activity 3 model-bias testing</td><td>30–45m</td><td>Required material</td></tr><tr><td><input data-check="" id="s5-12" type="checkbox"/></td><td>12</td><td><span aria-hidden="true" class="task-emoji">📖</span><a href="https://www.bbc.co.uk/editorialguidelines/guidance/use-of-artificial-intelligence" rel="noopener" target="_blank">BBC Editorial Policy: The use of Artificial Intelligence</a></td><td>Three policy rules to adopt</td><td>Midweek</td><td>Direct support for Activity 2 and responsible-use framing</td><td>25–35m</td><td>Required material</td></tr><tr><td><input data-check="" id="s5-13" type="checkbox"/></td><td>13</td><td><span aria-hidden="true" class="task-emoji">📖</span><a href="https://docs.google.com/document/d/1RKIpOdNUUM8vLOCXR2_trlzCoCjxor6DUBE0heIDVK0/edit" rel="noopener" target="_blank">Demystifying the Jargon of Generative AI</a></td><td>Check unfamiliar terms</td><td>As needed</td><td>Required reference material; open it and use it when a term slows you down</td><td>10m</td><td>Required material</td></tr><tr><td><input data-check="" id="s5-14" type="checkbox"/></td><td>14</td><td><span aria-hidden="true" class="task-emoji">✏️</span><a href="https://canvas.northwestern.edu/courses/253956/discussion_topics/1843953" rel="noopener" target="_blank">Activity 2: AI Policy Design</a></td><td>Personal AI-use policy post</td><td>Midweek</td><td>Easier after BBC + hallucination frame</td><td>30–40m</td><td>Required</td></tr><tr><td><input data-check="" id="s5-15" type="checkbox"/></td><td>15</td><td><span aria-hidden="true" class="task-emoji">✏️</span><a href="https://canvas.northwestern.edu/courses/253956/discussion_topics/1843954" rel="noopener" target="_blank">Activity 3: Exploring AI Model Bias</a></td><td>Prompt tests + screenshots + response post</td><td>Midweek / Fri</td><td>Requires tool testing and evidence capture</td><td>60–75m</td><td>Required</td></tr><tr><td><input data-check="" id="s5-16" type="checkbox"/></td><td>16</td><td><span aria-hidden="true" class="task-emoji">✏️</span><a href="https://canvas.northwestern.edu/courses/253956/assignments/1781924" rel="noopener" target="_blank">Memo angle + outside resource</a></td><td>Claim + one outside source</td><td>Friday</td><td>Needed before writing the memo</td><td>30–45m</td><td>Required</td></tr><tr><td><input data-check="" id="s5-17" type="checkbox"/></td><td>17</td><td><span aria-hidden="true" class="task-emoji">✏️</span><a href="https://canvas.northwestern.edu/courses/253956/assignments/1781924" rel="noopener" target="_blank">Week 1 Reading Response Memo</a></td><td>~300-word memo + question + outside resource</td><td>Friday</td><td>Main weekly synthesis task</td><td>60–90m</td><td>Required</td></tr><tr><td><input data-check="" id="s5-18" type="checkbox"/></td><td>18</td><td><span aria-hidden="true" class="task-emoji">✏️</span><a href="https://canvas.northwestern.edu/courses/253956/assignments/1781924" rel="noopener" target="_blank">Peer response/comment + final Canvas check</a></td><td>One substantive reply + confirmation everything is posted</td><td>Sat / Sun</td><td>Wait for classmates, then verify submission status</td><td>30–45m</td><td>Required</td></tr></tbody>
 <tfoot><tr><td colspan="6"><strong>Total estimated active work time</strong></td><td colspan="2"><strong>About 8.5–11.5 hours</strong></td></tr></tfoot>
 </table></div>
 </div></details></section>
@@ -422,7 +428,7 @@
 <tr>
 <td><a href="https://canvas.northwestern.edu/courses/253956/files?preview=25085271" rel="noopener" target="_blank">Week 1 Lecture</a> <span aria-label="Lecture" class="material-type-emoji" title="Lecture">🎙️</span></td>
 <td>Careful</td>
-<td><span aria-label="🖥️ Desk mode first" class="why-mode-emoji" title="🖥️ Desk mode first">🖥️</span> Main conceptual frame for the week: capabilities, limitations, hallucination, bias, benchmarks, and responsible use.</td>
+<td><span aria-label="🖥️ Desk mode first" class="why-mode-emoji" title="🖥️ Desk mode first">🖥️</span>Main conceptual frame for the week: capabilities, limitations, hallucination, bias, benchmarks, and responsible use.</td>
 <td>Watch/read at desk first. Then use NotebookLM or notes to compress into 4–5 core concepts.</td>
 <td>One sentence each for capabilities, limitations, responsible use, and one professional connection.</td>
 <td><span aria-label="Yes" class="status-dot" title="Yes">🟢</span></td>
@@ -431,7 +437,7 @@
 <tr>
 <td><a href="https://www.youtube.com/watch?app=desktop&amp;v=LPZh9BOjkQs" rel="noopener" target="_blank">Large Language Models Briefly Explained</a> <span aria-label="Video" class="material-type-emoji" title="Video">🎥</span></td>
 <td>Normal</td>
-<td><span aria-label="🔁 Flexible mode" class="why-mode-emoji" title="🔁 Flexible mode">🔁</span> Good basic grounding; not worth overprocessing unless LLM mechanics feel fuzzy.</td>
+<td><span aria-label="🔁 Flexible mode" class="why-mode-emoji" title="🔁 Flexible mode">🔁</span>Good basic grounding; not worth overprocessing unless LLM mechanics feel fuzzy.</td>
 <td>Watch once. Desk review only if you cannot explain LLMs in plain English after the lecture.</td>
 <td>One plain-English definition of an LLM and one reason LLMs can sound confident while being wrong.</td>
 <td><span aria-label="Maybe" class="status-dot" title="Maybe">🟡</span></td>
@@ -440,7 +446,7 @@
 <tr>
 <td><a href="https://www.youtube.com/watch?v=_6R7Ym6Vy_I" rel="noopener" target="_blank">What is generative AI and how does it work? – Turing Lectures</a> <span aria-label="Video" class="material-type-emoji" title="Video">🎥</span></td>
 <td>Skim/normal</td>
-<td><span aria-label="🚗 Move-friendly" class="why-mode-emoji" title="🚗 Move-friendly">🚗</span> Useful broad explainer; can be listened to while moving.</td>
+<td><span aria-label="🚗 Move-friendly" class="why-mode-emoji" title="🚗 Move-friendly">🚗</span>Useful broad explainer; can be listened to while moving.</td>
 <td>Use as a first-pass explainer during a walk/drive. Capture only what clarifies the lecture.</td>
 <td>Three concepts that clarified GenAI.</td>
 <td><span aria-label="Maybe" class="status-dot" title="Maybe">🟡</span></td>
@@ -449,7 +455,7 @@
 <tr>
 <td><a href="https://www.youtube.com/watch?v=eXdVDhOGqoE" rel="noopener" target="_blank">AI Is Dangerous, but Not for the Reasons You Think</a> <span aria-label="Video" class="material-type-emoji" title="Video">🎥</span></td>
 <td>Normal</td>
-<td><span aria-label="🚶 Move-friendly" class="why-mode-emoji" title="🚶 Move-friendly">🚶</span> Useful risk framing; listen for non-obvious risks beyond sci-fi fear.</td>
+<td><span aria-label="🚶 Move-friendly" class="why-mode-emoji" title="🚶 Move-friendly">🚶</span>Useful risk framing; listen for non-obvious risks beyond sci-fi fear.</td>
 <td>Listen while moving. Do not take detailed notes unless it connects to your memo angle.</td>
 <td>One risk that is not simply “AI becomes too smart.”</td>
 <td><span aria-label="Maybe" class="status-dot" title="Maybe">🟡</span></td>
@@ -458,7 +464,7 @@
 <tr>
 <td><a href="https://www.ted.com/talks/advait_sarkar_how_to_stop_ai_from_killing_your_critical_thinking" rel="noopener" target="_blank">How to stop AI from killing your critical thinking</a> <span aria-label="Video" class="material-type-emoji" title="Video">🎥</span></td>
 <td>Normal</td>
-<td><span aria-label="🚶 Move-friendly" class="why-mode-emoji" title="🚶 Move-friendly">🚶</span> Good reflection support for overreliance, learning, and active judgment.</td>
+<td><span aria-label="🚶 Move-friendly" class="why-mode-emoji" title="🚶 Move-friendly">🚶</span>Good reflection support for overreliance, learning, and active judgment.</td>
 <td>Listen while walking or doing chores. Save one practical habit.</td>
 <td>One habit that keeps you intellectually active while using AI.</td>
 <td><span aria-label="Yes, if using reflection angle" class="status-dot" title="Yes, if using reflection angle">🟡</span></td>
@@ -467,7 +473,7 @@
 <tr>
 <td><a href="https://ig.ft.com/generative-ai" rel="noopener" target="_blank">Financial Times: Generative AI exists because of the transformer</a> <span aria-label="Interactive reading" class="material-type-emoji" title="Interactive reading">📖</span></td>
 <td>Skim</td>
-<td><span aria-label="🖥️ Desk skim" class="why-mode-emoji" title="🖥️ Desk skim">🖥️</span> Transformer basics help, but this can become a technical rabbit hole.</td>
+<td><span aria-label="🖥️ Desk skim" class="why-mode-emoji" title="🖥️ Desk skim">🖥️</span>Transformer basics help, but this can become a technical rabbit hole.</td>
 <td>Skim at desk. Stop once you can complete the sentence “Transformers matter because…”</td>
 <td>One simple transformer explanation.</td>
 <td><span aria-label="Maybe" class="status-dot" title="Maybe">🟡</span></td>
@@ -476,7 +482,7 @@
 <tr>
 <td><a href="https://www.technologyreview.com/2026/01/07/1130795/what-even-is-a-parameter/" rel="noopener" target="_blank">MIT Technology Review: LLMs contain a lot of parameters</a> <span aria-label="Reading" class="material-type-emoji" title="Reading">📖</span></td>
 <td>Reference</td>
-<td><span aria-label="🗂️ Reference" class="why-mode-emoji" title="🗂️ Reference">🗂️</span> Helpful vocabulary support, but not a core memo source unless writing about technical literacy.</td>
+<td><span aria-label="🗂️ Reference" class="why-mode-emoji" title="🗂️ Reference">🗂️</span>Helpful vocabulary support, but not a core memo source unless writing about technical literacy.</td>
 <td>Skim if “parameters” is unclear. Otherwise save for lookup.</td>
 <td>One simple explanation of “parameter.”</td>
 <td><span aria-label="Low" class="status-dot" title="Low">🔴</span></td>
@@ -485,7 +491,7 @@
 <tr>
 <td><a href="https://www.nature.com/articles/d41586-025-00068-5" rel="noopener" target="_blank">Nature: AI hallucinations can’t be stopped</a> <span aria-label="Reading" class="material-type-emoji" title="Reading">📖</span></td>
 <td>Careful</td>
-<td><span aria-label="🖥️ Desk mode" class="why-mode-emoji" title="🖥️ Desk mode">🖥️</span> Strongest anchor for limitations, verification, and responsible use.</td>
+<td><span aria-label="🖥️ Desk mode" class="why-mode-emoji" title="🖥️ Desk mode">🖥️</span>Strongest anchor for limitations, verification, and responsible use.</td>
 <td>Read at desk. Pull one example, one risk, and one mitigation strategy.</td>
 <td>Why hallucination is structural, not a minor bug.</td>
 <td><span aria-label="Yes — very strong" class="status-dot" title="Yes — very strong">🟢</span></td>
@@ -494,7 +500,7 @@
 <tr>
 <td><a href="https://www.bloomberg.com/graphics/2023-generative-ai-bias/" rel="noopener" target="_blank">Bloomberg: Humans are Biased. Generative AI is Even Worse</a> <span aria-label="Interactive article" class="material-type-emoji" title="Interactive article">📖</span></td>
 <td>Careful / active</td>
-<td><span aria-label="🖥️ Desk mode" class="why-mode-emoji" title="🖥️ Desk mode">🖥️</span> Directly supports model-bias testing and Activity 3.</td>
+<td><span aria-label="🖥️ Desk mode" class="why-mode-emoji" title="🖥️ Desk mode">🖥️</span>Directly supports model-bias testing and Activity 3.</td>
 <td>Read at desk, then design your Activity 3 prompts from the patterns you notice.</td>
 <td>One visual bias pattern you want to test yourself.</td>
 <td><span aria-label="Yes, if bias angle" class="status-dot" title="Yes, if bias angle">🟡</span></td>
@@ -503,7 +509,7 @@
 <tr>
 <td><a href="https://www.bbc.co.uk/editorialguidelines/guidance/use-of-artificial-intelligence" rel="noopener" target="_blank">BBC Editorial Policy: The use of Artificial Intelligence</a> <span aria-label="Policy reading" class="material-type-emoji" title="Policy reading">🧾</span></td>
 <td>Careful</td>
-<td><span aria-label="🖥️ Desk mode" class="why-mode-emoji" title="🖥️ Desk mode">🖥️</span> Direct support for Activity 2 and the responsible-use memo angle.</td>
+<td><span aria-label="🖥️ Desk mode" class="why-mode-emoji" title="🖥️ Desk mode">🖥️</span>Direct support for Activity 2 and the responsible-use memo angle.</td>
 <td>Read at desk. Translate the policy into your own permitted/caution/not-permitted buckets.</td>
 <td>Three rules you would adopt for school/media work.</td>
 <td><span aria-label="Yes — strong" class="status-dot" title="Yes — strong">🟢</span></td>
@@ -512,7 +518,7 @@
 <tr>
 <td><a href="https://docs.google.com/document/d/1RKIpOdNUUM8vLOCXR2_trlzCoCjxor6DUBE0heIDVK0/edit" rel="noopener" target="_blank">Demystifying the Jargon of Generative AI</a> <span aria-label="Reference doc" class="material-type-emoji" title="Reference doc">🧠</span></td>
 <td>Reference</td>
-<td><span aria-label="🗂️ Reference" class="why-mode-emoji" title="🗂️ Reference">🗂️</span> Useful lookup tool; not worth reading straight through first.</td>
+<td><span aria-label="🗂️ Reference" class="why-mode-emoji" title="🗂️ Reference">🗂️</span>Useful lookup tool; not worth reading straight through first.</td>
 <td>Use only when a term slows you down.</td>
 <td>Terms you still cannot explain after the lecture.</td>
 <td><span aria-label="Low" class="status-dot" title="Low">🔴</span></td>
@@ -643,42 +649,43 @@ Could use in memo? yes/no/maybe</div>
 <p><strong>Strategy:</strong> Upload the available Week 1 sources, then run only the prompts that help with understanding, memo planning, activities, and Assignment 1 setup.</p>
 <div class="section-note"><strong>What to study more carefully this week:</strong> I reviewed the Week 1 assignments and materials. Study the Week 1 lecture, Nature hallucination article, BBC AI policy, Bloomberg bias piece, and Assignment 1 prompt most carefully. These are the materials that directly drive the memo, Activity 2, Activity 3, and next week’s Assignment 1. The broad explainers and jargon/parameter pieces can stay as background or clarification. I do not think you need an additional NotebookLM prompt beyond the prompts below unless you get stuck on technical vocabulary.</div>
 <div class="copybox">
-<div class="copyhead"><div><strong>Prompt 1: Overall Understanding + Synthesis</strong><p class="meta">Purpose: build a written study guide and generate Audio Overview + Video Overview instructions.</p></div><button class="btn small copy" data-copy="nlm1">Copy prompt</button></div>
+<div class="copyhead"><div><strong>Prompt 1: Overall Understanding + Synthesis</strong><p class="meta">Purpose: create Written Master Notes plus integrated Audio Overview and text-forward Video Overview guidance in one NotebookLM workflow.</p></div><button class="btn small copy" data-copy="nlm1">Copy prompt</button></div>
 <div class="copybody" id="nlm1">Use only the Week 1 sources in this NotebookLM course notebook.
 
-Help me build an overall understanding of Week 1: GenAI capabilities, limitations, and responsible use.
+Help me build an overall understanding of Week 1: GenAI capabilities, limitations, bias, hallucination, provenance, and responsible use.
 
-First, create a written study guide. Organize it by concepts, not by source type. Include:
+Create three study outputs from the uploaded Week 1 sources in one integrated workflow:
 
-1. The 3–5 most important ideas
-2. Plain-English definitions of the core concepts
-3. How the sources connect, build on each other, or disagree
-4. The biggest tensions, tradeoffs, or debates
-5. What matters most for the weekly memo
-6. What matters most for Activity 2, Activity 3, and Assignment 1
-7. What I should study more carefully and why
+1. Written Master Notes that function as a study guide
+2. A text-forward Video Overview
+3. An Audio Overview
 
-Do not write my memo. Help me understand and synthesize the week.
+Create the Written Master Notes first. Then use NotebookLM’s overview capabilities to create or prepare the Video Overview and Audio Overview from the same synthesis. Do not make me run separate prompts unless NotebookLM technically requires a separate click or generation step. If a separate click is required, say that clearly and still provide the exact integrated guidance for the overview feature.
 
-After the written study guide, give me clear instructions I can use with NotebookLM’s Audio Overview feature.
+For the Written Master Notes:
+- Use these Week 1 master-note headings: GenAI capabilities and use cases; hallucination and accuracy risk; bias and representation; provenance and transparency; responsible AI policy and governance; media/communication implications; practical takeaways for this week’s activities, memo, and Assignment 1.
+- Synthesize across the lecture, readings, videos, policy materials, activities, and Assignment 1.
+- Organize by concepts, not by source type.
+- Reduce duplication.
+- Explain the core concepts in plain English.
+- Preserve useful frameworks, examples, and tensions.
+- Clearly flag what matters most for Activity 2, Activity 3, the weekly memo, and Assignment 1 planning.
+- Do not write my memo. Help me understand and synthesize the week.
+
+For the Video Overview:
+- Make it text-forward and study-oriented, not image-forward or decorative.
+- Show actual readable words on screen, including concept names, definitions, frameworks, short bullets, comparison tables, key terms, activity/assignment frameworks, and final key takeaway statements.
+- Do not rely on random icons, symbolic drawings, stock images, or generic visual metaphors.
+- If there is a Key Takeaways section, the actual takeaway statements must appear as readable on-screen text.
+- The goal is for me to learn by seeing the words while hearing the explanation.
 
 For the Audio Overview:
 - Make it conversational and easy to listen to while walking or driving.
 - Explain the week in plain English.
 - Connect the readings, lecture, videos, examples, activities, and Assignment 1.
 - Emphasize the most important concepts.
-- End with a fast verbal review checklist.
-
-Then give me clear instructions I can use with NotebookLM’s Video Overview feature.
-
-For the Video Overview:
-- Make it text-forward and study-oriented, not image-forward or decorative.
-- Show actual readable words on screen.
-- Include concept names, definitions, frameworks, short bullets, comparison tables, key terms, assignment frameworks, and final takeaway statements.
-- Update the visual when the concept changes.
-- Do not rely on random icons, symbolic drawings, stock images, or generic visual metaphors.
-- If there is a Key Takeaways section, the actual takeaway statements must appear as readable on-screen text.
-- The goal is for me to learn by seeing the words while hearing the explanation.</div>
+- Include discussion/activity prep because Week 1 has required activities.
+- End with a fast verbal review checklist.</div>
 </div>
 <div class="copybox">
 <div class="copyhead"><div><strong>Prompt 2: Master Notes Builder</strong><p class="meta">Purpose: create concept-first notes for reading, memo planning, activities, and study review.</p></div><button class="btn small copy" data-copy="nlm2">Copy prompt</button></div>
@@ -884,7 +891,7 @@ Optional: 🎥 Course Launch Zoom recording / transcript review → Due [not lis
 <div>
 <h2>📘 Week 1 Dashboard</h2>
 <p>Jump to a section or your next task.</p>
-</div>
+<div class="week-switcher"><label for="mobileWeekSelect">Week</label><select data-week-switch="" id="mobileWeekSelect"><option selected="" value="index.html">Week 1</option><option disabled="" value="">Week 2 — coming soon</option><option disabled="" value="">Week 3 — coming soon</option><option disabled="" value="">Week 4 — coming soon</option><option disabled="" value="">Week 5 — coming soon</option></select></div></div>
 <button aria-label="Close menu" class="mobile-close" id="mobileCloseBtn">×</button>
 </div>
 <div class="mobile-progress-card">
@@ -1066,6 +1073,13 @@ Optional: 🎥 Course Launch Zoom recording / transcript review → Due [not lis
     });
   }, {rootMargin:'-35% 0px -60% 0px', threshold:0});
   sections.forEach(s => obs.observe(s));
+
+
+  document.querySelectorAll('[data-week-switch]').forEach(select => {
+    select.addEventListener('change', () => {
+      if(select.value) window.location.href = select.value;
+    });
+  });
 
   loadChecks();
 })();
