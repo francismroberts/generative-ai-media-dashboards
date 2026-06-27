@@ -292,6 +292,45 @@
   .mobile-drawer .week-switcher{margin-top:8px;max-width:230px}
 
 
+  /* Section 3 completion state synced from Section 5 */
+  #s3 tr[data-deliverable-sync]{transition:opacity .18s ease, background .18s ease, border-color .18s ease}
+  #s3 tr[data-deliverable-sync].deliverable-complete{opacity:.42}
+  #s3 tr[data-deliverable-sync].deliverable-complete td{background:transparent;color:#8d8d8d;border-color:#eeeeee}
+  #s3 tr[data-deliverable-sync].deliverable-complete a{color:#7f7f7f;font-weight:600}
+    #s3 tr[data-deliverable-sync].deliverable-complete td:first-child{font-weight:600}
+    .section-title-icon{width:1.05em;height:1.05em;margin:0 .25em 0 .08em;opacity:.72}
+    
+
+
+  /* Optional desktop sidebar collapse */
+  .sidebar-toggle-in{
+    position:absolute;top:14px;right:12px;z-index:3;width:34px;height:34px;
+    border:1px solid var(--line);border-radius:12px;background:rgba(255,253,248,.92);
+    color:var(--muted);display:inline-flex;align-items:center;justify-content:center;
+    font-weight:900;font-size:1.05rem;line-height:1;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.035);
+    transition:background .16s ease,color .16s ease,transform .16s ease;
+  }
+  .sidebar-toggle-in:hover{background:#fff;color:var(--ink);transform:translateX(-1px)}
+  .sidebar-restore{
+    position:fixed;top:18px;left:18px;z-index:65;width:42px;height:42px;
+    border:1px solid var(--line);border-radius:14px;background:rgba(255,253,248,.94);
+    color:var(--ink);display:none;align-items:center;justify-content:center;
+    font-size:1.1rem;cursor:pointer;box-shadow:0 8px 24px rgba(60,47,35,.14);backdrop-filter:blur(12px);
+    transition:background .16s ease,transform .16s ease;
+  }
+  .sidebar-restore:hover{background:#fff;transform:translateY(-1px)}
+  @media (min-width:901px){
+    .layout{transition:grid-template-columns .22s ease}
+    .layout > aside{transition:opacity .18s ease,transform .22s ease,padding .22s ease,border-color .22s ease}
+    body.sidebar-collapsed .layout{grid-template-columns:0 minmax(0,1fr)}
+    body.sidebar-collapsed .layout > aside{opacity:0;pointer-events:none;transform:translateX(-18px);padding-left:0;padding-right:0;border-right-color:transparent;overflow:hidden}
+    body.sidebar-collapsed main{padding-left:76px}
+    body.sidebar-collapsed .sidebar-restore{display:inline-flex}
+  }
+  @media (max-width:900px){
+    .sidebar-toggle-in,.sidebar-restore{display:none !important}
+  }
+
   /* View controls, sidebar hide toggles, and inner-card collapse */
   .dashboard-controls{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:-6px 0 18px;padding:13px 14px;border:1px solid var(--line);border-radius:18px;background:rgba(255,253,248,.82);box-shadow:0 6px 18px rgba(60,47,35,.055)}
   .control-copy{display:grid;gap:2px;min-width:0}
@@ -305,9 +344,9 @@
   .section-eye{width:30px;height:30px;border:0;border-radius:10px;background:transparent;color:var(--muted);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;opacity:0;transition:opacity .16s ease, background .16s ease, color .16s ease;font-size:.94rem}
   .nav-row:hover .section-eye,.nav-row:focus-within .section-eye,.nav-row.is-hidden .section-eye{opacity:1}
   .section-eye:hover{background:#fff;color:var(--ink)}
+  .section-eye svg{width:17px;height:17px;display:block;stroke:currentColor;fill:none;stroke-width:1.85;stroke-linecap:round;stroke-linejoin:round}
   .section-eye[disabled]{opacity:.35;cursor:not-allowed}
   .nav-row.is-hidden > a{opacity:.52;font-style:italic}
-  .nav-row.is-hidden > a::after{content:" hidden";font-size:.72rem;font-style:normal;color:var(--muted);margin-left:5px}
   section.card.section-hidden{display:none}
   .copybox.collapsible .copyhead{cursor:pointer}
   .copybox.collapsible .copyhead > div{min-width:0;flex:1}
@@ -334,8 +373,10 @@
 </style>
 <link href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Ctext%20y%3D%27.9em%27%20font-size%3D%2790%27%3E%F0%9F%93%8B%3C/text%3E%3C/svg%3E" rel="icon"/></head>
 <body>
+<button aria-label="Show sidebar" class="sidebar-restore" id="sidebarShowBtn" title="Show sidebar" type="button">›</button>
 <div class="layout">
 <aside>
+<button aria-label="Hide sidebar" class="sidebar-toggle-in" id="sidebarHideBtn" title="Hide sidebar" type="button">‹</button>
 <div class="brand">
 <h1>📋 Francis Roberts</h1>
 <p>GenAI &amp; the Media<br/>Week 1 Study Dashboard</p>
@@ -350,7 +391,7 @@
 <nav aria-label="Section navigation" class="side-nav" id="nav">
 <a href="#s1">1. 🧭 Mode</a>
 <a href="#s2">2. 🔎 Inputs check</a>
-<a href="#s3">3. ✅ Deliverables</a>
+<a href="#s3">3. Deliverables</a>
 <a href="#s4">4. 🧪 Assignment workback</a>
 <a href="#s5">5. 📌 Ordered checklist</a>
 <a href="#s6">6. 🗂️ Materials</a>
@@ -411,17 +452,16 @@
 </table></div>
 <div class="section-note"><strong>Proceed now.</strong> You have enough to complete Week 1. The remaining missing pieces are choices, not blockers.</div>
 </div></details></section>
-<section class="card" id="s3"><details open=""><summary>3. ✅ Weekly Deliverables and Deadlines <span class="chev">›</span></summary><div class="content">
+<section class="card" id="s3"><details open=""><summary>3. Weekly Deliverables and Deadlines <span class="chev">›</span></summary><div class="content">
 <div class="table-wrap standard-table-wrap"><table>
 <thead><tr><th>Deliverable</th><th>What it is</th><th>Due</th></tr></thead>
 <tbody>
-<tr><td><a href="https://canvas.northwestern.edu/courses/253956/assignments/1781924" rel="noopener" target="_blank">📝 Reading Response Memo</a></td><td>~300-word synthesis/reflection memo with substantive question and one outside resource.</td><td>Sun Jun 28, 11:59pm</td></tr>
-<tr><td><a href="https://canvas.northwestern.edu/courses/253956/assignments/1781924" rel="noopener" target="_blank">💬 Peer response/comment</a></td><td>One substantive response to a classmate’s memo.</td><td>Sun Jun 28, 11:59pm</td></tr>
-<tr><td><a href="https://canvas.northwestern.edu/courses/253956/discussion_topics/1843951" rel="noopener" target="_blank">🧩 Activity 1: Introductions</a></td><td>Short intro post.</td><td>Sun Jun 28, 11:59pm</td></tr>
-<tr><td><a href="https://canvas.northwestern.edu/courses/253956/discussion_topics/1843953" rel="noopener" target="_blank">🧩 Activity 2: AI Policy Design</a></td><td>Personal AI-use policy post.</td><td>Sun Jun 28, 11:59pm</td></tr>
-<tr><td><a href="https://canvas.northwestern.edu/courses/253956/discussion_topics/1843954" rel="noopener" target="_blank">🧩 Activity 3: Exploring AI Model Bias</a></td><td>Bias testing across Gemini, ChatGPT, and Copilot.</td><td>Sun Jun 28, 11:59pm</td></tr>
-<tr><td><a href="https://canvas.northwestern.edu/courses/253956/assignments/1781910" rel="noopener" target="_blank">🧪 Assignment 1: NotebookLM Curation and Critique</a></td><td>Assigned now; start topic and source curation this week.</td><td>Sun Jul 5</td></tr>
-<tr><td>⚪ Course Launch Zoom</td><td>Optional recording/session review.</td><td>Optional</td></tr>
+<tr data-deliverable-sync="s5-17"><td><a href="https://canvas.northwestern.edu/courses/253956/assignments/1781924" rel="noopener" target="_blank">Reading Response Memo</a></td><td>~300-word synthesis/reflection memo with substantive question and one outside resource.</td><td>Sun Jun 28, 11:59pm</td></tr>
+<tr data-deliverable-sync="s5-18"><td><a href="https://canvas.northwestern.edu/courses/253956/assignments/1781924" rel="noopener" target="_blank">Peer response/comment</a></td><td>One substantive response to a classmate’s memo.</td><td>Sun Jun 28, 11:59pm</td></tr>
+<tr data-deliverable-sync="s5-1"><td><a href="https://canvas.northwestern.edu/courses/253956/discussion_topics/1843951" rel="noopener" target="_blank">Activity 1: Introductions</a></td><td>Short intro post.</td><td>Sun Jun 28, 11:59pm</td></tr>
+<tr data-deliverable-sync="s5-14"><td><a href="https://canvas.northwestern.edu/courses/253956/discussion_topics/1843953" rel="noopener" target="_blank">Activity 2: AI Policy Design</a></td><td>Personal AI-use policy post.</td><td>Sun Jun 28, 11:59pm</td></tr>
+<tr data-deliverable-sync="s5-15"><td><a href="https://canvas.northwestern.edu/courses/253956/discussion_topics/1843954" rel="noopener" target="_blank">Activity 3: Exploring AI Model Bias</a></td><td>Bias testing across Gemini, ChatGPT, and Copilot.</td><td>Sun Jun 28, 11:59pm</td></tr>
+<tr data-deliverable-sync="s5-2"><td><a href="https://canvas.northwestern.edu/courses/253956/assignments/1781910" rel="noopener" target="_blank">Assignment 1: NotebookLM Curation and Critique</a></td><td>Assigned now; start topic and source curation this week.</td><td>Sun Jul 5</td></tr>
 </tbody>
 </table></div>
 </div></details></section>
@@ -978,7 +1018,7 @@ Optional: 🎥 Course Launch Zoom recording / transcript review → Due [not lis
 <nav aria-label="Mobile section links" id="mobileNav">
 <a href="#s1">1. 🧭 Mode</a>
 <a href="#s2">2. 🔎 Inputs check</a>
-<a href="#s3">3. ✅ Deliverables</a>
+<a href="#s3">3. Deliverables</a>
 <a href="#s4">4. 🧪 Assignment workback</a>
 <a href="#s5">5. 📌 Ordered checklist</a>
 <a href="#s6">6. 🗂️ Materials</a>
@@ -1028,6 +1068,21 @@ Optional: 🎥 Course Launch Zoom recording / transcript review → Due [not lis
     });
     updateProgress();
   }
+
+  function updateDeliverableStates(){
+    const rows = [...document.querySelectorAll('#s3 tr[data-deliverable-sync]')];
+    rows.forEach(row => {
+      const source = document.getElementById(row.dataset.deliverableSync);
+      row.classList.toggle('deliverable-complete', !!source && source.checked);
+    });
+    const tbody = document.querySelector('#s3 tbody');
+    if(tbody && rows.length){
+      const openRows = rows.filter(row => !row.classList.contains('deliverable-complete'));
+      const completeRows = rows.filter(row => row.classList.contains('deliverable-complete'));
+      [...openRows, ...completeRows].forEach(row => tbody.appendChild(row));
+    }
+  }
+
   function updateProgress(){
     const done = checks.filter(c => c.checked).length;
     const pct = checks.length ? (done/checks.length*100) + '%' : '0%';
@@ -1037,6 +1092,7 @@ Optional: 🎥 Course Launch Zoom recording / transcript review → Due [not lis
     document.querySelectorAll('.mobile-total-count').forEach(el => el.textContent = checks.length);
     document.querySelectorAll('.mobile-done-count').forEach(el => el.textContent = done);
     document.querySelectorAll('.mobile-bar').forEach(el => el.style.width = pct);
+    updateDeliverableStates();
   }
   checks.forEach(c => {
     c.addEventListener('change', () => {
@@ -1142,6 +1198,16 @@ Optional: 🎥 Course Launch Zoom recording / transcript review → Due [not lis
 
 
   const viewPrefix = storagePrefix + 'view_';
+  const sidebarCollapsedKey = viewPrefix + 'sidebarCollapsed';
+  function setSidebarCollapsed(collapsed){
+    document.body.classList.toggle('sidebar-collapsed', collapsed);
+    localStorage.setItem(sidebarCollapsedKey, collapsed ? '1' : '0');
+    document.getElementById('sidebarHideBtn')?.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+    document.getElementById('sidebarShowBtn')?.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+  }
+  function loadSidebarState(){
+    setSidebarCollapsed(localStorage.getItem(sidebarCollapsedKey) === '1');
+  }
   const mainSections = [...document.querySelectorAll('section.card[id]')];
   const mainDetails = mainSections.map(sec => sec.querySelector(':scope > details')).filter(Boolean);
   mainDetails.forEach(d => { d.dataset.defaultOpen = d.open ? '1' : '0'; });
@@ -1176,6 +1242,14 @@ Optional: 🎥 Course Launch Zoom recording / transcript review → Due [not lis
       setTimeout(()=>sec.scrollIntoView({behavior:'smooth', block:'start'}), 40);
     }
   }
+  function sectionIcon(type){
+    const icons = {
+      visible: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.6"></circle></svg>',
+      hidden: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"></path><path d="M10.6 5.2A10.8 10.8 0 0 1 12 5c6 0 9.5 7 9.5 7a18.1 18.1 0 0 1-3.2 4.2"></path><path d="M6.7 6.8C3.9 8.6 2.5 12 2.5 12s3.5 7 9.5 7a9.7 9.7 0 0 0 4.1-.9"></path><path d="M9.7 9.7a3.25 3.25 0 0 0 4.6 4.6"></path></svg>',
+      locked: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5.5" y="10" width="13" height="10" rx="2"></rect><path d="M8.5 10V7.8a3.5 3.5 0 0 1 7 0V10"></path></svg>'
+    };
+    return icons[type] || icons.visible;
+  }
   function updateNavHiddenState(){
     const hidden = getHiddenSections();
     document.querySelectorAll('.nav-row[data-section]').forEach(row => {
@@ -1185,12 +1259,12 @@ Optional: 🎥 Course Launch Zoom recording / transcript review → Due [not lis
       const btn = row.querySelector('.section-eye');
       if(btn){
         if(id === 's5'){
-          btn.textContent = '🔒';
+          btn.innerHTML = sectionIcon('locked');
           btn.title = 'Core checklist stays visible';
           btn.setAttribute('aria-label','Core checklist stays visible');
           btn.disabled = true;
         } else {
-          btn.textContent = isHidden ? '🙈' : '👁';
+          btn.innerHTML = sectionIcon(isHidden ? 'hidden' : 'visible');
           btn.title = isHidden ? 'Show section' : 'Hide section';
           btn.setAttribute('aria-label', isHidden ? 'Show section' : 'Hide section');
           btn.disabled = false;
@@ -1297,6 +1371,8 @@ Optional: 🎥 Course Launch Zoom recording / transcript review → Due [not lis
   }
   function resetView(){
     localStorage.removeItem(viewPrefix + 'hiddenSections');
+    localStorage.removeItem(sidebarCollapsedKey);
+    setSidebarCollapsed(false);
     mainDetails.forEach(d => {
       const sec = d.closest('section.card[id]');
       d.open = d.dataset.defaultOpen === '1';
@@ -1320,6 +1396,9 @@ Optional: 🎥 Course Launch Zoom recording / transcript review → Due [not lis
     document.getElementById('expandAllBtn')?.addEventListener('click', expandAll);
     document.getElementById('collapseAllBtn')?.addEventListener('click', collapseAll);
     document.getElementById('viewResetBtn')?.addEventListener('click', resetView);
+    document.getElementById('sidebarHideBtn')?.addEventListener('click', () => setSidebarCollapsed(true));
+    document.getElementById('sidebarShowBtn')?.addEventListener('click', () => setSidebarCollapsed(false));
+    loadSidebarState();
   }
 
   initViewControls();
