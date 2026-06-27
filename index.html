@@ -290,6 +290,47 @@
   .week-switcher select{width:100%;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);padding:9px 10px;font-weight:800;font-size:.9rem;box-shadow:0 2px 8px rgba(0,0,0,.035)}
   .week-switcher select:focus{outline:2px solid rgba(107,143,113,.22);border-color:var(--accent)}
   .mobile-drawer .week-switcher{margin-top:8px;max-width:230px}
+
+
+  /* View controls, sidebar hide toggles, and inner-card collapse */
+  .dashboard-controls{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:-6px 0 18px;padding:13px 14px;border:1px solid var(--line);border-radius:18px;background:rgba(255,253,248,.82);box-shadow:0 6px 18px rgba(60,47,35,.055)}
+  .control-copy{display:grid;gap:2px;min-width:0}
+  .control-copy strong{font-size:.94rem}
+  .control-copy span{color:var(--muted);font-size:.86rem;line-height:1.35}
+  .control-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+  .nav-row{display:grid;grid-template-columns:minmax(0,1fr) 32px;align-items:center;gap:4px;border-radius:12px;margin:2px 0}
+  .nav-row > a{min-width:0;margin:0}
+  .side-nav .nav-row > a{display:block;padding:9px 10px;border-radius:12px;color:var(--muted);font-size:.91rem}
+  .side-nav .nav-row:hover,.side-nav .nav-row:focus-within{background:rgba(238,244,239,.55)}
+  .section-eye{width:30px;height:30px;border:0;border-radius:10px;background:transparent;color:var(--muted);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;opacity:0;transition:opacity .16s ease, background .16s ease, color .16s ease;font-size:.94rem}
+  .nav-row:hover .section-eye,.nav-row:focus-within .section-eye,.nav-row.is-hidden .section-eye{opacity:1}
+  .section-eye:hover{background:#fff;color:var(--ink)}
+  .section-eye[disabled]{opacity:.35;cursor:not-allowed}
+  .nav-row.is-hidden > a{opacity:.52;font-style:italic}
+  .nav-row.is-hidden > a::after{content:" hidden";font-size:.72rem;font-style:normal;color:var(--muted);margin-left:5px}
+  section.card.section-hidden{display:none}
+  .copybox.collapsible .copyhead{cursor:pointer}
+  .copybox.collapsible .copyhead > div{min-width:0;flex:1}
+  .inner-caret{border:1px solid var(--line);background:#fff;border-radius:10px;min-width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-weight:900;transition:transform .16s ease, background .16s ease;margin-right:0}
+  .inner-caret:hover{background:#f9f6ef;color:var(--ink)}
+  .copybox.collapsed .copybody{display:none}
+  .copybox.collapsed .inner-caret{transform:rotate(-90deg)}
+  .copybox.collapsed .copyhead{border-bottom:none}
+  @media (max-width:900px){
+    .dashboard-controls{flex-direction:column;align-items:stretch;margin:0 0 14px;padding:12px;border-radius:16px}
+    .control-actions{justify-content:flex-start}
+    .control-actions .btn{flex:1 1 auto}
+    .mobile-drawer nav .nav-row{grid-template-columns:minmax(0,1fr) 38px;gap:5px;margin:2px 0}
+    .mobile-drawer nav .nav-row > a{display:flex;align-items:center;min-height:42px;padding:9px 10px;margin:0;border-radius:12px;color:var(--muted);font-size:.91rem;font-weight:760}
+    .mobile-drawer nav .nav-row.active > a,
+    .mobile-drawer nav .nav-row > a.active,
+    .mobile-drawer nav .nav-row > a:hover{background:var(--soft);color:var(--ink);text-decoration:none}
+    .mobile-drawer .section-eye{opacity:1;width:38px;height:38px;background:#fff;border:1px solid var(--line);font-size:.9rem}
+    .mobile-drawer .nav-row.is-hidden > a{opacity:.55}
+    .copybox.collapsible .copyhead{display:grid;grid-template-columns:30px minmax(0,1fr);align-items:start}
+    .copybox.collapsible .copyhead .copy{grid-column:2;justify-self:start;margin-top:4px}
+  }
+
 </style>
 <link href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Ctext%20y%3D%27.9em%27%20font-size%3D%2790%27%3E%F0%9F%93%8B%3C/text%3E%3C/svg%3E" rel="icon"/></head>
 <body>
@@ -338,6 +379,18 @@
 <span class="pill">🧠 Concept-first notes</span>
 </div>
 </div>
+<div class="dashboard-controls" aria-label="Dashboard view controls">
+  <div class="control-copy">
+    <strong>View controls</strong>
+    <span>Collapse sections, quiet what you do not need, and bring everything back without affecting checklist progress.</span>
+  </div>
+  <div class="control-actions">
+    <button class="btn small" id="expandAllBtn" type="button">Expand all</button>
+    <button class="btn small" id="collapseAllBtn" type="button">Collapse all</button>
+    <button class="btn small" id="viewResetBtn" type="button">Reset view</button>
+  </div>
+</div>
+
 <section class="card" id="s1"><details open=""><summary>1. 🧭 Mode Recommendation <span class="chev">›</span></summary><div class="content">
 <p><strong>Recommended mode:</strong> Full Mode.</p>
 <p><strong>Why:</strong> Week 1 combines conceptual grounding, responsible-use policy, model-bias testing, a reading memo, peer engagement, and Assignment 1 setup. Full Mode is useful because it gives you the full map without forcing you to make a separate system.</p>
@@ -1023,6 +1076,12 @@ Optional: 🎥 Course Launch Zoom recording / transcript review → Due [not lis
   function goToNextUnchecked(){
     const next = checks.find(c => !c.checked);
     if(next){
+      const sec = next.closest('section.card[id]');
+      if(sec && sec.classList.contains('section-hidden')){
+        sec.classList.remove('section-hidden');
+        saveHiddenSections(getHiddenSections().filter(x => x !== sec.id));
+        updateNavHiddenState();
+      }
       closeMobileNav();
       next.closest('details')?.setAttribute('open','open');
       next.scrollIntoView({behavior:'smooth', block:'center'});
@@ -1034,6 +1093,12 @@ Optional: 🎥 Course Launch Zoom recording / transcript review → Due [not lis
   function jumpToSection(selector){
     const target = document.querySelector(selector);
     if(target){
+      if(target.classList?.contains('section-hidden')){
+        target.classList.remove('section-hidden');
+        const hiddenIds = getHiddenSections().filter(x => x !== target.id);
+        saveHiddenSections(hiddenIds);
+        updateNavHiddenState();
+      }
       closeMobileNav();
       target.closest('details')?.setAttribute('open','open');
       target.scrollIntoView({behavior:'smooth', block:'start'});
@@ -1074,6 +1139,190 @@ Optional: 🎥 Course Launch Zoom recording / transcript review → Due [not lis
       }
     });
   });
+
+
+  const viewPrefix = storagePrefix + 'view_';
+  const mainSections = [...document.querySelectorAll('section.card[id]')];
+  const mainDetails = mainSections.map(sec => sec.querySelector(':scope > details')).filter(Boolean);
+  mainDetails.forEach(d => { d.dataset.defaultOpen = d.open ? '1' : '0'; });
+
+  function getHiddenSections(){
+    try{return JSON.parse(localStorage.getItem(viewPrefix + 'hiddenSections') || '[]');}
+    catch(e){return []}
+  }
+  function saveHiddenSections(ids){
+    localStorage.setItem(viewPrefix + 'hiddenSections', JSON.stringify([...new Set(ids)]));
+  }
+  function setSectionHidden(id, hidden){
+    if(id === 's5' && hidden){
+      showToast('Checklist stays visible');
+      return;
+    }
+    const sec = document.getElementById(id);
+    if(!sec) return;
+    const hiddenIds = getHiddenSections().filter(x => x !== id);
+    if(hidden) hiddenIds.push(id);
+    saveHiddenSections(hiddenIds);
+    sec.classList.toggle('section-hidden', hidden);
+    updateNavHiddenState();
+  }
+  function restoreAndJump(id){
+    setSectionHidden(id, false);
+    const sec = document.getElementById(id);
+    if(sec){
+      sec.querySelector(':scope > details')?.setAttribute('open','open');
+      localStorage.setItem(viewPrefix + 'open_' + id, '1');
+      closeMobileNav();
+      setTimeout(()=>sec.scrollIntoView({behavior:'smooth', block:'start'}), 40);
+    }
+  }
+  function updateNavHiddenState(){
+    const hidden = getHiddenSections();
+    document.querySelectorAll('.nav-row[data-section]').forEach(row => {
+      const id = row.dataset.section;
+      const isHidden = hidden.includes(id);
+      row.classList.toggle('is-hidden', isHidden);
+      const btn = row.querySelector('.section-eye');
+      if(btn){
+        if(id === 's5'){
+          btn.textContent = '🔒';
+          btn.title = 'Core checklist stays visible';
+          btn.setAttribute('aria-label','Core checklist stays visible');
+          btn.disabled = true;
+        } else {
+          btn.textContent = isHidden ? '🙈' : '👁';
+          btn.title = isHidden ? 'Show section' : 'Hide section';
+          btn.setAttribute('aria-label', isHidden ? 'Show section' : 'Hide section');
+          btn.disabled = false;
+        }
+      }
+    });
+  }
+  function applyHiddenSections(){
+    const hidden = getHiddenSections();
+    mainSections.forEach(sec => sec.classList.toggle('section-hidden', hidden.includes(sec.id)));
+    updateNavHiddenState();
+  }
+  function saveOpenState(detailsEl){
+    const sec = detailsEl.closest('section.card[id]');
+    if(sec) localStorage.setItem(viewPrefix + 'open_' + sec.id, detailsEl.open ? '1' : '0');
+  }
+  function loadOpenStates(){
+    mainDetails.forEach(d => {
+      const sec = d.closest('section.card[id]');
+      if(!sec) return;
+      const saved = localStorage.getItem(viewPrefix + 'open_' + sec.id);
+      if(saved === '1') d.open = true;
+      if(saved === '0') d.open = false;
+    });
+  }
+  mainDetails.forEach(d => d.addEventListener('toggle', () => saveOpenState(d)));
+
+  function wrapNavWithEyes(){
+    document.querySelectorAll('#nav a[href^="#"], #mobileNav a[href^="#"]').forEach(a => {
+      if(a.closest('.nav-row')) return;
+      const id = (a.getAttribute('href') || '').replace('#','');
+      const row = document.createElement('div');
+      row.className = 'nav-row';
+      row.dataset.section = id;
+      const btn = document.createElement('button');
+      btn.className = 'section-eye';
+      btn.type = 'button';
+      a.parentNode.insertBefore(row, a);
+      row.appendChild(a);
+      row.appendChild(btn);
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        const isHidden = getHiddenSections().includes(id);
+        setSectionHidden(id, !isHidden);
+      });
+      a.addEventListener('click', e => {
+        if(getHiddenSections().includes(id)){
+          e.preventDefault();
+          restoreAndJump(id);
+        }
+      });
+    });
+    updateNavHiddenState();
+  }
+
+  function initInnerCollapse(){
+    document.querySelectorAll('.copybox').forEach((box, index) => {
+      if(box.classList.contains('collapsible')) return;
+      const head = box.querySelector('.copyhead');
+      const body = box.querySelector('.copybody');
+      if(!head || !body) return;
+      const key = viewPrefix + 'inner_' + (body.id || index);
+      box.classList.add('collapsible');
+      const caret = document.createElement('button');
+      caret.type = 'button';
+      caret.className = 'inner-caret';
+      caret.textContent = '▾';
+      caret.setAttribute('aria-label','Collapse or expand this card');
+      head.insertBefore(caret, head.firstChild);
+      function setCollapsed(collapsed){
+        box.classList.toggle('collapsed', collapsed);
+        localStorage.setItem(key, collapsed ? '1' : '0');
+        caret.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+      }
+      setCollapsed(localStorage.getItem(key) === '1');
+      head.addEventListener('click', e => {
+        if(e.target.closest('.copy')) return;
+        setCollapsed(!box.classList.contains('collapsed'));
+      });
+    });
+  }
+
+  function expandAll(){
+    mainSections.forEach(sec => setSectionHidden(sec.id, false));
+    mainDetails.forEach(d => { d.open = true; saveOpenState(d); });
+    document.querySelectorAll('.copybox.collapsible').forEach(box => {
+      box.classList.remove('collapsed');
+      const body = box.querySelector('.copybody');
+      if(body) localStorage.setItem(viewPrefix + 'inner_' + body.id, '0');
+      box.querySelector('.inner-caret')?.setAttribute('aria-expanded','true');
+    });
+    showToast('Expanded all');
+  }
+  function collapseAll(){
+    mainDetails.forEach(d => { d.open = false; saveOpenState(d); });
+    document.querySelectorAll('.copybox.collapsible').forEach(box => {
+      box.classList.add('collapsed');
+      const body = box.querySelector('.copybody');
+      if(body) localStorage.setItem(viewPrefix + 'inner_' + body.id, '1');
+      box.querySelector('.inner-caret')?.setAttribute('aria-expanded','false');
+    });
+    showToast('Collapsed all');
+  }
+  function resetView(){
+    localStorage.removeItem(viewPrefix + 'hiddenSections');
+    mainDetails.forEach(d => {
+      const sec = d.closest('section.card[id]');
+      d.open = d.dataset.defaultOpen === '1';
+      if(sec) localStorage.removeItem(viewPrefix + 'open_' + sec.id);
+    });
+    document.querySelectorAll('.copybox.collapsible').forEach(box => {
+      box.classList.remove('collapsed');
+      const body = box.querySelector('.copybody');
+      if(body) localStorage.removeItem(viewPrefix + 'inner_' + body.id);
+      box.querySelector('.inner-caret')?.setAttribute('aria-expanded','true');
+    });
+    applyHiddenSections();
+    showToast('View reset');
+  }
+
+  function initViewControls(){
+    wrapNavWithEyes();
+    initInnerCollapse();
+    loadOpenStates();
+    applyHiddenSections();
+    document.getElementById('expandAllBtn')?.addEventListener('click', expandAll);
+    document.getElementById('collapseAllBtn')?.addEventListener('click', collapseAll);
+    document.getElementById('viewResetBtn')?.addEventListener('click', resetView);
+  }
+
+  initViewControls();
 
   const links = [...document.querySelectorAll('nav a[href^="#"]')];
   links.forEach(a => {
