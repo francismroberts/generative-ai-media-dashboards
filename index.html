@@ -3082,26 +3082,8 @@ Recommend the strongest topic for me and explain why.</pre>
   updateMatTable();
 
   // ── Supabase Realtime ───────────────────────────────────
-  // Visible debug panel for mobile testing
-  function showDebug(msg) {
-    let panel = document.getElementById('realtimeDebug');
-    if (!panel) {
-      panel = document.createElement('div');
-      panel.id = 'realtimeDebug';
-      panel.style.cssText = 'position:fixed;bottom:80px;left:10px;right:10px;z-index:9998;background:rgba(28,25,23,.9);color:#fff;font-size:.72rem;font-family:monospace;padding:10px 12px;border-radius:10px;max-height:160px;overflow-y:auto;';
-      document.body.appendChild(panel);
-    }
-    const line = document.createElement('div');
-    line.textContent = new Date().toLocaleTimeString() + ' · ' + msg;
-    panel.appendChild(line);
-    panel.scrollTop = panel.scrollHeight;
-    // Auto-remove after 30 seconds of no new messages
-    clearTimeout(panel._hide);
-    panel._hide = setTimeout(() => panel.remove(), 30000);
-  }
   if (SB_ENABLED && window.supabase) {
     try {
-      showDebug('Supabase client found — connecting…');
       const sbClient = window.supabase.createClient(SB_URL, SB_KEY);
       sbClient
         .channel('checklist_sync')
@@ -3124,17 +3106,13 @@ Recommend the strongest topic for me and explain why.</pre>
           updateProgressUI();
           updateLivePills();
           updateMatTable();
-          showDebug('✓ Realtime update: ' + checkId + ' = ' + row.checked);
         })
         .subscribe(status => {
-          showDebug('Realtime status: ' + status);
           if (status === 'SUBSCRIBED') setSyncStatus('ok');
         });
     } catch(e) {
-      showDebug('Realtime error: ' + e.message);
+      console.warn('Realtime error:', e.message);
     }
-  } else {
-    showDebug('SB_ENABLED=' + SB_ENABLED + ' supabase=' + !!window.supabase);
   }
 
 })();
