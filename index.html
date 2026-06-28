@@ -775,6 +775,15 @@ input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); c
 /* Mobile drawer nav-eye always visible */
 .mobile-drawer .nav-eye { opacity: 1; }
 .mobile-drawer .nav-entry { grid-template-columns: 1fr 26px; }
+/* Mobile drawer nav hierarchy — indent entries under zone labels */
+.mobile-drawer #mobileNavList .nav-entry { margin-left: 8px; }
+.mobile-drawer #mobileNavList .nav-link { font-size: .8rem; }
+/* Zone label dividers in drawer — stronger visual weight */
+.mobile-drawer #mobileNavList [style*="text-transform:uppercase"] {
+  margin-top: 6px;
+  border-top: 1px solid var(--line);
+  padding-top: 8px;
+}
 .text-muted { color: var(--muted); }
 .text-sm { font-size: .82rem; }
 .mt-0 { margin-top: 0; }
@@ -2995,17 +3004,16 @@ Recommend the strongest topic for me and explain why.</pre>
         el.classList.toggle('section-hidden', zoneOff || individuallyHidden);
         el.classList.remove('zone-grayed'); // clean up old grayout if present
       });
-      // Gray out nav entries in sidebar (don't hide — keep them visible but inactive)
+      // Gray out nav entries in both sidebar and mobile drawer — never hide
       document.querySelectorAll(`.nav-entry[data-zone="${zone}"]`).forEach(el => {
         el.classList.toggle('zone-nav-grayed', zoneOff);
-        el.style.display = ''; // always keep nav entries visible
+        el.style.display = ''; // always visible, grayed when zone is off
       });
-      // Update zone button state
-      const btn = document.querySelector(`.zone-btn[data-zone="${zone}"]`);
-      if (btn) {
+      // Update ALL zone buttons with this zone (sidebar + drawer)
+      document.querySelectorAll(`.zone-btn[data-zone="${zone}"]`).forEach(btn => {
         btn.classList.toggle('active', !zoneOff);
         btn.classList.toggle('inactive', zoneOff);
-      }
+      });
     });
   }
 
