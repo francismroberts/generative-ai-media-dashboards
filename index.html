@@ -2329,28 +2329,34 @@ Recommend the strongest topic for me and explain why.</pre>
 
   const SB_WEEK = 'w1'; // change this for each new week
 
+  // Disable Supabase sync when running from file:// (browsers block cross-origin fetch)
+  const SB_ENABLED = window.location.protocol !== 'file:';
+
   async function sbUpsert(id, checked) {
+    if (!SB_ENABLED) return false;
     try {
       const res = await fetch(`${SB_URL}/rest/v1/checklist_state`, {
         method: 'POST',
         headers: { ...SB_HEADERS, 'Prefer': 'resolution=merge-duplicates' },
         body: JSON.stringify({ id: `${SB_WEEK}_${id}`, checked, updated_at: new Date().toISOString() }),
       });
+      if (!res.ok) console.warn('Supabase upsert failed:', res.status, await res.text());
       return res.ok;
-    } catch(e) { return false; }
+    } catch(e) { console.warn('Supabase upsert error:', e.message); return false; }
   }
 
   async function sbLoadAll() {
+    if (!SB_ENABLED) return null;
     try {
       const res = await fetch(`${SB_URL}/rest/v1/checklist_state?select=id,checked&id=like.${SB_WEEK}_%`, { headers: SB_HEADERS });
-      if (!res.ok) return null;
+      if (!res.ok) { console.warn('Supabase load failed:', res.status); return null; }
       const rows = await res.json();
-      // Strip the week prefix before returning so IDs match DOM elements
       return rows.map(r => ({ id: r.id.replace(`${SB_WEEK}_`, ''), checked: r.checked }));
-    } catch(e) { return null; }
+    } catch(e) { console.warn('Supabase load error:', e.message); return null; }
   }
 
   async function sbResetAll() {
+    if (!SB_ENABLED) return false;
     try {
       const rows = checks.map(c => ({ id: `${SB_WEEK}_${c.id}`, checked: false, updated_at: new Date().toISOString() }));
       const res = await fetch(`${SB_URL}/rest/v1/checklist_state`, {
@@ -2358,8 +2364,9 @@ Recommend the strongest topic for me and explain why.</pre>
         headers: { ...SB_HEADERS, 'Prefer': 'resolution=merge-duplicates' },
         body: JSON.stringify(rows),
       });
+      if (!res.ok) console.warn('Supabase reset failed:', res.status);
       return res.ok;
-    } catch(e) { return false; }
+    } catch(e) { console.warn('Supabase reset error:', e.message); return false; }
   }
 
   function saveCheck(c) {
@@ -2370,9 +2377,11 @@ Recommend the strongest topic for me and explain why.</pre>
       s.checked = val;
       save(STORAGE + s.id, val ? '1' : '0');
     });
-    // 2. Sync to Supabase in background
-    setSyncStatus('saving');
-    sbUpsert(c.id, c.checked).then(ok => setSyncStatus(ok ? 'ok' : 'err'));
+    // 2. Sync to Supabase in background (only when hosted, not file://)
+    if (SB_ENABLED) {
+      setSyncStatus('saving');
+      sbUpsert(c.id, c.checked).then(ok => setSyncStatus(ok ? 'ok' : 'err'));
+    }
   }
 
   async function loadChecks() {
@@ -2444,8 +2453,10 @@ Recommend the strongest topic for me and explain why.</pre>
     checks.forEach(c => { c.checked = false; save(STORAGE + c.id, '0'); });
     synced.forEach(s => { s.checked = false; save(STORAGE + s.id, '0'); });
     updateProgressUI();
-    setSyncStatus('saving');
-    sbResetAll().then(ok => setSyncStatus(ok ? 'ok' : 'err'));
+    if (SB_ENABLED) {
+      setSyncStatus('saving');
+      sbResetAll().then(ok => setSyncStatus(ok ? 'ok' : 'err'));
+    }
     toast('Progress reset');
   }
   document.getElementById('resetBtn')?.addEventListener('click', resetChecks);
