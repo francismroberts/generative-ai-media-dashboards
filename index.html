@@ -2355,13 +2355,17 @@ Recommend the strongest topic for me and explain why.</pre>
   async function sbLoadAll() {
     if (!SB_ENABLED) return null;
     try {
-      const url = `${SB_URL}/rest/v1/checklist_state?select=id,checked&id=like.${SB_WEEK}_%`;
+      const url = `${SB_URL}/rest/v1/checklist_state?select=id,checked`;
       const res = await fetch(url, { headers: SB_HEADERS });
       const text = await res.text();
       if (!res.ok) { console.warn('Supabase load failed:', res.status, text); return null; }
       const rows = JSON.parse(text);
-      console.log('Supabase loaded:', rows.length, 'rows');
-      return rows.map(r => ({ id: r.id.replace(`${SB_WEEK}_`, ''), checked: r.checked }));
+      // Filter client-side to this week's rows and strip the prefix
+      const weekRows = rows
+        .filter(r => r.id.startsWith(`${SB_WEEK}_`))
+        .map(r => ({ id: r.id.replace(`${SB_WEEK}_`, ''), checked: r.checked }));
+      console.log('Supabase loaded:', weekRows.length, 'rows for', SB_WEEK);
+      return weekRows;
     } catch(e) { console.warn('Supabase load error:', e.message); return null; }
   }
 
