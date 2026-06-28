@@ -2309,8 +2309,15 @@ Recommend the strongest topic for me and explain why.</pre>
 
   // ── Supabase sync ──────────────────────────────────────
   const SB_URL = 'https://rehhlaznyrsokjtbncen.supabase.co';
-  const SB_KEY = 'sb_publishable_nrdeeHHKWdKNPC9MOH2dPw_OaiG57V7';
-  const SB_HEADERS = { 'Content-Type': 'application/json', 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'X-Client-Info': 'dashboard/1.0' };
+  const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlaGhsYXpueXJzb2tqdGJuY2VuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI2MTYxMTQsImV4cCI6MjA5ODE5MjExNH0.3dK_jo9ekSk8EMR5_CT_bTWJYcJ6oGRPJNNtB2FNmmg';
+  const SB_HEADERS = {
+    'Content-Type': 'application/json',
+    'apikey': SB_KEY,
+    'Authorization': 'Bearer ' + SB_KEY,
+  };
+
+  // Disable Supabase sync when running from file:// (browsers block cross-origin fetch)
+  const SB_ENABLED = window.location.protocol !== 'file:';
 
   // Show a subtle sync indicator in the progress block
   function setSyncStatus(state) {
@@ -2329,18 +2336,18 @@ Recommend the strongest topic for me and explain why.</pre>
 
   const SB_WEEK = 'w1'; // change this for each new week
 
-  // Disable Supabase sync when running from file:// (browsers block cross-origin fetch)
-  const SB_ENABLED = window.location.protocol !== 'file:';
-
   async function sbUpsert(id, checked) {
     if (!SB_ENABLED) return false;
     try {
+      const body = JSON.stringify({ id: `${SB_WEEK}_${id}`, checked, updated_at: new Date().toISOString() });
       const res = await fetch(`${SB_URL}/rest/v1/checklist_state`, {
         method: 'POST',
         headers: { ...SB_HEADERS, 'Prefer': 'resolution=merge-duplicates' },
-        body: JSON.stringify({ id: `${SB_WEEK}_${id}`, checked, updated_at: new Date().toISOString() }),
+        body,
       });
-      if (!res.ok) console.warn('Supabase upsert failed:', res.status, await res.text());
+      const text = await res.text();
+      if (!res.ok) console.warn('Supabase upsert failed:', res.status, text);
+      else console.log('Supabase upsert ok:', `${SB_WEEK}_${id}`, checked);
       return res.ok;
     } catch(e) { console.warn('Supabase upsert error:', e.message); return false; }
   }
@@ -2348,9 +2355,12 @@ Recommend the strongest topic for me and explain why.</pre>
   async function sbLoadAll() {
     if (!SB_ENABLED) return null;
     try {
-      const res = await fetch(`${SB_URL}/rest/v1/checklist_state?select=id,checked&id=like.${SB_WEEK}_%`, { headers: SB_HEADERS });
-      if (!res.ok) { console.warn('Supabase load failed:', res.status); return null; }
-      const rows = await res.json();
+      const url = `${SB_URL}/rest/v1/checklist_state?select=id,checked&id=like.${SB_WEEK}_%`;
+      const res = await fetch(url, { headers: SB_HEADERS });
+      const text = await res.text();
+      if (!res.ok) { console.warn('Supabase load failed:', res.status, text); return null; }
+      const rows = JSON.parse(text);
+      console.log('Supabase loaded:', rows.length, 'rows');
       return rows.map(r => ({ id: r.id.replace(`${SB_WEEK}_`, ''), checked: r.checked }));
     } catch(e) { console.warn('Supabase load error:', e.message); return null; }
   }
@@ -2364,7 +2374,7 @@ Recommend the strongest topic for me and explain why.</pre>
         headers: { ...SB_HEADERS, 'Prefer': 'resolution=merge-duplicates' },
         body: JSON.stringify(rows),
       });
-      if (!res.ok) console.warn('Supabase reset failed:', res.status);
+      if (!res.ok) console.warn('Supabase reset failed:', res.status, await res.text());
       return res.ok;
     } catch(e) { console.warn('Supabase reset error:', e.message); return false; }
   }
