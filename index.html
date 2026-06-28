@@ -108,7 +108,17 @@ strong { font-weight: 700; }
 }
 
 /* Week switcher — hidden until multiple weeks exist */
-.week-switcher { display: none; }
+.week-switcher { margin-top: 8px; }
+.week-switcher select {
+  width: 100%; border: 1px solid var(--line); border-radius: var(--r-sm);
+  background: var(--surface2); color: var(--ink); padding: 5px 8px;
+  font-size: .76rem; font-weight: 600;
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2378716c' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 8px center;
+  padding-right: 26px; cursor: pointer;
+}
+.week-switcher select:focus { outline: 2px solid var(--accent-mid); outline-offset: 1px; }
 
 /* Progress block */
 .progress-block {
@@ -762,7 +772,9 @@ input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); c
   .hero.is-stuck h2 { font-size: .86rem; }
 }
 
-/* ─── MISC UTILS ─── */
+/* Mobile drawer nav-eye always visible */
+.mobile-drawer .nav-eye { opacity: 1; }
+.mobile-drawer .nav-entry { grid-template-columns: 1fr 26px; }
 .text-muted { color: var(--muted); }
 .text-sm { font-size: .82rem; }
 .mt-0 { margin-top: 0; }
@@ -1887,12 +1899,18 @@ Recommend the strongest topic for me and explain why.</pre>
 <div class="mobile-backdrop" id="mobileBackdrop"></div>
 <div class="mobile-drawer" id="mobileDrawer" aria-label="Mobile navigation" role="dialog">
   <div class="mobile-drawer-head">
-    <div>
+    <div style="flex:1;min-width:0;">
       <div style="font-size:.67rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);">GenAI &amp; the Media</div>
       <div style="font-weight:700;font-size:.92rem;margin:2px 0;">🧠 Francis Roberts</div>
-      <div style="font-size:.76rem;color:var(--muted);">Week 1 · Navigation</div>
+      <select data-week-switch style="margin-top:5px;width:100%;border:1px solid var(--line);border-radius:8px;background:var(--surface2);color:var(--ink);padding:5px 8px;font-size:.78rem;font-weight:600;appearance:none;-webkit-appearance:none;" aria-label="Switch week">
+        <option value="dashboard-week1.html" selected>Week 1</option>
+        <option disabled value="">Week 2 — coming soon</option>
+        <option disabled value="">Week 3 — coming soon</option>
+        <option disabled value="">Week 4 — coming soon</option>
+        <option disabled value="">Week 5 — coming soon</option>
+      </select>
     </div>
-    <button class="mobile-close-btn" id="mobileCloseBtn" aria-label="Close navigation">×</button>
+    <button class="mobile-close-btn" id="mobileCloseBtn" aria-label="Close navigation" style="margin-left:10px;flex-shrink:0;">×</button>
   </div>
 
   <div class="progress-block" id="mProgressBlock">
@@ -1916,27 +1934,27 @@ Recommend the strongest topic for me and explain why.</pre>
     </div>
   </div>
 
-  <nav style="display:flex;flex-direction:column;gap:1px;" aria-label="Mobile section navigation">
+  <nav id="mobileNavList" style="display:flex;flex-direction:column;gap:1px;" aria-label="Mobile section navigation">
     <div style="font-size:.64rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:4px 6px 2px;">📋 Briefing</div>
-    <a class="nav-link" href="#s1" style="border-radius:8px;"><span class="nav-icon">🧭</span><span>1. How to approach this week</span></a>
-    <a class="nav-link" href="#s2" style="border-radius:8px;"><span class="nav-icon">🔎</span><span>2. Inputs check</span></a>
-    <a class="nav-link" href="#s8" style="border-radius:8px;"><span class="nav-icon">📆</span><span>3. Weekly workback plan</span></a>
-    <a class="nav-link" href="#s15" style="border-radius:8px;"><span class="nav-icon">✅</span><span>4. Google Tasks list</span></a>
-    <a class="nav-link" href="#s14" style="border-radius:8px;"><span class="nav-icon">🚀</span><span>5. First 3 actions</span></a>
+    <div class="nav-entry" data-section="s1" data-zone="briefing" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s1" style="font-size:.8rem;"><span class="nav-icon">🧭</span><span class="nav-text">1. How to approach this week</span></a><button class="nav-eye" data-eye="s1" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div class="nav-entry" data-section="s2" data-zone="briefing" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s2" style="font-size:.8rem;"><span class="nav-icon">🔎</span><span class="nav-text">2. Inputs check</span></a><button class="nav-eye" data-eye="s2" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div class="nav-entry" data-section="s8" data-zone="briefing" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s8" style="font-size:.8rem;"><span class="nav-icon">📆</span><span class="nav-text">3. Weekly workback plan</span></a><button class="nav-eye" data-eye="s8" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div class="nav-entry" data-section="s15" data-zone="briefing" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s15" style="font-size:.8rem;"><span class="nav-icon">✅</span><span class="nav-text">4. Google Tasks list</span></a><button class="nav-eye" data-eye="s15" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div class="nav-entry" data-section="s14" data-zone="briefing" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s14" style="font-size:.8rem;"><span class="nav-icon">🚀</span><span class="nav-text">5. First 3 actions</span></a><button class="nav-eye" data-eye="s14" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
     <div style="font-size:.64rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:6px 6px 2px;">⚡ Execution</div>
-    <a class="nav-link" href="#s3" style="border-radius:8px;"><span class="nav-icon">📅</span><span>6. Deliverables</span></a>
-    <a class="nav-link" href="#s5" style="border-radius:8px;"><span class="nav-icon">📌</span><span>7. Weekly checklist</span></a>
-    <a class="nav-link" href="#s6" style="border-radius:8px;"><span class="nav-icon">🗂️</span><span>8. Study materials guide</span></a>
-    <a class="nav-link" href="#s12" style="border-radius:8px;"><span class="nav-icon">🧩</span><span>9. Activity guide</span></a>
-    <a class="nav-link" href="#s4" style="border-radius:8px;"><span class="nav-icon">🧪</span><span>10. Assignment workback</span></a>
-    <a class="nav-link" href="#s13" style="border-radius:8px;"><span class="nav-icon">💬</span><span>11. Peer response guide</span></a>
+    <div class="nav-entry" data-section="s3" data-zone="execution" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s3" style="font-size:.8rem;"><span class="nav-icon">📅</span><span class="nav-text">6. Deliverables</span></a><button class="nav-eye" data-eye="s3" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div class="nav-entry" data-section="s5" data-zone="execution" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s5" style="font-size:.8rem;"><span class="nav-icon">📌</span><span class="nav-text">7. Weekly checklist</span></a><button class="nav-eye" data-eye="s5" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div class="nav-entry" data-section="s6" data-zone="execution" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s6" style="font-size:.8rem;"><span class="nav-icon">🗂️</span><span class="nav-text">8. Study materials guide</span></a><button class="nav-eye" data-eye="s6" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div class="nav-entry" data-section="s12" data-zone="execution" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s12" style="font-size:.8rem;"><span class="nav-icon">🧩</span><span class="nav-text">9. Activity guide</span></a><button class="nav-eye" data-eye="s12" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div class="nav-entry" data-section="s4" data-zone="execution" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s4" style="font-size:.8rem;"><span class="nav-icon">🧪</span><span class="nav-text">10. Assignment workback</span></a><button class="nav-eye" data-eye="s4" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div class="nav-entry" data-section="s13" data-zone="execution" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s13" style="font-size:.8rem;"><span class="nav-icon">💬</span><span class="nav-text">11. Peer response guide</span></a><button class="nav-eye" data-eye="s13" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
     <div style="font-size:.64rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:6px 6px 2px;">📚 Reference</div>
-    <a class="nav-link" href="#s9" style="border-radius:8px;"><span class="nav-icon">🧠</span><span>12. Big ideas</span></a>
-    <a class="nav-link" href="#s10" style="border-radius:8px;"><span class="nav-icon">📓</span><span>13. Master notes</span></a>
-    <a class="nav-link" href="#s7" style="border-radius:8px;"><span class="nav-icon">🛠️</span><span>14. AI tool workflow</span></a>
-    <a class="nav-link" href="#s11" style="border-radius:8px;"><span class="nav-icon">🤖</span><span>15. NotebookLM prompts</span></a>
-    <a class="nav-link" href="#s16" style="border-radius:8px;"><span class="nav-icon">📝</span><span>16. Reading memo guide</span></a>
-    <a class="nav-link" href="#s17" style="border-radius:8px;"><span class="nav-icon">🌐</span><span>17. Outside resources</span></a>
+    <div class="nav-entry" data-section="s9" data-zone="reference" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s9" style="font-size:.8rem;"><span class="nav-icon">🧠</span><span class="nav-text">12. Big ideas</span></a><button class="nav-eye" data-eye="s9" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div class="nav-entry" data-section="s10" data-zone="reference" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s10" style="font-size:.8rem;"><span class="nav-icon">📓</span><span class="nav-text">13. Master notes</span></a><button class="nav-eye" data-eye="s10" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div class="nav-entry" data-section="s7" data-zone="reference" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s7" style="font-size:.8rem;"><span class="nav-icon">🛠️</span><span class="nav-text">14. AI tool workflow</span></a><button class="nav-eye" data-eye="s7" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div class="nav-entry" data-section="s11" data-zone="reference" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s11" style="font-size:.8rem;"><span class="nav-icon">🤖</span><span class="nav-text">15. NotebookLM prompts</span></a><button class="nav-eye" data-eye="s11" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div class="nav-entry" data-section="s16" data-zone="reference" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s16" style="font-size:.8rem;"><span class="nav-icon">📝</span><span class="nav-text">16. Reading memo guide</span></a><button class="nav-eye" data-eye="s16" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div class="nav-entry" data-section="s17" data-zone="reference" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s17" style="font-size:.8rem;"><span class="nav-icon">🌐</span><span class="nav-text">17. Outside resources</span></a><button class="nav-eye" data-eye="s17" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
   </nav>
 
   <div>
@@ -2019,53 +2037,51 @@ Recommend the strongest topic for me and explain why.</pre>
     const pct = total ? Math.round(done / total * 100) : 0;
     const pctStr = pct + '%';
 
-    // Bar width + color — interpolate through rose→amber→teal→sage→green
+    // Shared color interpolation — traffic-light scale used everywhere
+    const STOPS = [
+      [0,   204, 102, 85],
+      [10,  210, 120, 80],
+      [20,  214, 140, 80],
+      [30,  218, 160, 85],
+      [40,  220, 185, 90],
+      [50,  210, 200, 100],
+      [60,  190, 205, 105],
+      [70,  160, 200, 105],
+      [80,  120, 185, 100],
+      [90,  80,  165, 90],
+      [100, 50,  140, 75],
+    ];
+    function progressColor(p) {
+      let r = STOPS[0][1], g = STOPS[0][2], b = STOPS[0][3];
+      for (let i = 0; i < STOPS.length - 1; i++) {
+        const [t0,r0,g0,b0] = STOPS[i];
+        const [t1,r1,g1,b1] = STOPS[i+1];
+        if (p >= t0 && p <= t1) {
+          const ratio = (p - t0) / (t1 - t0);
+          r = Math.round(r0 + (r1-r0)*ratio);
+          g = Math.round(g0 + (g1-g0)*ratio);
+          b = Math.round(b0 + (b1-b0)*ratio);
+          break;
+        } else if (p > t1) { r=r1; g=g1; b=b1; }
+      }
+      return `rgb(${r},${g},${b})`;
+    }
+    const barColor = pct > 0 ? progressColor(pct) : 'var(--line2)';
+
+    // Bar width + color
     if (progressBar) {
       progressBar.style.width = pctStr;
-      // Color stops matching traffic-light scale (red→orange→yellow→yellow-green→green)
-      const stops = [
-        [0,   204, 102, 85],   // #cc6655  muted rose-red       0%
-        [10,  210, 120, 80],   // #d27850  red-orange           10%
-        [20,  214, 140, 80],   // #d68c50  orange               20%
-        [30,  218, 160, 85],   // #daa055  amber-orange         30%
-        [40,  220, 185, 90],   // #dcb95a  warm yellow-amber    40%
-        [50,  210, 200, 100],  // #d2c864  yellow               50%
-        [60,  190, 205, 105],  // #becd69  yellow-green         60%
-        [70,  160, 200, 105],  // #a0c869  light sage-green     70%
-        [80,  120, 185, 100],  // #78b964  medium green         80%
-        [90,  80,  165, 90],   // #50a55a  strong green         90%
-        [100, 50,  140, 75],   // #328c4b  deep rich green     100%
-      ];
-      let r = stops[0][1], g = stops[0][2], b = stops[0][3];
-      for (let i = 0; i < stops.length - 1; i++) {
-        const [t0, r0, g0, b0] = stops[i];
-        const [t1, r1, g1, b1] = stops[i + 1];
-        if (pct >= t0 && pct <= t1) {
-          const ratio = (pct - t0) / (t1 - t0);
-          r = Math.round(r0 + (r1 - r0) * ratio);
-          g = Math.round(g0 + (g1 - g0) * ratio);
-          b = Math.round(b0 + (b1 - b0) * ratio);
-          break;
-        } else if (pct > t1) {
-          r = r1; g = g1; b = b1;
-        }
-      }
-      progressBar.style.background = `rgb(${r},${g},${b})`;
+      progressBar.style.background = barColor;
     }
 
-    // Percentage label color — matches bar stage
+    // Percentage label — exact same color as bar
     const pctEl = document.getElementById('progressPct');
     if (pctEl) {
       pctEl.textContent = pct > 0 ? `· ${pctStr}` : '';
-      if      (pct === 100) pctEl.style.color = '#328c4b';
-      else if (pct >= 80)   pctEl.style.color = '#50a55a';
-      else if (pct >= 60)   pctEl.style.color = '#78965a';
-      else if (pct >= 40)   pctEl.style.color = '#a08030';
-      else if (pct >= 10)   pctEl.style.color = '#b05030';
-      else                  pctEl.style.color = 'var(--muted)';
+      pctEl.style.color = pct > 0 ? barColor : 'var(--muted)';
     }
 
-    // Progress block border — tracks same stages as bar color
+    // Progress block border stage
     const block = document.getElementById('progressBlock');
     if (block) {
       block.classList.remove('progress-stage-red','progress-stage-amber','progress-stage-teal','progress-stage-sage','progress-stage-done');
@@ -2081,8 +2097,10 @@ Recommend the strongest topic for me and explain why.</pre>
     if (totalCount) totalCount.textContent = total;
     document.querySelectorAll('.m-done').forEach(el => el.textContent = done);
     document.querySelectorAll('.m-total').forEach(el => el.textContent = total);
+    // Mobile bar — same color as main bar
     document.querySelectorAll('.m-bar').forEach(el => {
       el.style.width = pctStr;
+      el.style.background = barColor;
     });
 
     // Remaining time — midpoint of each effort range for unchecked items
@@ -2916,15 +2934,22 @@ Recommend the strongest topic for me and explain why.</pre>
     const done  = checks.filter(c => c.checked).length;
     const total = checks.length;
     const next  = checks.find(c => !c.checked);
+    const pct   = total ? Math.round(done / total * 100) : 0;
 
-    // Progress pill
+    // Progress pill — dot color matches bar exactly
     const pillProgressText = document.getElementById('pillProgressText');
     const pillProgress = document.getElementById('pillProgress');
     if (pillProgressText) pillProgressText.textContent = `${done} of ${total} done`;
     if (pillProgress) {
       const dot = pillProgress.querySelector('.pill-progress-fill');
-      if (dot) dot.style.background = done === total ? 'var(--sage)' : 'var(--accent)';
-      pillProgress.classList.toggle('pill-done', done === total);
+      if (dot) {
+        // Reuse same stop logic as updateProgressUI
+        const STOPS = [[0,204,102,85],[10,210,120,80],[20,214,140,80],[30,218,160,85],[40,220,185,90],[50,210,200,100],[60,190,205,105],[70,160,200,105],[80,120,185,100],[90,80,165,90],[100,50,140,75]];
+        let r=STOPS[0][1],g=STOPS[0][2],b=STOPS[0][3];
+        for(let i=0;i<STOPS.length-1;i++){const[t0,r0,g0,b0]=STOPS[i];const[t1,r1,g1,b1]=STOPS[i+1];if(pct>=t0&&pct<=t1){const ratio=(pct-t0)/(t1-t0);r=Math.round(r0+(r1-r0)*ratio);g=Math.round(g0+(g1-g0)*ratio);b=Math.round(b0+(b1-b0)*ratio);break;}else if(pct>t1){r=r1;g=g1;b=b1;}}
+        dot.style.background = pct > 0 ? `rgb(${r},${g},${b})` : 'var(--muted)';
+      }
+      pillProgress.classList.toggle('pill-done', pct === 100);
     }
 
     // Next pill
@@ -3057,7 +3082,6 @@ Recommend the strongest topic for me and explain why.</pre>
   updateMatTable();
 
   // ── Supabase Realtime ───────────────────────────────────
-  // Subscribe to live changes so all devices update instantly
   if (SB_ENABLED && window.supabase) {
     try {
       const sbClient = window.supabase.createClient(SB_URL, SB_KEY);
@@ -3067,17 +3091,17 @@ Recommend the strongest topic for me and explain why.</pre>
           event: '*',
           schema: 'public',
           table: 'checklist_state',
-          filter: `id=like.${SB_WEEK}_%`,
         }, payload => {
           const row = payload.new;
           if (!row || !row.id) return;
+          // Only handle rows for this week
+          if (!row.id.startsWith(`${SB_WEEK}_`)) return;
           const checkId = row.id.replace(`${SB_WEEK}_`, '');
           const el = document.getElementById(checkId);
           if (!el || el.checked === row.checked) return;
-          // Update checkbox silently without triggering another save
+          // Update silently without triggering another save
           el.checked = row.checked;
           save(STORAGE + checkId, row.checked ? '1' : '0');
-          // Sync any paired checkboxes
           synced.filter(s => s.dataset.sync === checkId).forEach(s => {
             s.checked = row.checked;
           });
@@ -3088,7 +3112,7 @@ Recommend the strongest topic for me and explain why.</pre>
         })
         .subscribe(status => {
           console.log('Realtime status:', status);
-          setSyncStatus(status === 'SUBSCRIBED' ? 'ok' : null);
+          if (status === 'SUBSCRIBED') setSyncStatus('ok');
         });
     } catch(e) {
       console.warn('Realtime setup error:', e.message);
