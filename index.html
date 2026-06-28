@@ -2307,24 +2307,100 @@ Recommend the strongest topic for me and explain why.</pre>
     [...open, ...done].forEach(r => tbody.appendChild(r));
   }
 
+  // ── Supabase sync ──────────────────────────────────────
+  const SB_URL = 'https://rehhlaznyrsokjtbncen.supabase.co';
+  const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlaGhsYXpueXJzb2tqdGJuY2VuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI2MTYxMTQsImV4cCI6MjA5ODE5MjExNH0.3dK_jo9ekSk8EMR5_CT_bTWJYcJ6oGRPJNNtB2FNmmg';
+  const SB_HEADERS = { 'Content-Type': 'application/json', 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY };
+
+  // Show a subtle sync indicator in the progress block
+  function setSyncStatus(state) {
+    let el = document.getElementById('syncStatus');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'syncStatus';
+      el.style.cssText = 'font-size:.68rem;color:var(--muted);text-align:right;margin-top:4px;min-height:14px;transition:opacity .2s;';
+      document.getElementById('progressBlock')?.appendChild(el);
+    }
+    if (state === 'saving')  { el.textContent = '↑ Saving…';  el.style.opacity = '1'; }
+    else if (state === 'ok') { el.textContent = '✓ Synced';   el.style.opacity = '1'; setTimeout(() => el.style.opacity = '0', 1500); }
+    else if (state === 'err'){ el.textContent = '⚠ Offline — saved locally'; el.style.opacity = '1'; }
+    else                     { el.style.opacity = '0'; }
+  }
+
+  async function sbUpsert(id, checked) {
+    try {
+      const res = await fetch(`${SB_URL}/rest/v1/checklist_state`, {
+        method: 'POST',
+        headers: { ...SB_HEADERS, 'Prefer': 'resolution=merge-duplicates' },
+        body: JSON.stringify({ id, checked, updated_at: new Date().toISOString() }),
+      });
+      return res.ok;
+    } catch(e) { return false; }
+  }
+
+  async function sbLoadAll() {
+    try {
+      const res = await fetch(`${SB_URL}/rest/v1/checklist_state?select=id,checked`, { headers: SB_HEADERS });
+      if (!res.ok) return null;
+      return await res.json(); // [{id, checked}, ...]
+    } catch(e) { return null; }
+  }
+
+  async function sbResetAll() {
+    try {
+      // Set all known check IDs to false
+      const ids = checks.map(c => c.id);
+      const rows = ids.map(id => ({ id, checked: false, updated_at: new Date().toISOString() }));
+      const res = await fetch(`${SB_URL}/rest/v1/checklist_state`, {
+        method: 'POST',
+        headers: { ...SB_HEADERS, 'Prefer': 'resolution=merge-duplicates' },
+        body: JSON.stringify(rows),
+      });
+      return res.ok;
+    } catch(e) { return false; }
+  }
+
   function saveCheck(c) {
+    // 1. Save to localStorage immediately (instant, no lag)
     save(STORAGE + c.id, c.checked ? '1' : '0');
     const val = c.checked;
     synced.filter(s => s.dataset.sync === c.id).forEach(s => {
       s.checked = val;
       save(STORAGE + s.id, val ? '1' : '0');
     });
+    // 2. Sync to Supabase in background
+    setSyncStatus('saving');
+    sbUpsert(c.id, c.checked).then(ok => setSyncStatus(ok ? 'ok' : 'err'));
   }
 
-  function loadChecks() {
-    checks.forEach(c => {
-      c.checked = load(STORAGE + c.id) === '1';
-    });
+  async function loadChecks() {
+    // 1. Apply localStorage first so UI is instant
+    checks.forEach(c => { c.checked = load(STORAGE + c.id) === '1'; });
     synced.forEach(s => {
       const src = document.getElementById(s.dataset.sync);
       s.checked = src ? src.checked : (load(STORAGE + s.id) === '1');
     });
     updateProgressUI();
+
+    // 2. Then fetch from Supabase and override if newer
+    const rows = await sbLoadAll();
+    if (!rows || rows.length === 0) return;
+    let changed = false;
+    rows.forEach(({ id, checked }) => {
+      const el = document.getElementById(id);
+      if (el && el.checked !== checked) {
+        el.checked = checked;
+        save(STORAGE + id, checked ? '1' : '0');
+        changed = true;
+      }
+    });
+    // Sync synced checkboxes to match
+    synced.forEach(s => {
+      const src = document.getElementById(s.dataset.sync);
+      if (src) s.checked = src.checked;
+    });
+    if (changed) updateProgressUI();
+    setSyncStatus('ok');
   }
 
   checks.forEach(c => {
@@ -2366,6 +2442,8 @@ Recommend the strongest topic for me and explain why.</pre>
     checks.forEach(c => { c.checked = false; save(STORAGE + c.id, '0'); });
     synced.forEach(s => { s.checked = false; save(STORAGE + s.id, '0'); });
     updateProgressUI();
+    setSyncStatus('saving');
+    sbResetAll().then(ok => setSyncStatus(ok ? 'ok' : 'err'));
     toast('Progress reset');
   }
   document.getElementById('resetBtn')?.addEventListener('click', resetChecks);
