@@ -1977,6 +1977,9 @@ Recommend the strongest topic for me and explain why.</pre>
   <p class="banner-sub">Great job Francis!</p>
 </div>
 
+<!-- Supabase JS client for Realtime -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
 <!-- Confetti canvas — must be before script -->
 <canvas id="confetti-canvas"></canvas>
 
@@ -3052,6 +3055,45 @@ Recommend the strongest topic for me and explain why.</pre>
   initDrag();
   updateLivePills();
   updateMatTable();
+
+  // ── Supabase Realtime ───────────────────────────────────
+  // Subscribe to live changes so all devices update instantly
+  if (SB_ENABLED && window.supabase) {
+    try {
+      const sbClient = window.supabase.createClient(SB_URL, SB_KEY);
+      sbClient
+        .channel('checklist_sync')
+        .on('postgres_changes', {
+          event: '*',
+          schema: 'public',
+          table: 'checklist_state',
+          filter: `id=like.${SB_WEEK}_%`,
+        }, payload => {
+          const row = payload.new;
+          if (!row || !row.id) return;
+          const checkId = row.id.replace(`${SB_WEEK}_`, '');
+          const el = document.getElementById(checkId);
+          if (!el || el.checked === row.checked) return;
+          // Update checkbox silently without triggering another save
+          el.checked = row.checked;
+          save(STORAGE + checkId, row.checked ? '1' : '0');
+          // Sync any paired checkboxes
+          synced.filter(s => s.dataset.sync === checkId).forEach(s => {
+            s.checked = row.checked;
+          });
+          updateProgressUI();
+          updateLivePills();
+          updateMatTable();
+          console.log('Realtime update:', checkId, row.checked);
+        })
+        .subscribe(status => {
+          console.log('Realtime status:', status);
+          setSyncStatus(status === 'SUBSCRIBED' ? 'ok' : null);
+        });
+    } catch(e) {
+      console.warn('Realtime setup error:', e.message);
+    }
+  }
 
 })();
 </script>
