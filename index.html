@@ -2327,12 +2327,14 @@ Recommend the strongest topic for me and explain why.</pre>
     else                     { el.style.opacity = '0'; }
   }
 
+  const SB_WEEK = 'w1'; // change this for each new week
+
   async function sbUpsert(id, checked) {
     try {
       const res = await fetch(`${SB_URL}/rest/v1/checklist_state`, {
         method: 'POST',
         headers: { ...SB_HEADERS, 'Prefer': 'resolution=merge-duplicates' },
-        body: JSON.stringify({ id, checked, updated_at: new Date().toISOString() }),
+        body: JSON.stringify({ id: `${SB_WEEK}_${id}`, checked, updated_at: new Date().toISOString() }),
       });
       return res.ok;
     } catch(e) { return false; }
@@ -2340,17 +2342,17 @@ Recommend the strongest topic for me and explain why.</pre>
 
   async function sbLoadAll() {
     try {
-      const res = await fetch(`${SB_URL}/rest/v1/checklist_state?select=id,checked`, { headers: SB_HEADERS });
+      const res = await fetch(`${SB_URL}/rest/v1/checklist_state?select=id,checked&id=like.${SB_WEEK}_%`, { headers: SB_HEADERS });
       if (!res.ok) return null;
-      return await res.json(); // [{id, checked}, ...]
+      const rows = await res.json();
+      // Strip the week prefix before returning so IDs match DOM elements
+      return rows.map(r => ({ id: r.id.replace(`${SB_WEEK}_`, ''), checked: r.checked }));
     } catch(e) { return null; }
   }
 
   async function sbResetAll() {
     try {
-      // Set all known check IDs to false
-      const ids = checks.map(c => c.id);
-      const rows = ids.map(id => ({ id, checked: false, updated_at: new Date().toISOString() }));
+      const rows = checks.map(c => ({ id: `${SB_WEEK}_${c.id}`, checked: false, updated_at: new Date().toISOString() }));
       const res = await fetch(`${SB_URL}/rest/v1/checklist_state`, {
         method: 'POST',
         headers: { ...SB_HEADERS, 'Prefer': 'resolution=merge-duplicates' },
