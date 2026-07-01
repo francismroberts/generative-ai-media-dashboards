@@ -3049,7 +3049,7 @@ Recommend the strongest 3–5 source corpus and explain what each source contrib
     try {
       const sbClient = window.supabase.createClient(SB_URL, SB_KEY);
       sbClient
-        .channel('checklist_sync')
+        .channel('checklist_sync_w2')
         .on('postgres_changes', {
           event: '*',
           schema: 'public',
