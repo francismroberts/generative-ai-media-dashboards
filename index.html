@@ -96,29 +96,32 @@ strong { font-weight: 700; }
 .sidebar-brand h1 {
   font-size: .92rem; font-weight: 700; color: var(--ink); margin: 0 0 1px;
 }
-.sidebar-brand .week-tag {
-  display: inline-block;
-  background: var(--accent-light); color: var(--accent);
-  font-size: .68rem; font-weight: 700; padding: 1px 7px;
-  border-radius: 99px; margin-top: 3px;
+.sidebar-brand .week-tag { display: none; }
+.sidebar-brand .sidebar-subtitle { display: none; }
+.sidebar-title-line {
+  display: flex; align-items: center; gap: 6px;
+  margin-top: 4px; flex-wrap: nowrap;
 }
-.sidebar-brand .sidebar-subtitle {
-  font-size: .74rem; color: var(--muted); font-weight: 500;
-  margin: 1px 0 0; line-height: 1.3;
+.sidebar-title-line .week-pill-select {
+  font-size: .74rem; font-weight: 700;
+  color: #3d6b6e; background: #f0f7f7;
+  border: 0.5px solid #b8d8d8; border-radius: 99px;
+  padding: 3px 20px 3px 9px;
+  appearance: none; -webkit-appearance: none;
+  font-family: inherit; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%235a9a9a' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 7px center;
+  max-width: 80px; flex-shrink: 0;
+}
+.sidebar-title-line .week-pill-select:focus {
+  outline: 2px solid #3d6b6e; outline-offset: 2px;
+}
+.sidebar-title-line .dash-label {
+  font-size: .74rem; font-weight: 500; color: var(--muted);
+  white-space: nowrap;
 }
 
-/* Week switcher — hidden until multiple weeks exist */
-.week-switcher { margin-top: 8px; }
-.week-switcher select {
-  width: 100%; border: 1px solid var(--line); border-radius: var(--r-sm);
-  background: var(--surface2); color: var(--ink); padding: 5px 8px;
-  font-size: .76rem; font-weight: 600;
-  appearance: none; -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2378716c' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 8px center;
-  padding-right: 26px; cursor: pointer;
-}
-.week-switcher select:focus { outline: 2px solid var(--accent-mid); outline-offset: 1px; }
+.week-switcher { display: none; }
 
 /* Progress block */
 .progress-block {
@@ -256,11 +259,15 @@ body.sidebar-hidden .main { padding-left: 68px; }
   text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
   transition: opacity .15s;
 }
-.hero h2 {
-  font-size: 1.7rem; font-weight: 800; color: var(--ink);
+.hero h2 { display: none; }
+.hero-title-mobile {
+  display: flex; align-items: center; gap: 8px;
   margin: 0 0 6px; line-height: 1.15;
-  transition: font-size .22s ease;
 }
+.hero-dash-label {
+  font-size: 1.7rem; font-weight: 800; color: var(--ink); white-space: nowrap;
+}
+
 .hero-sub {
   font-size: .88rem; color: var(--muted); margin-bottom: 14px;
   transition: opacity .15s;
@@ -407,9 +414,15 @@ tfoot td {
 .check-table tbody tr:hover td:nth-child(2),
 .check-table tbody tr:hover td:nth-child(3) { background: #f5f4f2; }
 /* Body row sticky backgrounds — done/faded rows */
+.check-table tbody tr.done-row td { 
+  opacity: .45; text-decoration: none;
+}
+.check-table tbody tr.done-row td:nth-child(3) a {
+  color: var(--muted); text-decoration: line-through;
+}
 .check-table tbody tr.done-row td:nth-child(1),
 .check-table tbody tr.done-row td:nth-child(2),
-.check-table tbody tr.done-row td:nth-child(3) { background: #ffffff; }
+.check-table tbody tr.done-row td:nth-child(3) { background: var(--surface2, #fafaf9); }
 
 input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); cursor: pointer; }
 
@@ -702,7 +715,7 @@ input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); c
   .sidebar { display: none; }
   .main { padding: 14px 14px 100px; }
   .hero { padding: 18px 18px 16px; border-radius: var(--r-lg); margin-bottom: 14px; }
-  .hero h2 { font-size: 1.35rem; }
+  .hero-dash-label { font-size: 1.35rem; }
   .grid-2, .grid-3 { grid-template-columns: 1fr; }
   .idea-grid { grid-template-columns: 1fr; }
   .workback-cols { grid-template-columns: 1fr; }
@@ -757,7 +770,7 @@ input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); c
 @media (max-width: 768px) {
   .section-body { padding: 14px 14px 18px; }
   .hero { padding: 16px 16px 14px; }
-  .hero h2 { font-size: 1.28rem; }
+  .hero-dash-label { font-size: 1.28rem; }
   .pill { font-size: .72rem; padding: 3px 8px; }
   .pill-row { gap: 4px; }
   .section-summary { padding: 12px 14px; }
@@ -765,7 +778,7 @@ input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); c
 }
 @media (max-width: 560px) {
   .main { padding: 10px 10px 96px; }
-  .hero h2 { font-size: 1.22rem; }
+  .hero-dash-label { font-size: 1.22rem; }
   .check-table { min-width: 980px; }
   /* In compact stuck state on small phones, hide theme pill to save space */
   .hero.is-stuck #pillTheme { display: none; }
@@ -793,6 +806,190 @@ input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); c
   border-radius: var(--r-md); padding: 11px 14px; margin-bottom: 14px;
   font-size: .83rem; color: var(--accent);
 }
+
+/* ─── CHECKLIST TABLE MOBILE ─── */
+/* On tablet/mobile: show only Done, #, Task columns */
+@media (max-width: 768px) {
+  .check-table {
+    min-width: 0;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  /* Hide all columns except Done (#1), # (#2), Task (#3) */
+  .check-table th:nth-child(n+4),
+  .check-table td:nth-child(n+4) {
+    display: none;
+  }
+  /* Make task column fill remaining space */
+  .check-table th:nth-child(3),
+  .check-table td:nth-child(3) {
+    width: auto;
+    max-width: none;
+    white-space: normal;
+    font-size: .82rem;
+  }
+  /* Done checkbox column */
+  .check-table th:nth-child(1),
+  .check-table td:nth-child(1) {
+    width: 36px;
+    min-width: 36px;
+  }
+  /* # column */
+  .check-table th:nth-child(2),
+  .check-table td:nth-child(2) {
+    width: 28px;
+    min-width: 28px;
+    font-size: .78rem;
+  }
+  /* Unwrap the tscroll so table fills full width */
+  .section-card .tscroll {
+    overflow-x: visible;
+  }
+  /* tfoot — stack total and remaining on mobile */
+  .check-table tfoot td {
+    font-size: .78rem;
+    padding: 6px 8px;
+  }
+}
+
+@media (max-width: 560px) {
+  .check-table th:nth-child(3),
+  .check-table td:nth-child(3) {
+    font-size: .79rem;
+  }
+}
+
+
+/* ─── MOBILE CHECKLIST CARDS (< 600px) ─── */
+@media (max-width: 600px) {
+  /* Hide the entire table-based checklist */
+  .check-table-wrap { display: none !important; }
+  /* Show card layout */
+  .checklist-cards { display: block !important; }
+
+  /* Hero week pill */
+  .hero-week-pill {
+    display: inline-block;
+    font-size: .72rem; font-weight: 700;
+    color: #3d6b6e; background: #f0f7f7;
+    border: 0.5px solid #b8d8d8; border-radius: 99px;
+    padding: 3px 20px 3px 9px;
+    cursor: pointer; appearance: none; -webkit-appearance: none;
+    font-family: inherit; line-height: 1.5;
+    max-width: 80px; flex-shrink: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%235a9a9a' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 7px center;
+  }
+
+  /* Card container */
+  .checklist-cards { margin: 0; }
+
+  /* Completed group divider */
+  .card-completed-div {
+    color: #3d6b6e;
+    border-top: 0.5px solid #b8d8d8;
+    margin-top: 2px;
+  }
+
+  /* Group toggle button */
+  .card-group-toggle {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 9px 14px 8px; border-bottom: 0.5px solid var(--line);
+    background: var(--surface2);
+  }
+  .card-group-label { font-size: 11px; color: var(--muted); }
+  .card-group-btn {
+    font-size: 10.5px; font-weight: 600; padding: 4px 10px;
+    border-radius: 8px; border: 0.5px solid var(--line2);
+    background: var(--surface); color: var(--ink2);
+    display: flex; align-items: center; gap: 4px; cursor: pointer;
+  }
+
+  /* Day divider */
+  .card-day-div {
+    font-size: 9.5px; font-weight: 700; letter-spacing: .07em;
+    text-transform: uppercase; color: var(--muted);
+    padding: 7px 14px 4px; background: var(--surface2);
+    border-bottom: 0.5px solid var(--line);
+  }
+
+  /* Card row */
+  .check-card {
+    display: grid; grid-template-columns: 30px 1fr 26px;
+    align-items: start; padding: 11px 12px 11px 11px;
+    border-bottom: 0.5px solid var(--line); background: var(--surface);
+    gap: 0;
+  }
+  .check-card.card-done { background: var(--surface2); }
+
+  /* Checkbox */
+  .check-card .card-cb {
+    width: 18px; height: 18px; border: 1.5px solid var(--line2);
+    border-radius: 4px; margin-top: 2px; display: flex;
+    align-items: center; justify-content: center; flex-shrink: 0;
+    cursor: pointer; background: var(--surface);
+  }
+  .check-card .card-cb.cb-checked {
+    background: var(--accent); border-color: var(--accent);
+  }
+  .check-card .card-cb.cb-checked::after {
+    content: ''; width: 9px; height: 6px;
+    border-left: 2px solid #fff; border-bottom: 2px solid #fff;
+    transform: rotate(-45deg) translate(1px,-1px); display: block;
+  }
+
+  /* Task body */
+  .card-body { padding: 0 8px; }
+  .card-task-name {
+    font-size: 13px; font-weight: 600; color: var(--accent);
+    line-height: 1.35; margin-bottom: 3px; text-decoration: none;
+    display: block;
+  }
+  .card-task-name:visited { color: var(--accent); }
+  .check-card.card-done .card-task-name {
+    color: var(--muted); text-decoration: line-through; font-weight: 400;
+  }
+  .card-capture {
+    font-size: 11.5px; color: var(--ink2); line-height: 1.35; margin-bottom: 5px;
+  }
+  .check-card.card-done .card-capture { color: var(--line2); }
+  .card-meta {
+    display: flex; gap: 5px; align-items: center; flex-wrap: wrap;
+  }
+  .card-meta-item { font-size: 10px; color: var(--muted); white-space: nowrap; }
+  .card-meta-sep {
+    width: 2px; height: 2px; border-radius: 50%;
+    background: var(--line2); flex-shrink: 0; margin-top: 1px;
+  }
+
+  /* Mode badge */
+  .card-mode {
+    width: 22px; height: 22px; border-radius: 6px; font-size: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 2px; flex-shrink: 0;
+  }
+  .mode-desk { background: #e4e8ed; }
+  .mode-move { background: #f0ede8; }
+  .mode-flex { background: #dce8f0; }
+}
+
+/* On tablet/desktop: hide card layout, show table */
+@media (min-width: 601px) {
+  .checklist-cards { display: none !important; }
+  .check-table-wrap { display: block; }
+}
+
+
+/* ─── MODE BADGES ─── */
+.mode-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px; border-radius: 6px; font-size: 14px;
+}
+.mode-desk { background: #e4e8ed; }
+.mode-move { background: #f0ede8; }
+.mode-flex { background: #dce8f0; }
+
 </style>
 </head>
 <body>
@@ -810,16 +1007,15 @@ input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); c
     <div class="sidebar-brand">
       <div class="course-label">GenAI &amp; the Media</div>
       <h1>🧠 Francis Roberts</h1>
-      <div class="sidebar-subtitle">Week 1 Study Dashboard</div>
-      <div class="week-tag">Week 1</div>
-      <div class="week-switcher">
-        <select data-week-switch id="weekSelect" aria-label="Switch week">
+      <div class="sidebar-title-line">
+        <select class="week-pill-select" data-week-switch aria-label="Switch week">
           <option value="index.html" selected>Week 1</option>
           <option value="week2.html">Week 2</option>
-          <option disabled value="">Week 3 — coming soon</option>
-          <option disabled value="">Week 4 — coming soon</option>
-          <option disabled value="">Week 5 — coming soon</option>
+          <option disabled value="">Week 3</option>
+          <option disabled value="">Week 4</option>
+          <option disabled value="">Week 5</option>
         </select>
+        <span class="dash-label">Study Dashboard</span>
       </div>
     </div>
 
@@ -957,11 +1153,20 @@ input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); c
   <!-- Hero (sticky) -->
   <div class="hero" id="hero">
     <div class="hero-eyebrow">Francis Roberts - GenAI &amp; the Media</div>
-    <h2>Week 1 Study Dashboard</h2>
+    <div class="hero-title-mobile">
+      <select class="hero-week-pill" data-week-switch aria-label="Switch week">
+        <option value="index.html" selected>Week 1</option>
+        <option value="week2.html">Week 2</option>
+        <option disabled value="">Week 3</option>
+        <option disabled value="">Week 4</option>
+        <option disabled value="">Week 5</option>
+      </select>
+      <span class="hero-dash-label">Study Dashboard</span>
+    </div>
     <p class="hero-sub">Northwestern MSC 550-6 · Theme: GenAI capabilities, limitations, and responsible use</p>
     <div class="pill-row">
       <span class="pill pill-live" id="pillDue">📅 Due Sun Jun 28</span>
-      <span class="pill pill-live" id="pillProgress"><span class="pill-progress-fill"></span> <span id="pillProgressText">0 of 18 done</span></span>
+      <span class="pill pill-live" id="pillProgress" style="cursor:pointer;" title="Jump to checklist"><span class="pill-progress-fill"></span> <span id="pillProgressText">0 of 18 done</span></span>
       <span class="pill pill-next" id="pillNext" title="Jump to next task">↓ <span id="pillNextText">Loading…</span></span>
       <span class="pill pill-live" id="pillTheme">🧠 Capabilities &amp; limits</span>
     </div>
@@ -1191,40 +1396,286 @@ input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); c
         <span class="section-chev">›</span>
       </summary>
       <div class="section-body">
-        <p class="text-sm text-muted">Source of truth for progress. 18 required or required-soon tasks.</p>
-        <div class="table-wrap">
+        <p class="text-sm text-muted">Source of truth for progress. 18 required tasks.</p>
+        <div class="check-table-wrap"><div class="table-wrap">
             <table class="check-table table-xl">
               <thead>
                 <tr>
-                  <th>Done</th><th>#</th><th>Task / assignment</th><th>Produce / submit</th><th>What to capture</th>
-                  <th>Best timing</th><th>Why this order</th><th>Effort</th><th>Required?</th>
+                  <th>Done</th><th>#</th><th>Task / assignment</th>
+                  <th>What to capture</th><th>Best timing</th>
+                  <th>Why this order</th><th>Effort</th><th>Mode</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr><td><input type="checkbox" data-check id="s5-1"/></td><td>1</td><td>✏️ <a href="https://canvas.northwestern.edu/courses/253956/discussion_topics/1843951" target="_blank" rel="noopener">Activity 1: Introductions</a></td><td>Short intro post</td><td>—</td><td>First</td><td>Fastest required win; lowers friction</td><td>15m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-2"/></td><td>2</td><td>✏️ <a href="https://canvas.northwestern.edu/courses/253956/assignments/1781910" target="_blank" rel="noopener">Assignment 1 prompt + source setup</a></td><td>Topic direction + 6–8 candidate sources</td><td>Topic direction + 6–8 candidate source notes</td><td>Early / Fri</td><td>Due Jul 5; curation and NotebookLM testing need runway</td><td>75–90m</td><td><span class="tag tag-req">Required soon</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-3"/></td><td>3</td><td>🎥 <a href="https://canvas.northwestern.edu/courses/253956/files?preview=25085271" target="_blank" rel="noopener">Week 1 Lecture</a></td><td>Core concept notes</td><td>One sentence each: capabilities, limitations, responsible use, one professional connection.</td><td>Early</td><td>Gives the week's frame for all activities and the memo</td><td>45–60m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-4"/></td><td>4</td><td>🎥 <a href="https://www.youtube.com/watch?app=desktop&v=LPZh9BOjkQs" target="_blank" rel="noopener">Large Language Models Briefly Explained</a></td><td>One plain-English LLM definition</td><td>One plain-English LLM definition and one reason LLMs can sound confident while being wrong.</td><td>Early</td><td>Basic grounding for how LLMs work and why they can be confidently wrong</td><td>10–15m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-5"/></td><td>5</td><td>🎥 <a href="https://www.youtube.com/watch?v=_6R7Ym6Vy_I" target="_blank" rel="noopener">Turing Lectures: What is generative AI?</a></td><td>Broad GenAI concept notes</td><td>Three concepts that clarified GenAI.</td><td>Early / move-friendly</td><td>Useful first-pass explainer; capture only what clarifies the lecture</td><td>30–45m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-6"/></td><td>6</td><td>🎥 <a href="https://www.youtube.com/watch?v=eXdVDhOGqoE" target="_blank" rel="noopener">AI Is Dangerous, but Not for the Reasons You Think</a></td><td>One non-obvious AI risk</td><td>One risk that is not simply "AI becomes too smart."</td><td>Early / move-friendly</td><td>Supports risk framing beyond sci-fi fear</td><td>15–25m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-7"/></td><td>7</td><td>🎥 <a href="https://www.ted.com/talks/advait_sarkar_how_to_stop_ai_from_killing_your_critical_thinking" target="_blank" rel="noopener">How to stop AI from killing your critical thinking</a></td><td>One practical critical-thinking habit</td><td>One habit that keeps you intellectually active while using AI.</td><td>Early / move-friendly</td><td>Supports reflection on overreliance and responsible learning</td><td>15–20m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-8"/></td><td>8</td><td>📖 <a href="https://ig.ft.com/generative-ai" target="_blank" rel="noopener">FT: Generative AI exists because of the transformer</a></td><td>One simple transformer explanation</td><td>One simple transformer explanation.</td><td>Midweek</td><td>Required technical background; skim to explain why transformers matter</td><td>20–30m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-9"/></td><td>9</td><td>📖 <a href="https://www.technologyreview.com/2026/01/07/1130795/what-even-is-a-parameter/" target="_blank" rel="noopener">MIT Tech Review: LLMs contain a lot of parameters</a></td><td>One simple parameter definition</td><td>One simple explanation of "parameter."</td><td>Midweek</td><td>Required vocabulary support; reference-level depth</td><td>10–15m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-10"/></td><td>10</td><td>📖 <a href="https://www.nature.com/articles/d41586-025-00068-5" target="_blank" rel="noopener">Nature: AI hallucinations can't be stopped</a></td><td>Hallucination, risk, and mitigation notes</td><td>Why hallucination is structural, not a minor bug.</td><td>Early / midweek</td><td>Strongest anchor for limitations, verification, and responsible use</td><td>35–45m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-11"/></td><td>11</td><td>📖 <a href="https://www.bloomberg.com/graphics/2023-generative-ai-bias/" target="_blank" rel="noopener">Bloomberg: Humans are Biased. Generative AI is Even Worse</a></td><td>One bias pattern to test</td><td>One visual bias pattern you want to test yourself.</td><td>Midweek</td><td>Directly supports Activity 3 model-bias testing</td><td>30–45m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-12"/></td><td>12</td><td>📖 <a href="https://www.bbc.co.uk/editorialguidelines/guidance/use-of-artificial-intelligence" target="_blank" rel="noopener">BBC Editorial Policy: Use of Artificial Intelligence</a></td><td>Three policy rules to adopt</td><td>Three rules you would adopt for school/media work.</td><td>Midweek</td><td>Direct support for Activity 2 and responsible-use framing</td><td>25–35m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-13"/></td><td>13</td><td>📖 <a href="https://docs.google.com/document/d/1RKIpOdNUUM8vLOCXR2_trlzCoCjxor6DUBE0heIDVK0/edit" target="_blank" rel="noopener">Demystifying the Jargon of Generative AI</a></td><td>Check unfamiliar terms</td><td>Terms you still cannot explain after the lecture.</td><td>As needed</td><td>Required reference material; open when a term slows you down</td><td>10m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-14"/></td><td>14</td><td>✏️ <a href="https://canvas.northwestern.edu/courses/253956/discussion_topics/1843953" target="_blank" rel="noopener">Activity 2: AI Policy Design</a></td><td>Personal AI-use policy post</td><td>—</td><td>Midweek</td><td>Easier after BBC + hallucination frame</td><td>30–40m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-15"/></td><td>15</td><td>✏️ <a href="https://canvas.northwestern.edu/courses/253956/discussion_topics/1843954" target="_blank" rel="noopener">Activity 3: Exploring AI Model Bias</a></td><td>Prompt tests + screenshots + response post</td><td>—</td><td>Midweek / Fri</td><td>Requires tool testing and evidence capture</td><td>60–75m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-16"/></td><td>16</td><td>✏️ <a href="https://canvas.northwestern.edu/courses/253956/assignments/1781924" target="_blank" rel="noopener">Memo angle + outside resource</a></td><td>Claim + one outside source</td><td>Chosen angle + one outside source citation.</td><td>Friday</td><td>Needed before writing the memo</td><td>30–45m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-17"/></td><td>17</td><td>✏️ <a href="https://canvas.northwestern.edu/courses/253956/assignments/1781924" target="_blank" rel="noopener">Week 1 Reading Response Memo</a></td><td>~300-word memo + question + outside resource</td><td>—</td><td>Friday</td><td>Main weekly synthesis task</td><td>60–90m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-18"/></td><td>18</td><td>✏️ <a href="https://canvas.northwestern.edu/courses/253956/assignments/1781924" target="_blank" rel="noopener">Peer response + final Canvas check</a></td><td>One substantive reply + confirm all posted</td><td>—</td><td>Sat / Sun</td><td>Wait for classmates, then verify submission status</td><td>30–45m</td><td><span class="tag tag-req">Required</span></td></tr>
+                            <tbody>
+                <tr><td><input type="checkbox" data-check id="s5-1"/></td><td>1</td><td>✏️ <a href="https://canvas.northwestern.edu/courses/253956/discussion_topics/1843951" target="_blank" rel="noopener">Activity 1: Introductions</a></td><td>Short intro post</td><td>First</td><td>Fastest required win; lowers friction</td><td>15m</td><td><span class="mode-badge mode-move">🏎️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-2"/></td><td>2</td><td>🧪 <a href="https://canvas.northwestern.edu/courses/253956/assignments/1781910" target="_blank" rel="noopener">Assignment 1 prompt + source setup</a></td><td>Topic direction + 6–8 candidate sources</td><td>Early / Fri</td><td>Due Jul 5; curation and NotebookLM testing need runway</td><td>75–90m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-3"/></td><td>3</td><td>🎥 <a href="https://canvas.northwestern.edu/courses/253956/files?preview=25085271" target="_blank" rel="noopener">Week 1 Lecture</a></td><td>One sentence each: capabilities, limitations, responsible use, one professional connection</td><td>Early</td><td>Gives the week's frame for all activities and the memo</td><td>45–60m</td><td><span class="mode-badge mode-flex">🔁</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-4"/></td><td>4</td><td>🎥 <a href="https://www.youtube.com/watch?app=desktop&amp;v=LPZh9BOjkQs" target="_blank" rel="noopener">Large Language Models Briefly Explained</a></td><td>One plain-English LLM definition and one reason LLMs can sound confident while being wrong</td><td>Early</td><td>Basic grounding for how LLMs work and why they can be confidently wrong</td><td>10–15m</td><td><span class="mode-badge mode-flex">🔁</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-5"/></td><td>5</td><td>🎥 <a href="https://www.youtube.com/watch?v=_6R7Ym6Vy_I" target="_blank" rel="noopener">Turing Lectures: What is generative AI?</a></td><td>Three concepts that clarified GenAI</td><td>Early / move-friendly</td><td>Useful first-pass explainer; capture only what clarifies the lecture</td><td>30–45m</td><td><span class="mode-badge mode-flex">🔁</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-6"/></td><td>6</td><td>🎥 <a href="https://www.youtube.com/watch?v=eXdVDhOGqoE" target="_blank" rel="noopener">AI Is Dangerous, but Not for the Reasons You Think</a></td><td>One risk that is not simply "AI becomes too smart"</td><td>Early / move-friendly</td><td>Supports risk framing beyond sci-fi fear</td><td>15–25m</td><td><span class="mode-badge mode-move">🏎️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-7"/></td><td>7</td><td>🎥 <a href="https://www.ted.com/talks/advait_sarkar_how_to_stop_ai_from_killing_your_critical_thinking" target="_blank" rel="noopener">How to stop AI from killing your critical thinking</a></td><td>One habit that keeps you intellectually active while using AI</td><td>Early / move-friendly</td><td>Supports reflection on overreliance and responsible learning</td><td>15–20m</td><td><span class="mode-badge mode-move">🏎️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-8"/></td><td>8</td><td>📖 <a href="https://ig.ft.com/generative-ai" target="_blank" rel="noopener">Generative AI exists because of the transformer</a></td><td>One simple transformer explanation</td><td>Midweek</td><td>Required technical background; skim to explain why transformers matter</td><td>20–30m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-9"/></td><td>9</td><td>📖 <a href="https://www.technologyreview.com/2026/01/07/1130795/what-even-is-a-parameter/" target="_blank" rel="noopener">LLMs contain a lot of parameters</a></td><td>One simple explanation of "parameter"</td><td>Midweek</td><td>Required vocabulary support; reference-level depth</td><td>10–15m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-10"/></td><td>10</td><td>📖 <a href="https://www.nature.com/articles/d41586-025-00068-5" target="_blank" rel="noopener">AI hallucinations can't be stopped</a></td><td>Why hallucination is structural, not a minor bug</td><td>Early / midweek</td><td>Strongest anchor for limitations, verification, and responsible use</td><td>35–45m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-11"/></td><td>11</td><td>📖 <a href="https://www.bloomberg.com/graphics/2023-generative-ai-bias/" target="_blank" rel="noopener">Humans are Biased. Generative AI is Even Worse</a></td><td>One visual bias pattern you want to test yourself</td><td>Midweek</td><td>Directly supports Activity 3 model-bias testing</td><td>30–45m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-12"/></td><td>12</td><td>📖 <a href="https://www.bbc.co.uk/editorialguidelines/guidance/use-of-artificial-intelligence" target="_blank" rel="noopener">BBC Editorial Policy: Use of Artificial Intelligence</a></td><td>Three rules you would adopt for school/media work</td><td>Midweek</td><td>Direct support for Activity 2 and responsible-use framing</td><td>25–35m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-13"/></td><td>13</td><td>📖 <a href="https://docs.google.com/document/d/1RKIpOdNUUM8vLOCXR2_trlzCoCjxor6DUBE0heIDVK0/edit" target="_blank" rel="noopener">Demystifying the Jargon of Generative AI</a></td><td>Terms you still cannot explain after the lecture</td><td>As needed</td><td>Required reference material; open when a term slows you down</td><td>10m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-14"/></td><td>14</td><td>✏️ <a href="https://canvas.northwestern.edu/courses/253956/discussion_topics/1843953" target="_blank" rel="noopener">Activity 2: AI Policy Design</a></td><td>Personal AI-use policy post</td><td>Midweek</td><td>Easier after BBC + hallucination frame</td><td>30–40m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-15"/></td><td>15</td><td>✏️ <a href="https://canvas.northwestern.edu/courses/253956/discussion_topics/1843954" target="_blank" rel="noopener">Activity 3: Exploring AI Model Bias</a></td><td>Prompt tests + screenshots + response post</td><td>Midweek / Fri</td><td>Requires tool testing and evidence capture</td><td>60–75m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-16"/></td><td>16</td><td>✏️ <a href="https://canvas.northwestern.edu/courses/253956/assignments/1781924" target="_blank" rel="noopener">Memo angle + outside resource</a></td><td>Claim + one outside source citation</td><td>Friday</td><td>Needed before writing the memo</td><td>30–45m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-17"/></td><td>17</td><td>✏️ <a href="https://canvas.northwestern.edu/courses/253956/assignments/1781924" target="_blank" rel="noopener">Week 1 Reading Response Memo</a></td><td>~300-word memo + question + outside resource</td><td>Friday</td><td>Main weekly synthesis task</td><td>60–90m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-18"/></td><td>18</td><td>✏️ <a href="https://canvas.northwestern.edu/courses/253956/assignments/1781924" target="_blank" rel="noopener">Peer response + final Canvas check</a></td><td>One substantive reply + confirm all posted</td><td>Sat / Sun</td><td>Wait for classmates, then verify submission status</td><td>30–45m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
               </tbody>
               <tfoot>
-                <tr><td colspan="7"><strong>Total estimated active work time</strong></td><td colspan="2"><strong>About 8.5–11.5 hours</strong></td></tr>
-                <tr id="remainingTimeRow"><td colspan="7" class="text-muted">Estimated remaining</td><td colspan="2" id="remainingTimeVal" class="text-muted">—</td></tr>
+                <tr><td colspan="6"><strong>Total estimated active work time</strong></td><td colspan="2"><strong>About 8.5–11.5 hours</strong></td></tr>
+                <tr id="remainingTimeRow"><td colspan="6" class="text-muted">Estimated remaining</td><td colspan="2" id="remainingTimeVal" class="text-muted">—</td></tr>
               </tfoot>
             </table>
+        </div></div>
+      
+        <div class="checklist-cards" id="checklistCards">
+          <div class="card-group-toggle">
+            <span class="card-group-label">18 required tasks</span>
+            <button class="card-group-btn" id="groupToggleBtn">Group: By day ▾</button>
+          </div>
+          <div class="card-day-div">First / Early</div>
+          <div class="check-card" data-card-id="s5-1">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-1"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">✏️ Activity 1: Introductions</div>
+              <div class="card-capture">Short intro post</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 First</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 15m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Fastest required win; lowers friction</span>
+              </div>
+            </div>
+            <div class="card-mode mode-move">🏎️</div>
+          </div>
+          <div class="check-card" data-card-id="s5-2">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-2"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">🧪 Assignment 1 prompt + source setup</div>
+              <div class="card-capture">Topic direction + 6–8 candidate sources</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Early / Fri</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 75–90m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Due Jul 5; NotebookLM testing needs runway</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="check-card" data-card-id="s5-3">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-3"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">🎥 Week 1 Lecture</div>
+              <div class="card-capture">One sentence each: capabilities, limitations, responsible use, one professional connection</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Early</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 45–60m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Gives the week's frame for all activities and the memo</span>
+              </div>
+            </div>
+            <div class="card-mode mode-flex">🔁</div>
+          </div>
+          <div class="check-card" data-card-id="s5-4">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-4"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">🎥 Large Language Models Briefly Explained</div>
+              <div class="card-capture">One plain-English LLM definition and one reason LLMs can sound confident while being wrong</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Early</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 10–15m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Basic grounding for how LLMs work</span>
+              </div>
+            </div>
+            <div class="card-mode mode-flex">🔁</div>
+          </div>
+          <div class="check-card" data-card-id="s5-5">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-5"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">🎥 Turing Lectures: What is generative AI?</div>
+              <div class="card-capture">Three concepts that clarified GenAI</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Early / move-friendly</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 30–45m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Useful first-pass explainer</span>
+              </div>
+            </div>
+            <div class="card-mode mode-flex">🔁</div>
+          </div>
+          <div class="check-card" data-card-id="s5-6">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-6"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">🎥 AI Is Dangerous, but Not for the Reasons You Think</div>
+              <div class="card-capture">One risk that is not simply "AI becomes too smart"</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Early / move-friendly</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 15–25m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Supports risk framing beyond sci-fi fear</span>
+              </div>
+            </div>
+            <div class="card-mode mode-move">🏎️</div>
+          </div>
+          <div class="check-card" data-card-id="s5-7">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-7"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">🎥 How to stop AI from killing your critical thinking</div>
+              <div class="card-capture">One habit that keeps you intellectually active while using AI</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Early / move-friendly</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 15–20m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Supports reflection on overreliance</span>
+              </div>
+            </div>
+            <div class="card-mode mode-move">🏎️</div>
+          </div>
+          <div class="card-day-div">Midweek</div>
+          <div class="check-card" data-card-id="s5-8">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-8"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">📖 Generative AI exists because of the transformer</div>
+              <div class="card-capture">One simple transformer explanation</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Midweek</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 20–30m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Required technical background</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="check-card" data-card-id="s5-9">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-9"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">📖 LLMs contain a lot of parameters</div>
+              <div class="card-capture">One simple explanation of "parameter"</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Midweek</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 10–15m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Required vocabulary support</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="check-card" data-card-id="s5-10">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-10"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">📖 AI hallucinations can't be stopped</div>
+              <div class="card-capture">Why hallucination is structural, not a minor bug</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Early / midweek</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 35–45m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Strongest anchor for limitations and responsible use</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="check-card" data-card-id="s5-11">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-11"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">📖 Humans are Biased. Generative AI is Even Worse</div>
+              <div class="card-capture">One visual bias pattern you want to test yourself</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Midweek</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 30–45m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Directly supports Activity 3 model-bias testing</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="check-card" data-card-id="s5-12">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-12"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">📖 BBC Editorial Policy: Use of Artificial Intelligence</div>
+              <div class="card-capture">Three rules you would adopt for school/media work</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Midweek</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 25–35m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Direct support for Activity 2 and responsible-use framing</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="check-card" data-card-id="s5-13">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-13"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">📖 Demystifying the Jargon of Generative AI</div>
+              <div class="card-capture">Terms you still cannot explain after the lecture</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 As needed</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 10m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Open when a term slows you down</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="check-card" data-card-id="s5-14">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-14"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">✏️ Activity 2: AI Policy Design</div>
+              <div class="card-capture">Personal AI-use policy post</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Midweek</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 30–40m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Easier after BBC + hallucination frame</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="check-card" data-card-id="s5-15">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-15"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">✏️ Activity 3: Exploring AI Model Bias</div>
+              <div class="card-capture">Prompt tests + screenshots + response post</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Midweek / Fri</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 60–75m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Requires tool testing and evidence capture</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="card-day-div">Friday</div>
+          <div class="check-card" data-card-id="s5-16">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-16"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">✏️ Memo angle + outside resource</div>
+              <div class="card-capture">Claim + one outside source citation</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Friday</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 30–45m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Needed before writing the memo</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="check-card" data-card-id="s5-17">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-17"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">✏️ Week 1 Reading Response Memo</div>
+              <div class="card-capture">~300-word memo + question + outside resource</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Friday</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 60–90m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Main weekly synthesis task</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="card-day-div">Saturday / Sunday</div>
+          <div class="check-card" data-card-id="s5-18">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-18"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">✏️ Peer response + final Canvas check</div>
+              <div class="card-capture">One substantive reply + confirm all posted</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Sat / Sun</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 30–45m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Wait for classmates, then verify submission status</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
         </div>
       </div>
     </details>
@@ -1242,97 +1693,29 @@ input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); c
       </summary>
       <div class="section-body">
         <div class="callout">
-          <strong>Study rule:</strong> do not study everything equally. Prioritize the lecture, Nature, BBC, Bloomberg, and Assignment 1 prompt for desk attention. Other materials are useful support, not equal-weight reading projects.
+          <strong>Study rule:</strong> Do not study everything equally. Prioritize the lecture, Nature, BBC, Bloomberg, and Assignment 1 prompt for desk attention. Other materials are useful support, not equal-weight reading projects.
         </div>
-        <div class="table-wrap" style="margin-top:12px;">
+        <div class="tscroll" style="margin-top:12px;">
+        <div class="table-wrap">
           <table class="mat-table">
-              <thead>
-                <tr>
-                  <th>Material</th><th>Depth</th><th>Why this mode</th>
-                  <th>How to consume it</th>
-                  <th>Memo?</th><th>Activity / Assign?</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><a href="https://canvas.northwestern.edu/courses/253956/files?preview=25085271" target="_blank" rel="noopener">Week 1 Lecture</a> 🎙️</td>
-                  <td>Careful</td>
-                  <td><span class="tag tag-desk">🖥️ Desk</span> Main frame for the week.</td>
-                  <td>Watch/read at desk first. Compress into 4–5 core concepts via NotebookLM or notes.</td>
-                  <td><span class="tag tag-green">Yes</span></td><td><span class="tag tag-green">Yes</span></td>
-                </tr>
-                <tr>
-                  <td><a href="https://www.youtube.com/watch?app=desktop&v=LPZh9BOjkQs" target="_blank" rel="noopener">Large Language Models Briefly Explained</a> 🎥</td>
-                  <td>Normal</td>
-                  <td><span class="tag tag-flex">🔁 Flexible</span> Basic grounding.</td>
-                  <td>Watch once. Desk review only if LLMs feel fuzzy after the lecture.</td>
-                  <td><span class="tag tag-amber">Maybe</span></td><td><span class="tag tag-amber">Maybe</span></td>
-                </tr>
-                <tr>
-                  <td><a href="https://www.youtube.com/watch?v=_6R7Ym6Vy_I" target="_blank" rel="noopener">Turing Lectures: What is generative AI?</a> 🎥</td>
-                  <td>Skim/normal</td>
-                  <td><span class="tag tag-move">🚗 Move</span> Broad explainer.</td>
-                  <td>Listen during a walk or drive. Capture only what clarifies the lecture.</td>
-                  <td><span class="tag tag-amber">Maybe</span></td><td><span class="tag tag-amber">Maybe</span></td>
-                </tr>
-                <tr>
-                  <td><a href="https://www.youtube.com/watch?v=eXdVDhOGqoE" target="_blank" rel="noopener">AI Is Dangerous, but Not for the Reasons You Think</a> 🎥</td>
-                  <td>Normal</td>
-                  <td><span class="tag tag-move">🚶 Move</span> Risk framing.</td>
-                  <td>Listen while moving. Notes only if it connects to your memo angle.</td>
-                  <td><span class="tag tag-amber">Maybe</span></td><td><span class="tag tag-amber">Maybe</span></td>
-                </tr>
-                <tr>
-                  <td><a href="https://www.ted.com/talks/advait_sarkar_how_to_stop_ai_from_killing_your_critical_thinking" target="_blank" rel="noopener">How to stop AI from killing your critical thinking</a> 🎥</td>
-                  <td>Normal</td>
-                  <td><span class="tag tag-move">🚶 Move</span> Reflection support.</td>
-                  <td>Listen while walking or doing chores. Save one practical habit.</td>
-                  <td><span class="tag tag-amber">Maybe</span></td><td><span class="tag tag-amber">Maybe</span></td>
-                </tr>
-                <tr>
-                  <td><a href="https://ig.ft.com/generative-ai" target="_blank" rel="noopener">FT: Generative AI exists because of the transformer</a> 📖</td>
-                  <td>Skim</td>
-                  <td><span class="tag tag-desk">🖥️ Desk skim</span> Transformer basics.</td>
-                  <td>Skim at desk. Stop once you can complete "Transformers matter because…"</td>
-                  <td><span class="tag tag-amber">Maybe</span></td><td><span class="tag tag-red">Background</span></td>
-                </tr>
-                <tr>
-                  <td><a href="https://www.technologyreview.com/2026/01/07/1130795/what-even-is-a-parameter/" target="_blank" rel="noopener">MIT Tech Review: LLMs contain a lot of parameters</a> 📖</td>
-                  <td>Reference</td>
-                  <td><span class="tag tag-ref">🗂️ Ref</span> Vocabulary support.</td>
-                  <td>Skim if "parameters" is unclear. Otherwise save for lookup.</td>
-                  <td><span class="tag tag-red">Low</span></td><td><span class="tag tag-red">Background</span></td>
-                </tr>
-                <tr>
-                  <td><a href="https://www.nature.com/articles/d41586-025-00068-5" target="_blank" rel="noopener">Nature: AI hallucinations can't be stopped</a> 📖</td>
-                  <td>Careful</td>
-                  <td><span class="tag tag-desk">🖥️ Desk</span> Strongest anchor for limitations.</td>
-                  <td>Read at desk. Pull one example, one risk, and one mitigation strategy.</td>
-                  <td><span class="tag tag-green">Yes — strong</span></td><td><span class="tag tag-green">Yes</span></td>
-                </tr>
-                <tr>
-                  <td><a href="https://www.bloomberg.com/graphics/2023-generative-ai-bias/" target="_blank" rel="noopener">Bloomberg: Humans are Biased. Generative AI is Even Worse</a> 📖</td>
-                  <td>Careful / active</td>
-                  <td><span class="tag tag-desk">🖥️ Desk</span> Activity 3 support.</td>
-                  <td>Read at desk, then design your Activity 3 prompts from the patterns you notice.</td>
-                  <td><span class="tag tag-amber">If bias angle</span></td><td><span class="tag tag-green">Yes — Act. 3</span></td>
-                </tr>
-                <tr>
-                  <td><a href="https://www.bbc.co.uk/editorialguidelines/guidance/use-of-artificial-intelligence" target="_blank" rel="noopener">BBC Editorial Policy: Use of Artificial Intelligence</a> 🧾</td>
-                  <td>Careful</td>
-                  <td><span class="tag tag-desk">🖥️ Desk</span> Activity 2 + responsible use.</td>
-                  <td>Read at desk. Translate the policy into permitted/caution/not-permitted buckets.</td>
-                  <td><span class="tag tag-green">Yes — strong</span></td><td><span class="tag tag-green">Yes — Act. 2</span></td>
-                </tr>
-                <tr>
-                  <td><a href="https://docs.google.com/document/d/1RKIpOdNUUM8vLOCXR2_trlzCoCjxor6DUBE0heIDVK0/edit" target="_blank" rel="noopener">Demystifying the Jargon of Generative AI</a> 🧠</td>
-                  <td>Reference</td>
-                  <td><span class="tag tag-ref">🗂️ Ref</span> Lookup only.</td>
-                  <td>Use only when a term slows you down.</td>
-                  <td><span class="tag tag-red">Low</span></td><td><span class="tag tag-amber">Support only</span></td>
-                </tr>
-              </tbody>
-            </table>
+            <thead>
+              <tr><th>Material</th><th>Depth</th><th>Mode</th><th>How to consume it</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><a href="https://canvas.northwestern.edu/courses/253956/files?preview=25085271" target="_blank" rel="noopener">Week 1 Lecture</a> 🎙️</td><td>Careful</td><td>🔁</td><td>Watch at desk or listen via TTS. Capture 5 core concepts and one professional connection.</td></tr>
+              <tr><td><a href="https://www.youtube.com/watch?app=desktop&amp;v=LPZh9BOjkQs" target="_blank" rel="noopener">Large Language Models Briefly Explained</a> 🎥</td><td>Normal</td><td>🔁</td><td>Watch or listen. Capture one plain-English LLM definition and one reason they can sound confident while wrong.</td></tr>
+              <tr><td><a href="https://www.youtube.com/watch?v=_6R7Ym6Vy_I" target="_blank" rel="noopener">Turing Lectures: What is generative AI?</a> 🎥</td><td>Skim / normal</td><td>🔁</td><td>Watch or listen while moving. Capture three concepts that clarified GenAI.</td></tr>
+              <tr><td><a href="https://www.youtube.com/watch?v=eXdVDhOGqoE" target="_blank" rel="noopener">AI Is Dangerous, but Not for the Reasons You Think</a> 🎥</td><td>Normal</td><td>🏎️</td><td>Listen while moving. Capture one non-obvious AI risk beyond "AI becomes too smart."</td></tr>
+              <tr><td><a href="https://www.ted.com/talks/advait_sarkar_how_to_stop_ai_from_killing_your_critical_thinking" target="_blank" rel="noopener">How to stop AI from killing your critical thinking</a> 🎥</td><td>Normal</td><td>🏎️</td><td>Listen while moving. Capture one habit that keeps you intellectually active while using AI.</td></tr>
+              <tr><td><a href="https://ig.ft.com/generative-ai" target="_blank" rel="noopener">Generative AI exists because of the transformer</a> 📖</td><td>Skim</td><td>🖥️</td><td>Read at desk. Capture one simple transformer explanation.</td></tr>
+              <tr><td><a href="https://www.technologyreview.com/2026/01/07/1130795/what-even-is-a-parameter/" target="_blank" rel="noopener">LLMs contain a lot of parameters</a> 📖</td><td>Reference</td><td>🖥️</td><td>Read at desk. Capture one simple definition of "parameter."</td></tr>
+              <tr><td><a href="https://www.nature.com/articles/d41586-025-00068-5" target="_blank" rel="noopener">AI hallucinations can't be stopped</a> 📖</td><td>Careful</td><td>🖥️</td><td>Read carefully at desk. Capture why hallucination is structural, not a minor bug.</td></tr>
+              <tr><td><a href="https://www.bloomberg.com/graphics/2023-generative-ai-bias/" target="_blank" rel="noopener">Humans are Biased. Generative AI is Even Worse</a> 📖</td><td>Careful / active</td><td>🖥️</td><td>Read at desk with tool open. Capture one bias pattern you want to test yourself.</td></tr>
+              <tr><td><a href="https://www.bbc.co.uk/editorialguidelines/guidance/use-of-artificial-intelligence" target="_blank" rel="noopener">BBC Editorial Policy: Use of Artificial Intelligence</a> 🧾</td><td>Careful</td><td>🖥️</td><td>Read at desk. Capture three policy rules you would adopt for school/media work.</td></tr>
+              <tr><td><a href="https://docs.google.com/document/d/1RKIpOdNUUM8vLOCXR2_trlzCoCjxor6DUBE0heIDVK0/edit" target="_blank" rel="noopener">Demystifying the Jargon of Generative AI</a> 🧠</td><td>Reference</td><td>🖥️</td><td>Open when a term slows you down. Capture terms you still can't explain after the lecture.</td></tr>
+            </tbody>
+          </table>
+        </div>
         </div>
       </div>
     </details>
@@ -1911,13 +2294,16 @@ Recommend the strongest topic for me and explain why.</pre>
     <div style="flex:1;min-width:0;">
       <div style="font-size:.67rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);">GenAI &amp; the Media</div>
       <div style="font-weight:700;font-size:.92rem;margin:2px 0;">🧠 Francis Roberts</div>
-      <select data-week-switch style="margin-top:5px;width:100%;border:1px solid var(--line);border-radius:8px;background:var(--surface2);color:var(--ink);padding:5px 8px;font-size:.78rem;font-weight:600;appearance:none;-webkit-appearance:none;" aria-label="Switch week">
-        <option value="index.html" selected>Week 1</option>
-        <option value="week2.html">Week 2</option>
-        <option disabled value="">Week 3 — coming soon</option>
-        <option disabled value="">Week 4 — coming soon</option>
-        <option disabled value="">Week 5 — coming soon</option>
-      </select>
+            <div style="display:flex;align-items:center;gap:6px;margin-top:4px;">
+        <select class="week-pill-select" data-week-switch aria-label="Switch week">
+          <option value="index.html" selected>Week 1</option>
+          <option value="week2.html">Week 2</option>
+          <option disabled value="">Week 3</option>
+          <option disabled value="">Week 4</option>
+          <option disabled value="">Week 5</option>
+        </select>
+        <span style="font-size:.74rem;font-weight:500;color:var(--muted);white-space:nowrap;">Study Dashboard</span>
+      </div>
     </div>
     <button class="mobile-close-btn" id="mobileCloseBtn" aria-label="Close navigation" style="margin-left:10px;flex-shrink:0;">×</button>
   </div>
@@ -2040,6 +2426,41 @@ Recommend the strongest topic for me and explain why.</pre>
   const doneCount  = document.getElementById('doneCount');
   const totalCount = document.getElementById('totalCount');
 
+
+  // ── Apply done-row to checklist table rows + sort ──────────────────────
+  function updateChecklistDoneRows() {
+    const tbody = document.querySelector('.check-table tbody');
+    if (!tbody) return;
+    const trs = [...tbody.querySelectorAll('tr')];
+    // Toggle done-row first
+    trs.forEach(tr => {
+      const cb = tr.querySelector('input[data-check]');
+      if (cb) tr.classList.toggle('done-row', cb.checked);
+    });
+    // Re-query after toggling so filter reflects current DOM state
+    const allTrs = [...tbody.querySelectorAll('tr')];
+    const open = allTrs.filter(r => !r.classList.contains('done-row'));
+    const done = allTrs.filter(r => r.classList.contains('done-row'));
+    [...open, ...done].forEach(r => tbody.appendChild(r));
+  }
+
+  // ── Apply card-done classes only (no sorting — rebuildCardGroups handles order) ──
+  function updateCardDoneState() {
+    const container = document.getElementById('checklistCards');
+    if (!container) return;
+    const cards = [...container.querySelectorAll('.check-card')];
+    cards.forEach(card => {
+      const sid = card.dataset.cardId;
+      const cb = document.getElementById(sid);
+      const isDone = cb && cb.checked;
+      card.classList.toggle('card-done', isDone);
+      const cardCb = card.querySelector('.card-cb');
+      if (cardCb) cardCb.classList.toggle('cb-checked', isDone);
+    });
+    // Always rebuild groups after state change so Completed group updates
+    rebuildCardGroups();
+  }
+
   function updateProgressUI() {
     const done = checks.filter(c => c.checked).length;
     const total = checks.length;
@@ -2151,6 +2572,18 @@ Recommend the strongest topic for me and explain why.</pre>
     }
 
     updateDeliverables();
+    updateChecklistDoneRows();
+    updateCardDoneState();
+
+    // ── Move done rows to bottom of checklist table ─────────────────────
+    const checkTbody = document.querySelector('.check-table tbody');
+    if (checkTbody) {
+      const allTrs = [...checkTbody.querySelectorAll('tr')];
+      const openTrs = allTrs.filter(r => !r.classList.contains('done-row'));
+      const doneTrs = allTrs.filter(r => r.classList.contains('done-row'));
+      [...openTrs, ...doneTrs].forEach(r => checkTbody.appendChild(r));
+    }
+
   }
 
   // ── Celebration: banner + rockets + confetti ───────────
@@ -2459,7 +2892,12 @@ Recommend the strongest topic for me and explain why.</pre>
   }
 
   checks.forEach(c => {
-    c.addEventListener('change', () => { saveCheck(c); updateProgressUI(); });
+    c.addEventListener('change', () => {
+      saveCheck(c);
+      updateProgressUI();
+      updateChecklistDoneRows();
+      updateCardDoneState();
+    });
   });
 
   synced.forEach(s => {
@@ -2714,6 +3152,17 @@ Recommend the strongest topic for me and explain why.</pre>
   document.getElementById('mMenuBtn')?.addEventListener('click', openMobileDrawer);
   document.getElementById('mobileCloseBtn')?.addEventListener('click', closeMobileDrawer);
   document.getElementById('mobileBackdrop')?.addEventListener('click', closeMobileDrawer);
+
+
+  // Progress pill → jump to checklist
+  document.getElementById('pillProgress')?.addEventListener('click', () => {
+    const s5 = document.getElementById('s5');
+    if (!s5) return;
+    const det = s5.querySelector('.section-details');
+    if (det) det.open = true;
+    if (s5.classList.contains('section-hidden')) setSectionHidden('s5', false);
+    s5.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
 
   document.getElementById('mProgressBtn')?.addEventListener('click', () => {
     const s5 = document.getElementById('s5');
@@ -3122,6 +3571,165 @@ Recommend the strongest topic for me and explain why.</pre>
       console.warn('Realtime error:', e.message);
     }
   }
+
+
+  // ── Mobile card group toggle ───────────────────────────────────────
+  // ── Card grouping ──────────────────────────────────────────────────
+  const CARD_META = {
+    's5-1': {day:'First/Early', type:'activity', effort:15, bucket:'short'},
+    's5-2': {day:'Early/Fri', type:'assignment', effort:83, bucket:'long'},
+    's5-3': {day:'Early', type:'video', effort:53, bucket:'medium'},
+    's5-4': {day:'Early', type:'video', effort:13, bucket:'short'},
+    's5-5': {day:'Early', type:'video', effort:38, bucket:'medium'},
+    's5-6': {day:'Early', type:'video', effort:20, bucket:'short'},
+    's5-7': {day:'Early', type:'video', effort:18, bucket:'short'},
+    's5-8': {day:'Midweek', type:'reading', effort:25, bucket:'short'},
+    's5-9': {day:'Midweek', type:'reading', effort:13, bucket:'short'},
+    's5-10': {day:'Midweek', type:'reading', effort:40, bucket:'medium'},
+    's5-11': {day:'Midweek', type:'reading', effort:38, bucket:'medium'},
+    's5-12': {day:'Midweek', type:'reading', effort:30, bucket:'short'},
+    's5-13': {day:'Midweek', type:'reading', effort:10, bucket:'short'},
+    's5-14': {day:'Midweek', type:'activity', effort:35, bucket:'medium'},
+    's5-15': {day:'Midweek/Fri', type:'activity', effort:68, bucket:'long'},
+    's5-16': {day:'Friday', type:'activity', effort:38, bucket:'medium'},
+    's5-17': {day:'Friday', type:'activity', effort:75, bucket:'long'},
+    's5-18': {day:'Sat/Sun', type:'activity', effort:38, bucket:'medium'},
+  };
+
+  const TYPE_LABELS = {
+    'video': '🎥 Video & Audio',
+    'reading': '📖 Readings',
+    'activity': '✏️ Activities & Submissions',
+    'assignment': '🧪 Assignments',
+  };
+
+  const EFFORT_LABELS = {
+    'short': '⚡ Short (≤30m)',
+    'medium': '🕐 Medium (31–60m)',
+    'long': '🕑 Long (60m+)',
+  };
+
+  const GROUP_MODES = ['By day', 'By type', 'By effort', 'None'];
+  let groupModeIdx = 0;
+
+  function rebuildCardGroups() {
+    const container = document.getElementById('checklistCards');
+    if (!container) return;
+
+    // Remove existing dividers
+    container.querySelectorAll('.card-day-div').forEach(d => d.remove());
+
+    // Get all cards
+    const allCards = [...container.querySelectorAll('.check-card')];
+    if (!allCards.length) return;
+
+    // Split into open and done
+    const openCards = allCards.filter(c => !c.classList.contains('card-done'));
+    const doneCards = allCards.filter(c => c.classList.contains('card-done'));
+
+    const mode = GROUP_MODES[groupModeIdx];
+
+    // Determine group key for a card
+    function getGroup(card) {
+      const sid = card.dataset.cardId;
+      const meta = CARD_META[sid];
+      if (!meta) return 'Other';
+      if (mode === 'By day') return meta.day;
+      if (mode === 'By type') return TYPE_LABELS[meta.type] || meta.type;
+      if (mode === 'By effort') return EFFORT_LABELS[meta.bucket] || meta.bucket;
+      return null;
+    }
+
+    // Sort open cards by mode
+    if (mode === 'By type') {
+      const typeOrder = ['video', 'reading', 'activity', 'assignment'];
+      openCards.sort((a, b) => {
+        const ma = CARD_META[a.dataset.cardId];
+        const mb = CARD_META[b.dataset.cardId];
+        return typeOrder.indexOf(ma?.type) - typeOrder.indexOf(mb?.type);
+      });
+    } else if (mode === 'By effort') {
+      openCards.sort((a, b) => {
+        const ma = CARD_META[a.dataset.cardId];
+        const mb = CARD_META[b.dataset.cardId];
+        return (ma?.effort || 0) - (mb?.effort || 0);
+      });
+    } else {
+      // By day or None — original order
+      openCards.sort((a, b) => {
+        const aNum = parseInt(a.dataset.cardId?.replace('s5-', '') || 0);
+        const bNum = parseInt(b.dataset.cardId?.replace('s5-', '') || 0);
+        return aNum - bNum;
+      });
+    }
+
+    // Insert open cards with group dividers
+    if (mode !== 'None') {
+      let lastGroup = null;
+      openCards.forEach(card => {
+        const group = getGroup(card);
+        if (group && group !== lastGroup) {
+          const div = document.createElement('div');
+          div.className = 'card-day-div';
+          div.textContent = group;
+          container.appendChild(div);
+          lastGroup = group;
+        }
+        container.appendChild(card);
+      });
+    } else {
+      openCards.forEach(c => container.appendChild(c));
+    }
+
+    // Always add Completed group at bottom if any done cards
+    if (doneCards.length > 0) {
+      const completedDiv = document.createElement('div');
+      completedDiv.className = 'card-day-div card-completed-div';
+      completedDiv.textContent = 'Completed ✓';
+      container.appendChild(completedDiv);
+      doneCards.forEach(c => container.appendChild(c));
+    }
+  }
+
+  const groupBtn = document.getElementById('groupToggleBtn');
+  if (groupBtn) {
+    groupBtn.addEventListener('click', () => {
+      groupModeIdx = (groupModeIdx + 1) % GROUP_MODES.length;
+      groupBtn.textContent = 'Group: ' + GROUP_MODES[groupModeIdx] + ' ▾';
+      rebuildCardGroups();
+    });
+  }
+
+  // ── Mobile card checkbox sync ──────────────────────────────────────
+  document.querySelectorAll('.card-cb').forEach(cb => {
+    const sid = cb.dataset.cb;
+    const mainCb = document.getElementById(sid);
+    
+    // Sync initial state
+    if (mainCb && mainCb.checked) {
+      cb.classList.add('cb-checked');
+      cb.closest('.check-card')?.classList.add('card-done');
+    }
+    
+    cb.addEventListener('click', () => {
+      const mainCb = document.getElementById(cb.dataset.cb);
+      if (!mainCb) return;
+      mainCb.checked = !mainCb.checked;
+      mainCb.dispatchEvent(new Event('change'));
+      cb.classList.toggle('cb-checked', mainCb.checked);
+      cb.closest('.check-card')?.classList.toggle('card-done', mainCb.checked);
+    });
+  });
+
+  // ── Sync card checkboxes when main checkboxes change ───────────────
+  checks.forEach(mainCb => {
+    mainCb.addEventListener('change', () => {
+      const cardCb = document.querySelector(`.card-cb[data-cb="${mainCb.id}"]`);
+      if (!cardCb) return;
+      cardCb.classList.toggle('cb-checked', mainCb.checked);
+      cardCb.closest('.check-card')?.classList.toggle('card-done', mainCb.checked);
+    });
+  });
 
 })();
 </script>

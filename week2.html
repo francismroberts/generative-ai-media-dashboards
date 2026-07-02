@@ -96,29 +96,32 @@ strong { font-weight: 700; }
 .sidebar-brand h1 {
   font-size: .92rem; font-weight: 700; color: var(--ink); margin: 0 0 1px;
 }
-.sidebar-brand .week-tag {
-  display: inline-block;
-  background: var(--accent-light); color: var(--accent);
-  font-size: .68rem; font-weight: 700; padding: 1px 7px;
-  border-radius: 99px; margin-top: 3px;
+.sidebar-brand .week-tag { display: none; }
+.sidebar-brand .sidebar-subtitle { display: none; }
+.sidebar-title-line {
+  display: flex; align-items: center; gap: 6px;
+  margin-top: 4px; flex-wrap: nowrap;
 }
-.sidebar-brand .sidebar-subtitle {
-  font-size: .74rem; color: var(--muted); font-weight: 500;
-  margin: 1px 0 0; line-height: 1.3;
+.sidebar-title-line .week-pill-select {
+  font-size: .74rem; font-weight: 700;
+  color: #3d6b6e; background: #f0f7f7;
+  border: 0.5px solid #b8d8d8; border-radius: 99px;
+  padding: 3px 20px 3px 9px;
+  appearance: none; -webkit-appearance: none;
+  font-family: inherit; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%235a9a9a' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 7px center;
+  max-width: 80px; flex-shrink: 0;
+}
+.sidebar-title-line .week-pill-select:focus {
+  outline: 2px solid #3d6b6e; outline-offset: 2px;
+}
+.sidebar-title-line .dash-label {
+  font-size: .74rem; font-weight: 500; color: var(--muted);
+  white-space: nowrap;
 }
 
-/* Week switcher — hidden until multiple weeks exist */
-.week-switcher { margin-top: 8px; }
-.week-switcher select {
-  width: 100%; border: 1px solid var(--line); border-radius: var(--r-sm);
-  background: var(--surface2); color: var(--ink); padding: 5px 8px;
-  font-size: .76rem; font-weight: 600;
-  appearance: none; -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2378716c' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 8px center;
-  padding-right: 26px; cursor: pointer;
-}
-.week-switcher select:focus { outline: 2px solid var(--accent-mid); outline-offset: 1px; }
+.week-switcher { display: none; }
 
 /* Progress block */
 .progress-block {
@@ -256,11 +259,15 @@ body.sidebar-hidden .main { padding-left: 68px; }
   text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
   transition: opacity .15s;
 }
-.hero h2 {
-  font-size: 1.7rem; font-weight: 800; color: var(--ink);
+.hero h2 { display: none; }
+.hero-title-mobile {
+  display: flex; align-items: center; gap: 8px;
   margin: 0 0 6px; line-height: 1.15;
-  transition: font-size .22s ease;
 }
+.hero-dash-label {
+  font-size: 1.7rem; font-weight: 800; color: var(--ink); white-space: nowrap;
+}
+
 .hero-sub {
   font-size: .88rem; color: var(--muted); margin-bottom: 14px;
   transition: opacity .15s;
@@ -407,9 +414,15 @@ tfoot td {
 .check-table tbody tr:hover td:nth-child(2),
 .check-table tbody tr:hover td:nth-child(3) { background: #f5f4f2; }
 /* Body row sticky backgrounds — done/faded rows */
+.check-table tbody tr.done-row td { 
+  opacity: .45; text-decoration: none;
+}
+.check-table tbody tr.done-row td:nth-child(3) a {
+  color: var(--muted); text-decoration: line-through;
+}
 .check-table tbody tr.done-row td:nth-child(1),
 .check-table tbody tr.done-row td:nth-child(2),
-.check-table tbody tr.done-row td:nth-child(3) { background: #ffffff; }
+.check-table tbody tr.done-row td:nth-child(3) { background: var(--surface2, #fafaf9); }
 
 input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); cursor: pointer; }
 
@@ -702,7 +715,7 @@ input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); c
   .sidebar { display: none; }
   .main { padding: 14px 14px 100px; }
   .hero { padding: 18px 18px 16px; border-radius: var(--r-lg); margin-bottom: 14px; }
-  .hero h2 { font-size: 1.35rem; }
+  .hero-dash-label { font-size: 1.35rem; }
   .grid-2, .grid-3 { grid-template-columns: 1fr; }
   .idea-grid { grid-template-columns: 1fr; }
   .workback-cols { grid-template-columns: 1fr; }
@@ -757,7 +770,7 @@ input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); c
 @media (max-width: 768px) {
   .section-body { padding: 14px 14px 18px; }
   .hero { padding: 16px 16px 14px; }
-  .hero h2 { font-size: 1.28rem; }
+  .hero-dash-label { font-size: 1.28rem; }
   .pill { font-size: .72rem; padding: 3px 8px; }
   .pill-row { gap: 4px; }
   .section-summary { padding: 12px 14px; }
@@ -765,7 +778,7 @@ input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); c
 }
 @media (max-width: 560px) {
   .main { padding: 10px 10px 96px; }
-  .hero h2 { font-size: 1.22rem; }
+  .hero-dash-label { font-size: 1.22rem; }
   .check-table { min-width: 980px; }
   /* In compact stuck state on small phones, hide theme pill to save space */
   .hero.is-stuck #pillTheme { display: none; }
@@ -793,6 +806,190 @@ input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); c
   border-radius: var(--r-md); padding: 11px 14px; margin-bottom: 14px;
   font-size: .83rem; color: var(--accent);
 }
+
+/* ─── CHECKLIST TABLE MOBILE ─── */
+/* On tablet/mobile: show only Done, #, Task columns */
+@media (max-width: 768px) {
+  .check-table {
+    min-width: 0;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  /* Hide all columns except Done (#1), # (#2), Task (#3) */
+  .check-table th:nth-child(n+4),
+  .check-table td:nth-child(n+4) {
+    display: none;
+  }
+  /* Make task column fill remaining space */
+  .check-table th:nth-child(3),
+  .check-table td:nth-child(3) {
+    width: auto;
+    max-width: none;
+    white-space: normal;
+    font-size: .82rem;
+  }
+  /* Done checkbox column */
+  .check-table th:nth-child(1),
+  .check-table td:nth-child(1) {
+    width: 36px;
+    min-width: 36px;
+  }
+  /* # column */
+  .check-table th:nth-child(2),
+  .check-table td:nth-child(2) {
+    width: 28px;
+    min-width: 28px;
+    font-size: .78rem;
+  }
+  /* Unwrap the tscroll so table fills full width */
+  .section-card .tscroll {
+    overflow-x: visible;
+  }
+  /* tfoot — stack total and remaining on mobile */
+  .check-table tfoot td {
+    font-size: .78rem;
+    padding: 6px 8px;
+  }
+}
+
+@media (max-width: 560px) {
+  .check-table th:nth-child(3),
+  .check-table td:nth-child(3) {
+    font-size: .79rem;
+  }
+}
+
+
+/* ─── MOBILE CHECKLIST CARDS (< 600px) ─── */
+@media (max-width: 600px) {
+  /* Hide the entire table-based checklist */
+  .check-table-wrap { display: none !important; }
+  /* Show card layout */
+  .checklist-cards { display: block !important; }
+
+  /* Hero week pill */
+  .hero-week-pill {
+    display: inline-block;
+    font-size: .72rem; font-weight: 700;
+    color: #3d6b6e; background: #f0f7f7;
+    border: 0.5px solid #b8d8d8; border-radius: 99px;
+    padding: 3px 20px 3px 9px;
+    cursor: pointer; appearance: none; -webkit-appearance: none;
+    font-family: inherit; line-height: 1.5;
+    max-width: 80px; flex-shrink: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%235a9a9a' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 7px center;
+  }
+
+  /* Card container */
+  .checklist-cards { margin: 0; }
+
+  /* Completed group divider */
+  .card-completed-div {
+    color: #3d6b6e;
+    border-top: 0.5px solid #b8d8d8;
+    margin-top: 2px;
+  }
+
+  /* Group toggle button */
+  .card-group-toggle {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 9px 14px 8px; border-bottom: 0.5px solid var(--line);
+    background: var(--surface2);
+  }
+  .card-group-label { font-size: 11px; color: var(--muted); }
+  .card-group-btn {
+    font-size: 10.5px; font-weight: 600; padding: 4px 10px;
+    border-radius: 8px; border: 0.5px solid var(--line2);
+    background: var(--surface); color: var(--ink2);
+    display: flex; align-items: center; gap: 4px; cursor: pointer;
+  }
+
+  /* Day divider */
+  .card-day-div {
+    font-size: 9.5px; font-weight: 700; letter-spacing: .07em;
+    text-transform: uppercase; color: var(--muted);
+    padding: 7px 14px 4px; background: var(--surface2);
+    border-bottom: 0.5px solid var(--line);
+  }
+
+  /* Card row */
+  .check-card {
+    display: grid; grid-template-columns: 30px 1fr 26px;
+    align-items: start; padding: 11px 12px 11px 11px;
+    border-bottom: 0.5px solid var(--line); background: var(--surface);
+    gap: 0;
+  }
+  .check-card.card-done { background: var(--surface2); }
+
+  /* Checkbox */
+  .check-card .card-cb {
+    width: 18px; height: 18px; border: 1.5px solid var(--line2);
+    border-radius: 4px; margin-top: 2px; display: flex;
+    align-items: center; justify-content: center; flex-shrink: 0;
+    cursor: pointer; background: var(--surface);
+  }
+  .check-card .card-cb.cb-checked {
+    background: var(--accent); border-color: var(--accent);
+  }
+  .check-card .card-cb.cb-checked::after {
+    content: ''; width: 9px; height: 6px;
+    border-left: 2px solid #fff; border-bottom: 2px solid #fff;
+    transform: rotate(-45deg) translate(1px,-1px); display: block;
+  }
+
+  /* Task body */
+  .card-body { padding: 0 8px; }
+  .card-task-name {
+    font-size: 13px; font-weight: 600; color: var(--accent);
+    line-height: 1.35; margin-bottom: 3px; text-decoration: none;
+    display: block;
+  }
+  .card-task-name:visited { color: var(--accent); }
+  .check-card.card-done .card-task-name {
+    color: var(--muted); text-decoration: line-through; font-weight: 400;
+  }
+  .card-capture {
+    font-size: 11.5px; color: var(--ink2); line-height: 1.35; margin-bottom: 5px;
+  }
+  .check-card.card-done .card-capture { color: var(--line2); }
+  .card-meta {
+    display: flex; gap: 5px; align-items: center; flex-wrap: wrap;
+  }
+  .card-meta-item { font-size: 10px; color: var(--muted); white-space: nowrap; }
+  .card-meta-sep {
+    width: 2px; height: 2px; border-radius: 50%;
+    background: var(--line2); flex-shrink: 0; margin-top: 1px;
+  }
+
+  /* Mode badge */
+  .card-mode {
+    width: 22px; height: 22px; border-radius: 6px; font-size: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 2px; flex-shrink: 0;
+  }
+  .mode-desk { background: #e4e8ed; }
+  .mode-move { background: #f0ede8; }
+  .mode-flex { background: #dce8f0; }
+}
+
+/* On tablet/desktop: hide card layout, show table */
+@media (min-width: 601px) {
+  .checklist-cards { display: none !important; }
+  .check-table-wrap { display: block; }
+}
+
+
+/* ─── MODE BADGES ─── */
+.mode-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px; border-radius: 6px; font-size: 14px;
+}
+.mode-desk { background: #e4e8ed; }
+.mode-move { background: #f0ede8; }
+.mode-flex { background: #dce8f0; }
+
 </style>
 </head>
 <body>
@@ -810,16 +1007,15 @@ input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); c
     <div class="sidebar-brand">
       <div class="course-label">GenAI &amp; the Media</div>
       <h1>🧠 Francis Roberts</h1>
-      <div class="sidebar-subtitle">Week 2 Study Dashboard</div>
-      <div class="week-tag">Week 2</div>
-      <div class="week-switcher">
-        <select data-week-switch id="weekSelect" aria-label="Switch week">
+      <div class="sidebar-title-line">
+        <select class="week-pill-select" data-week-switch aria-label="Switch week">
           <option value="index.html">Week 1</option>
           <option value="week2.html" selected>Week 2</option>
-          <option disabled value="">Week 3 — coming soon</option>
-          <option disabled value="">Week 4 — coming soon</option>
-          <option disabled value="">Week 5 — coming soon</option>
+          <option disabled value="">Week 3</option>
+          <option disabled value="">Week 4</option>
+          <option disabled value="">Week 5</option>
         </select>
+        <span class="dash-label">Study Dashboard</span>
       </div>
     </div>
 
@@ -957,11 +1153,20 @@ input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); c
   <!-- Hero (sticky) -->
   <div class="hero" id="hero">
     <div class="hero-eyebrow">Francis Roberts - GenAI &amp; the Media</div>
-    <h2>Week 2 Study Dashboard</h2>
+    <div class="hero-title-mobile">
+      <select class="hero-week-pill" data-week-switch aria-label="Switch week">
+        <option value="index.html">Week 1</option>
+        <option value="week2.html" selected>Week 2</option>
+        <option disabled value="">Week 3</option>
+        <option disabled value="">Week 4</option>
+        <option disabled value="">Week 5</option>
+      </select>
+      <span class="hero-dash-label">Study Dashboard</span>
+    </div>
     <p class="hero-sub">Northwestern MSC 550-6 · Theme: User Experience, Interaction, and Prompting</p>
     <div class="pill-row">
       <span class="pill pill-live" id="pillDue">📅 Due Sun Jul 5</span>
-      <span class="pill pill-live" id="pillProgress"><span class="pill-progress-fill"></span> <span id="pillProgressText">0 of 18 done</span></span>
+      <span class="pill pill-live" id="pillProgress" style="cursor:pointer;" title="Jump to checklist"><span class="pill-progress-fill"></span> <span id="pillProgressText">0 of 18 done</span></span>
       <span class="pill pill-next" id="pillNext" title="Jump to next task">↓ <span id="pillNextText">Loading…</span></span>
       <span class="pill pill-live" id="pillTheme">🎯 UX &amp; Prompting</span>
     </div>
@@ -1135,8 +1340,8 @@ input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); c
           <div class="action-num">1</div>
           <div class="action-body">
             <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;">
-              <input type="checkbox" data-sync="s5-18" id="c-first1" style="margin-top:3px;width:17px;height:17px;accent-color:var(--accent);flex-shrink:0;"/>
-              <span><strong>Read Assignment 1 instructions and rubric.</strong><br/><span class="text-sm text-muted">This sets the criteria for how to read everything else this week. 30 minutes.</span></span>
+              <input type="checkbox" data-sync="s5-1" id="c-first1" style="margin-top:3px;width:17px;height:17px;accent-color:var(--accent);flex-shrink:0;"/>
+              <span><strong>Watch/read the Week 2 lecture.</strong><br/><span class="text-sm text-muted">Gives the week's intellectual map: UX, overreliance, anthropomorphism, sycophancy, prompting, RAG. 60–75 minutes.</span></span>
             </label>
           </div>
         </div>
@@ -1144,8 +1349,8 @@ input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); c
           <div class="action-num">2</div>
           <div class="action-body">
             <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;">
-              <input type="checkbox" data-sync="s5-1" id="c-first2" style="margin-top:3px;width:17px;height:17px;accent-color:var(--accent);flex-shrink:0;"/>
-              <span><strong>Watch/read the Week 2 lecture.</strong><br/><span class="text-sm text-muted">Gives the week's intellectual map: UX, overreliance, anthropomorphism, sycophancy, prompting, RAG. 60–75 minutes.</span></span>
+              <input type="checkbox" data-sync="s5-5" id="c-first2" style="margin-top:3px;width:17px;height:17px;accent-color:var(--accent);flex-shrink:0;"/>
+              <span><strong>Complete Activity 1: Voice Chat.</strong><br/><span class="text-sm text-muted">Have a spoken conversation with ChatGPT Voice or Gemini Live and post your reflection. 30 minutes.</span></span>
             </label>
           </div>
         </div>
@@ -1153,8 +1358,8 @@ input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); c
           <div class="action-num">3</div>
           <div class="action-body">
             <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;">
-              <input type="checkbox" data-sync="s5-14" id="c-first3" style="margin-top:3px;width:17px;height:17px;accent-color:var(--accent);flex-shrink:0;"/>
-              <span><strong>Create two working lanes.</strong><br/><span class="text-sm text-muted">Separate notes/folders for "Reading Memo" and "Assignment 1." Keeps the week from bleeding together. 10 minutes.</span></span>
+              <input type="checkbox" data-sync="s5-18" id="c-first3" style="margin-top:3px;width:17px;height:17px;accent-color:var(--accent);flex-shrink:0;"/>
+              <span><strong>Submit Assignment 1: NotebookLM Curation and Critique.</strong><br/><span class="text-sm text-muted">5–8 min video + shared NotebookLM link. Check sharing permissions before submitting. 120 minutes.</span></span>
             </label>
           </div>
         </div>
@@ -1181,7 +1386,7 @@ input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); c
               <tbody>
                 <tr class="deliverable-row" data-del-sync="s5-16"><td><a href="https://canvas.northwestern.edu/courses/253956/assignments/1781925" target="_blank" rel="noopener">Reading Response Memo</a></td><td>~300-word synthesis/reflection memo with substantive question and one outside resource.</td><td>Sun Jul 5 — verify Canvas time</td></tr>
                 <tr class="deliverable-row" data-del-sync="s5-17"><td><a href="https://canvas.northwestern.edu/courses/253956/assignments/1781925" target="_blank" rel="noopener">Peer response/comment</a></td><td>One substantive response to a classmate's memo.</td><td>Sun Jul 5 — verify Canvas time</td></tr>
-                <tr class="deliverable-row" data-del-sync="s5-14"><td><a href="https://canvas.northwestern.edu/courses/253956/discussion_topics/1843958" target="_blank" rel="noopener">Activity 1: Voice Chat</a></td><td>Spoken conversation with ChatGPT Voice or Gemini Live + reflection on spoken vs written interaction.</td><td>Sun Jul 5 — verify Canvas time</td></tr>
+                <tr class="deliverable-row" data-del-sync="s5-5"><td><a href="https://canvas.northwestern.edu/courses/253956/discussion_topics/1843958" target="_blank" rel="noopener">Activity 1: Voice Chat</a></td><td>Spoken conversation with ChatGPT Voice or Gemini Live + reflection on spoken vs written interaction.</td><td>Sun Jul 5 — verify Canvas time</td></tr>
                 <tr class="deliverable-row" data-del-sync="s5-15"><td><a href="https://canvas.northwestern.edu/courses/253956/discussion_topics/1843959" target="_blank" rel="noopener">Activity 2: Gemini Prompting Challenge</a></td><td>Iterative Gemini image generation to match target image — final image, full chat thread, reflection.</td><td>Sun Jul 5 — verify Canvas time</td></tr>
                 <tr class="deliverable-row" data-del-sync="s5-18"><td><a href="https://canvas.northwestern.edu/courses/253956/assignments/1781910" target="_blank" rel="noopener">Assignment 1: NotebookLM Curation &amp; Critique</a></td><td>5–8 minute video + NotebookLM link. Curate 3–5 sources, test, generate transformations, critique.</td><td>Sun Jul 5</td></tr>
               </tbody>
@@ -1204,41 +1409,291 @@ input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); c
       </summary>
       <div class="section-body">
         <p class="text-sm text-muted">Source of truth for progress. 18 required tasks.</p>
-        <div class="table-wrap">
+        <div class="check-table-wrap"><div class="table-wrap">
             <table class="check-table table-xl">
               <thead>
                 <tr>
-                  <th>Done</th><th>#</th><th>Task / assignment</th><th>Produce / submit</th><th>What to capture</th>
-                  <th>Best timing</th><th>Why this order</th><th>Effort</th><th>Required?</th>
+                  <th>Done</th><th>#</th><th>Task / assignment</th>
+                  <th>What to capture</th><th>Best timing</th>
+                  <th>Why this order</th><th>Effort</th><th>Mode</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr><td><input type="checkbox" data-check id="s5-1"/></td><td>1</td><td>🎥 <a href="https://canvas.northwestern.edu/courses/253956/files?preview=25094793" target="_blank" rel="noopener">Week 2 Lecture</a></td><td>7-concept map</td><td>UX, overreliance, anthropomorphism, sycophancy, prompting, RAG, verification</td><td>Mon</td><td>Week's intellectual map — do first</td><td>75m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-2"/></td><td>2</td><td>🎥 <a href="https://www.npr.org/2024/07/01/1247296788/the-benefits-and-drawbacks-of-chatbot-relationships" target="_blank" rel="noopener">If a bot relationship FEELS real, should we care? — NPR</a></td><td>Capture notes</td><td>Artificial intimacy angle</td><td>Tue</td><td>Best move-friendly material; strong memo source</td><td>30m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-3"/></td><td>3</td><td>🎥 <a href="https://www.youtube.com/watch?v=ysPbXH0LpIE" target="_blank" rel="noopener">Prompting 101 — Anthropic</a></td><td>Prompt structure notes</td><td>Prompt components + iteration approach</td><td>Wed</td><td>Required for Activity 2 and Assignment 1 test design</td><td>45m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-4"/></td><td>4</td><td>🎥 <a href="https://claude.ai/public/artifacts/b63ed621-7f35-4b6c-93d7-95cdca7a5577" target="_blank" rel="noopener">Prompt Structure Dojo — Interactive</a></td><td>Practice notes</td><td>Prompt structure hands-on practice</td><td>Wed</td><td>Reinforces Prompting 101 concepts interactively</td><td>15m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-5"/></td><td>5</td><td>📖 <a href="https://www.nngroup.com/articles/ai-changing-search-behaviors/" target="_blank" rel="noopener">How AI Is Changing Search Behaviors — Nielsen Norman Group</a></td><td>Capture notes</td><td>AI summaries + source verification implications</td><td>Wed</td><td>Supports media trust memo angle</td><td>35m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-6"/></td><td>6</td><td>📖 <a href="https://uxmag.com/articles/the-4-degrees-of-anthropomorphism-of-generative-ai" target="_blank" rel="noopener">The 4 Degrees of Anthropomorphism of Generative AI — UX Magazine</a></td><td>Capture notes</td><td>4 degrees framework</td><td>Tue</td><td>Core framework for voice AI / companion angle</td><td>35m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-7"/></td><td>7</td><td>📖 <a href="https://www.nngroup.com/articles/sycophancy-generative-ai-chatbots/" target="_blank" rel="noopener">Sycophancy in Generative-AI Chatbots — Nielsen Norman Group</a></td><td>Capture notes</td><td>AI agreement/confirmation bias pattern</td><td>Tue</td><td>Strong memo + Assignment 1 critique source</td><td>35m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-8"/></td><td>8</td><td>📖 <a href="https://cacm.acm.org/research/against-imaginary-friends-why-digital-companions-are-no-solution-to-social-isolation/" target="_blank" rel="noopener">Against Imaginary Friends — Communications of the ACM</a></td><td>Capture notes</td><td>Loneliness vs social isolation distinction</td><td>Tue/Wed</td><td>Best memo source for companionship angle</td><td>45m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-9"/></td><td>9</td><td>📖 <a href="https://cloud.google.com/discover/what-is-prompt-engineering" target="_blank" rel="noopener">Prompt Engineering: Overview and Guide — Google</a></td><td>Capture notes</td><td>Prompting basics and structure</td><td>Wed</td><td>Foundation for Assignment 1 test design</td><td>30m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-10"/></td><td>10</td><td>📖 <a href="https://docs.claude.com/en/docs/test-and-evaluate/strengthen-guardrails/reduce-hallucinations" target="_blank" rel="noopener">Reducing Hallucinations — Anthropic</a></td><td>Capture notes</td><td>"I don't know" technique, citations, source restriction</td><td>Wed</td><td>Core Assignment 1 critique language</td><td>30m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-11"/></td><td>11</td><td>📖 <a href="https://cloud.google.com/use-cases/retrieval-augmented-generation" target="_blank" rel="noopener">What is RAG? — Google</a></td><td>Capture notes</td><td>Retrieval, grounding, source quality</td><td>Wed</td><td>Essential Assignment 1 critique framework</td><td>30m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-12"/></td><td>12</td><td>📖 <a href="https://generative-ai-newsroom.com/prompting-techniques-and-best-practices-for-journalists-6fa806cde8ec" target="_blank" rel="noopener">Prompting Techniques for Journalists — Generative AI in the Newsroom</a></td><td>Capture notes</td><td>Validation, source grounding, evaluation criteria</td><td>Wed</td><td>Strong memo + Assignment 1 source</td><td>45m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-13"/></td><td>13</td><td>📖 <a href="https://generative-ai-newsroom.com/personalizing-newsletters-a-case-study-on-iterative-prompt-evaluation-and-improvement-a9f1141900fd" target="_blank" rel="noopener">Personalizing Newsletters: Iterative Prompt Evaluation — Generative AI in the Newsroom</a></td><td>Capture notes</td><td>Iterative evaluation criteria</td><td>Wed/Thu</td><td>Best case study for prompt iteration</td><td>45m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-14"/></td><td>14</td><td>✏️ <a href="https://canvas.northwestern.edu/courses/253956/discussion_topics/1843958" target="_blank" rel="noopener">Activity 1: Voice Chat</a></td><td>Reflection post</td><td>Spoken vs written observations, anthropomorphism angle</td><td>Tue</td><td>Firsthand UX experience; required submission</td><td>30m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-15"/></td><td>15</td><td>✏️ <a href="https://canvas.northwestern.edu/courses/253956/discussion_topics/1843959" target="_blank" rel="noopener">Activity 2: Gemini Prompting Challenge</a></td><td>Final image + chat link + reflection</td><td>Prompt iteration notes</td><td>Fri</td><td>Required submission; save full Gemini thread</td><td>90m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-16"/></td><td>16</td><td>✏️ <a href="https://canvas.northwestern.edu/courses/253956/assignments/1781925" target="_blank" rel="noopener">Reading Response Memo</a></td><td>~300-word memo + question + outside resource</td><td>Chosen angle + outside source citation</td><td>Fri/Sat</td><td>Main weekly synthesis submission</td><td>75m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-17"/></td><td>17</td><td>✏️ <a href="https://canvas.northwestern.edu/courses/253956/assignments/1781925" target="_blank" rel="noopener">Peer response/comment</a></td><td>One substantive reply</td><td>—</td><td>Sat/Sun</td><td>Wait for classmates to post first</td><td>30m</td><td><span class="tag tag-req">Required</span></td></tr>
-                <tr><td><input type="checkbox" data-check id="s5-18"/></td><td>18</td><td>🧪 <a href="https://canvas.northwestern.edu/courses/253956/assignments/1781910" target="_blank" rel="noopener">Assignment 1: NotebookLM Curation and Critique</a></td><td>5–8 min video + shared NotebookLM link</td><td>—</td><td>Sat/Sun</td><td>Major project submission; check sharing permissions</td><td>120m</td><td><span class="tag tag-req">Required</span></td></tr>
+                            <tbody>
+                <tr><td><input type="checkbox" data-check id="s5-1"/></td><td>1</td><td>🎥 <a href="https://canvas.northwestern.edu/courses/253956/files?preview=25094793" target="_blank" rel="noopener">Week 2 Lecture</a></td><td>7-concept map: UX, overreliance, anthropomorphism, sycophancy, prompting, RAG, verification</td><td>Mon</td><td>Week's intellectual map — do first</td><td>75m</td><td><span class="mode-badge mode-flex">🔁</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-2"/></td><td>2</td><td>🎥 <a href="https://www.npr.org/2024/07/01/1247296788/the-benefits-and-drawbacks-of-chatbot-relationships" target="_blank" rel="noopener">If a bot relationship FEELS real,<br>should we care?</a></td><td>Artificial intimacy angle</td><td>Tue</td><td>Best move-friendly material; strong memo source</td><td>30m</td><td><span class="mode-badge mode-move">🏎️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-3"/></td><td>3</td><td>📖 <a href="https://uxmag.com/articles/the-4-degrees-of-anthropomorphism-of-generative-ai" target="_blank" rel="noopener">The 4 Degrees of<br>Anthropomorphism</a></td><td>4 degrees framework</td><td>Tue</td><td>Core framework for voice AI / companion angle</td><td>35m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-4"/></td><td>4</td><td>📖 <a href="https://www.nngroup.com/articles/sycophancy-generative-ai-chatbots/" target="_blank" rel="noopener">Sycophancy in<br>Generative-AI Chatbots</a></td><td>AI agreement/confirmation bias pattern</td><td>Tue</td><td>Strong memo + Assignment 1 critique source</td><td>35m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-5"/></td><td>5</td><td>✏️ <a href="https://canvas.northwestern.edu/courses/253956/discussion_topics/1843958" target="_blank" rel="noopener">Activity 1: Voice Chat</a></td><td>Reflection post on Canvas</td><td>Tue</td><td>Firsthand UX experience; required submission</td><td>30m</td><td><span class="mode-badge mode-move">🏎️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-6"/></td><td>6</td><td>📖 <a href="https://cacm.acm.org/research/against-imaginary-friends-why-digital-companions-are-no-solution-to-social-isolation/" target="_blank" rel="noopener">Against Imaginary Friends</a></td><td>Loneliness vs social isolation distinction</td><td>Tue/Wed</td><td>Best memo source for companionship angle</td><td>45m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-7"/></td><td>7</td><td>🎥 <a href="https://www.youtube.com/watch?v=ysPbXH0LpIE" target="_blank" rel="noopener">Prompting 101 — Anthropic</a></td><td>Prompt structure notes</td><td>Wed</td><td>Required for Activity 2 and Assignment 1 test design</td><td>45m</td><td><span class="mode-badge mode-flex">🔁</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-8"/></td><td>8</td><td>🎥 <a href="https://claude.ai/public/artifacts/b63ed621-7f35-4b6c-93d7-95cdca7a5577" target="_blank" rel="noopener">Prompt Structure Dojo — Interactive</a></td><td>Prompt structure hands-on practice</td><td>Wed</td><td>Reinforces Prompting 101 concepts interactively</td><td>15m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-9"/></td><td>9</td><td>📖 <a href="https://www.nngroup.com/articles/ai-changing-search-behaviors/" target="_blank" rel="noopener">How AI Is Changing<br>Search Behaviors</a></td><td>AI summaries + source verification implications</td><td>Wed</td><td>Supports media trust memo angle</td><td>35m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-10"/></td><td>10</td><td>📖 <a href="https://cloud.google.com/discover/what-is-prompt-engineering" target="_blank" rel="noopener">Prompt Engineering:<br>Overview and Guide</a></td><td>Prompting basics and structure</td><td>Wed</td><td>Foundation for Assignment 1 test design</td><td>30m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-11"/></td><td>11</td><td>📖 <a href="https://docs.claude.com/en/docs/test-and-evaluate/strengthen-guardrails/reduce-hallucinations" target="_blank" rel="noopener">Reducing Hallucinations</a></td><td>"I don't know" technique, citations, source restriction</td><td>Wed</td><td>Core Assignment 1 critique language</td><td>30m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-12"/></td><td>12</td><td>📖 <a href="https://cloud.google.com/use-cases/retrieval-augmented-generation" target="_blank" rel="noopener">What is RAG?</a></td><td>Retrieval, grounding, source quality</td><td>Wed</td><td>Essential Assignment 1 critique framework</td><td>30m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-13"/></td><td>13</td><td>📖 <a href="https://generative-ai-newsroom.com/prompting-techniques-and-best-practices-for-journalists-6fa806cde8ec" target="_blank" rel="noopener">Prompting Techniques<br>for Journalists</a></td><td>Validation, source grounding, evaluation criteria</td><td>Wed</td><td>Strong memo + Assignment 1 source</td><td>45m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-14"/></td><td>14</td><td>📖 <a href="https://generative-ai-newsroom.com/personalizing-newsletters-a-case-study-on-iterative-prompt-evaluation-and-improvement-a9f1141900fd" target="_blank" rel="noopener">Personalizing Newsletters:<br>Iterative Prompt Evaluation</a></td><td>Iterative evaluation criteria</td><td>Wed/Thu</td><td>Best case study for prompt iteration</td><td>45m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-15"/></td><td>15</td><td>✏️ <a href="https://canvas.northwestern.edu/courses/253956/discussion_topics/1843959" target="_blank" rel="noopener">Activity 2: Gemini Prompting Challenge</a></td><td>Final image + full Gemini chat thread</td><td>Fri</td><td>Required submission; save full Gemini thread</td><td>90m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-16"/></td><td>16</td><td>✏️ <a href="https://canvas.northwestern.edu/courses/253956/assignments/1781925" target="_blank" rel="noopener">Reading Response Memo</a></td><td>~300-word memo + question + outside resource</td><td>Fri/Sat</td><td>Main weekly synthesis submission</td><td>75m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-17"/></td><td>17</td><td>✏️ <a href="https://canvas.northwestern.edu/courses/253956/assignments/1781925" target="_blank" rel="noopener">Peer response/comment</a></td><td>One substantive reply on Canvas</td><td>Sat/Sun</td><td>Wait for classmates to post first</td><td>30m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-18"/></td><td>18</td><td>🧪 <a href="https://canvas.northwestern.edu/courses/253956/assignments/1781910" target="_blank" rel="noopener">Assignment 1: NotebookLM<br>Curation and Critique</a></td><td>5–8 min video + shared NotebookLM link</td><td>Sat/Sun</td><td>Major project submission; check sharing permissions</td><td>120m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
               </tbody>
               <tfoot>
-                <tr><td colspan="7"><strong>Total estimated active work time</strong></td><td colspan="2"><strong>About 13–14 hours</strong></td></tr>
-                <tr id="remainingTimeRow"><td colspan="7" class="text-muted">Estimated remaining</td><td colspan="2" id="remainingTimeVal" class="text-muted">—</td></tr>
+                <tr><td colspan="6"><strong>Total estimated active work time</strong></td><td colspan="2"><strong>About 13–14 hours</strong></td></tr>
+                <tr id="remainingTimeRow"><td colspan="6" class="text-muted">Estimated remaining</td><td colspan="2" id="remainingTimeVal" class="text-muted">—</td></tr>
               </tfoot>
             </table>
+        </div></div>
+
+        <div class="checklist-cards" id="checklistCards">
+          <div class="card-group-toggle">
+            <span class="card-group-label">18 required tasks</span>
+            <button class="card-group-btn" id="groupToggleBtn">Group: By day ▾</button>
+          </div>
+          <div class="card-day-div">Monday</div>
+          <div class="check-card" data-card-id="s5-1">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-1"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">🎥 Week 2 Lecture</div>
+              <div class="card-capture">7-concept map: UX, overreliance, anthropomorphism, sycophancy, prompting, RAG, verification</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Mon</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 75m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Week's intellectual map — do first</span>
+              </div>
+            </div>
+            <div class="card-mode mode-flex">🔁</div>
+          </div>
+          <div class="card-day-div">Tuesday</div>
+          <div class="check-card" data-card-id="s5-2">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-2"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">🎥 If a bot relationship FEELS real, should we care?</div>
+              <div class="card-capture">Artificial intimacy angle</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Tue</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 30m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Best move-friendly material; strong memo source</span>
+              </div>
+            </div>
+            <div class="card-mode mode-move">🏎️</div>
+          </div>
+          <div class="check-card" data-card-id="s5-3">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-3"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">📖 The 4 Degrees of Anthropomorphism</div>
+              <div class="card-capture">4 degrees framework</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Tue</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 35m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Core framework for voice AI / companion angle</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="check-card" data-card-id="s5-4">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-4"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">📖 Sycophancy in Generative-AI Chatbots</div>
+              <div class="card-capture">AI agreement/confirmation bias pattern</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Tue</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 35m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Strong memo + Assignment 1 critique source</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="check-card" data-card-id="s5-5">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-5"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">✏️ Activity 1: Voice Chat</div>
+              <div class="card-capture">Reflection post on Canvas</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Tue</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 30m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Firsthand UX experience; required submission</span>
+              </div>
+            </div>
+            <div class="card-mode mode-move">🏎️</div>
+          </div>
+          <div class="card-day-div">Tuesday / Wednesday</div>
+          <div class="check-card" data-card-id="s5-6">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-6"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">📖 Against Imaginary Friends</div>
+              <div class="card-capture">Loneliness vs social isolation distinction</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Tue/Wed</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 45m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Best memo source for companionship angle</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="card-day-div">Wednesday</div>
+          <div class="check-card" data-card-id="s5-7">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-7"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">🎥 Prompting 101</div>
+              <div class="card-capture">Prompt structure notes</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Wed</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 45m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Required for Activity 2 and Assignment 1 test design</span>
+              </div>
+            </div>
+            <div class="card-mode mode-flex">🔁</div>
+          </div>
+          <div class="check-card" data-card-id="s5-8">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-8"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">🎥 Prompt Structure Dojo — Interactive</div>
+              <div class="card-capture">Prompt structure hands-on practice</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Wed</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 15m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Reinforces Prompting 101 concepts interactively</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="check-card" data-card-id="s5-9">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-9"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">📖 How AI Is Changing Search Behaviors</div>
+              <div class="card-capture">AI summaries + source verification implications</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Wed</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 35m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Supports media trust memo angle</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="check-card" data-card-id="s5-10">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-10"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">📖 Prompt Engineering: Overview and Guide</div>
+              <div class="card-capture">Prompting basics and structure</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Wed</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 30m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Foundation for Assignment 1 test design</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="check-card" data-card-id="s5-11">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-11"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">📖 Reducing Hallucinations</div>
+              <div class="card-capture">"I don't know" technique, citations, source restriction</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Wed</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 30m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Core Assignment 1 critique language</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="check-card" data-card-id="s5-12">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-12"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">📖 What is RAG?</div>
+              <div class="card-capture">Retrieval, grounding, source quality</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Wed</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 30m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Essential Assignment 1 critique framework</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="check-card" data-card-id="s5-13">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-13"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">📖 Prompting Techniques for Journalists</div>
+              <div class="card-capture">Validation, source grounding, evaluation criteria</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Wed</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 45m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Strong memo + Assignment 1 source</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="card-day-div">Wednesday / Thursday</div>
+          <div class="check-card" data-card-id="s5-14">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-14"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">📖 Personalizing Newsletters: Iterative Prompt Evaluation</div>
+              <div class="card-capture">Iterative evaluation criteria</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Wed/Thu</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 45m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Best case study for prompt iteration</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="card-day-div">Friday</div>
+          <div class="check-card" data-card-id="s5-15">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-15"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">✏️ Activity 2: Gemini Prompting Challenge</div>
+              <div class="card-capture">Final image + full Gemini chat thread</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Fri</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 90m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Required submission; save full Gemini thread</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="card-day-div">Friday / Saturday</div>
+          <div class="check-card" data-card-id="s5-16">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-16"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">✏️ Reading Response Memo</div>
+              <div class="card-capture">~300-word memo + question + outside resource</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Fri/Sat</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 75m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Main weekly synthesis submission</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="card-day-div">Saturday / Sunday</div>
+          <div class="check-card" data-card-id="s5-17">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-17"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">✏️ Peer response/comment</div>
+              <div class="card-capture">One substantive reply on Canvas</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Sat/Sun</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 30m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Wait for classmates to post first</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="check-card" data-card-id="s5-18">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-18"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">🧪 Assignment 1: NotebookLM Curation and Critique</div>
+              <div class="card-capture">5–8 min video + shared NotebookLM link</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Sat/Sun</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 120m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Major project submission; check sharing permissions</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
         </div>
-</div>
+      </div>
     </details>
   </section>
   <!-- ─── SECTION 6: Materials ─── -->
@@ -1258,29 +1713,29 @@ input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); c
         </div>
         <div class="tscroll" style="margin-top:12px;">
         <div class="table-wrap">
-            <table class="mat-table">
-              <thead>
-                <tr>
-                  <th>Material</th><th>Depth</th><th>Why this mode</th>
-                  <th>How to consume it</th>
-                  <th>Memo?</th><th>Assignment?</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><td><a href="https://canvas.northwestern.edu/courses/253956/files?preview=25094793" target="_blank" rel="noopener">Week 2 Lecture</a> 🎥</td><td>Careful</td><td><span class="tag tag-desk">🖥️ Desk</span> Week map.</td><td>Watch at desk. Capture 7 concept map: UX, overreliance, anthropomorphism, sycophancy, prompting, RAG, verification.</td><td><span class="tag tag-green">Strong</span></td><td><span class="tag tag-green">Strong</span></td></tr>
-                <tr><td><a href="https://www.npr.org/2024/07/01/1247296788/the-benefits-and-drawbacks-of-chatbot-relationships" target="_blank" rel="noopener">NPR Bot Relationships</a> 🎧</td><td>Normal</td><td><span class="tag tag-move">🚶 Move</span> Audio.</td><td>Listen while walking. Capture: artificial intimacy angle.</td><td><span class="tag tag-green">Strong</span></td><td><span class="tag tag-amber">Maybe</span></td></tr>
-                <tr><td><a href="https://cacm.acm.org/research/against-imaginary-friends-why-digital-companions-are-no-solution-to-social-isolation/" target="_blank" rel="noopener">Against Imaginary Friends</a> 📖</td><td>Careful</td><td><span class="tag tag-desk">🖥️ iPad</span> PDF.</td><td>Read carefully. Capture: loneliness vs social isolation distinction.</td><td><span class="tag tag-green">Strong</span></td><td><span class="tag tag-amber">Maybe</span></td></tr>
-                <tr><td><a href="https://uxmag.com/articles/the-4-degrees-of-anthropomorphism-of-generative-ai" target="_blank" rel="noopener">Anthropomorphism</a> 📖</td><td>Careful</td><td><span class="tag tag-desk">🖥️ iPad</span> PDF.</td><td>Read carefully. Capture: 4 degrees framework.</td><td><span class="tag tag-green">Strong</span></td><td><span class="tag tag-amber">Medium</span></td></tr>
-                <tr><td><a href="https://www.nngroup.com/articles/sycophancy-generative-ai-chatbots/" target="_blank" rel="noopener">Sycophancy</a> 📖</td><td>Careful</td><td><span class="tag tag-desk">🖥️ iPad</span> PDF.</td><td>Read carefully. Capture: AI agreement/confirmation bias.</td><td><span class="tag tag-green">Strong</span></td><td><span class="tag tag-green">Strong</span></td></tr>
-                <tr><td><a href="https://www.nngroup.com/articles/ai-changing-search-behaviors/" target="_blank" rel="noopener">AI Search Behaviors</a> 📖</td><td>Normal</td><td><span class="tag tag-desk">🖥️ iPad</span> PDF.</td><td>Read normally. Capture: AI summaries + source checking implications.</td><td><span class="tag tag-green">Strong</span></td><td><span class="tag tag-green">Strong</span></td></tr>
-                <tr><td><a href="https://cloud.google.com/use-cases/retrieval-augmented-generation" target="_blank" rel="noopener">RAG / Hallucination / Prompt Engineering</a> 📖</td><td>Careful</td><td><span class="tag tag-desk">🖥️ Desk</span> Technical.</td><td>Read at desk. Capture: retrieval, grounding, citations, "I don't know" technique.</td><td><span class="tag tag-amber">Maybe</span></td><td><span class="tag tag-green">Essential</span></td></tr>
-                <tr><td><a href="https://www.youtube.com/watch?v=ysPbXH0LpIE" target="_blank" rel="noopener">Prompting 101 + Prompt Structure Dojo</a> 🎥</td><td>Normal</td><td><span class="tag tag-move">🔁 Flex</span> Audio+notes.</td><td>Listen via TTS + practice Dojo interactively. Capture: prompt structure.</td><td><span class="tag tag-amber">Maybe</span></td><td><span class="tag tag-green">Strong</span></td></tr>
-                <tr><td><a href="https://generative-ai-newsroom.com/prompting-techniques-and-best-practices-for-journalists-6fa806cde8ec" target="_blank" rel="noopener">Prompting for Journalists + Newsletter Case</a> 📖</td><td>Careful</td><td><span class="tag tag-desk">🖥️ Desk</span> Careful.</td><td>Read at desk. Capture: validation, source grounding, iterative evaluation criteria.</td><td><span class="tag tag-green">Strong</span></td><td><span class="tag tag-green">Strong</span></td></tr>
-              </tbody>
-            </table>
+          <table class="mat-table">
+            <thead>
+              <tr><th>Material</th><th>Depth</th><th>Mode</th><th>How to consume it</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><a href="https://canvas.northwestern.edu/courses/253956/files?preview=25094793" target="_blank" rel="noopener">Week 2 Lecture</a> 🎥</td><td>Careful</td><td>🔁</td><td>Watch at desk or listen via TTS. Capture 7-concept map: UX, overreliance, anthropomorphism, sycophancy, prompting, RAG, verification.</td></tr>
+              <tr><td><a href="https://www.npr.org/2024/07/01/1247296788/the-benefits-and-drawbacks-of-chatbot-relationships" target="_blank" rel="noopener">If a bot relationship FEELS real, should we care?</a> 🎧</td><td>Normal</td><td>🏎️</td><td>Listen while walking/driving. Capture the artificial intimacy angle.</td></tr>
+              <tr><td><a href="https://uxmag.com/articles/the-4-degrees-of-anthropomorphism-of-generative-ai" target="_blank" rel="noopener">The 4 Degrees of Anthropomorphism</a> 📖</td><td>Careful</td><td>🖥️</td><td>Read carefully at desk or iPad. Capture the 4 degrees framework.</td></tr>
+              <tr><td><a href="https://www.nngroup.com/articles/sycophancy-generative-ai-chatbots/" target="_blank" rel="noopener">Sycophancy in Generative-AI Chatbots</a> 📖</td><td>Careful</td><td>🖥️</td><td>Read carefully at desk or iPad. Capture the AI agreement/confirmation bias pattern.</td></tr>
+              <tr><td><a href="https://www.nngroup.com/articles/ai-changing-search-behaviors/" target="_blank" rel="noopener">How AI Is Changing Search Behaviors</a> 📖</td><td>Normal</td><td>🖥️</td><td>Read at desk or iPad. Capture AI summaries + source verification implications.</td></tr>
+              <tr><td><a href="https://cacm.acm.org/research/against-imaginary-friends-why-digital-companions-are-no-solution-to-social-isolation/" target="_blank" rel="noopener">Against Imaginary Friends</a> 📖</td><td>Careful</td><td>🖥️</td><td>Read carefully at desk or iPad. Capture the loneliness vs social isolation distinction.</td></tr>
+              <tr><td><a href="https://www.youtube.com/watch?v=ysPbXH0LpIE" target="_blank" rel="noopener">Prompting 101</a> 🎥</td><td>Normal</td><td>🔁</td><td>Watch or listen via TTS. Capture prompt structure components.</td></tr>
+              <tr><td><a href="https://claude.ai/public/artifacts/b63ed621-7f35-4b6c-93d7-95cdca7a5577" target="_blank" rel="noopener">Prompt Structure Dojo</a> 🎮</td><td>Practice</td><td>🖥️</td><td>Work through interactively at desk. Practice prompt structure hands-on.</td></tr>
+              <tr><td><a href="https://cloud.google.com/discover/what-is-prompt-engineering" target="_blank" rel="noopener">Prompt Engineering: Overview and Guide</a> 📖</td><td>Normal</td><td>🖥️</td><td>Read at desk. Capture prompting basics and structure for Assignment 1 test design.</td></tr>
+              <tr><td><a href="https://docs.claude.com/en/docs/test-and-evaluate/strengthen-guardrails/reduce-hallucinations" target="_blank" rel="noopener">Reducing Hallucinations</a> 📖</td><td>Careful</td><td>🖥️</td><td>Read carefully at desk. Capture the "I don't know" technique and citation practices.</td></tr>
+              <tr><td><a href="https://cloud.google.com/use-cases/retrieval-augmented-generation" target="_blank" rel="noopener">What is RAG?</a> 📖</td><td>Careful</td><td>🖥️</td><td>Read carefully at desk. Capture retrieval, grounding, and source quality concepts.</td></tr>
+              <tr><td><a href="https://generative-ai-newsroom.com/prompting-techniques-and-best-practices-for-journalists-6fa806cde8ec" target="_blank" rel="noopener">Prompting Techniques for Journalists</a> 📖</td><td>Careful</td><td>🖥️</td><td>Read carefully at desk. Capture validation, source grounding, and evaluation criteria.</td></tr>
+              <tr><td><a href="https://generative-ai-newsroom.com/personalizing-newsletters-a-case-study-on-iterative-prompt-evaluation-and-improvement-a9f1141900fd" target="_blank" rel="noopener">Personalizing Newsletters</a> 📖</td><td>Normal</td><td>🖥️</td><td>Read at desk. Capture iterative evaluation criteria for prompt improvement.</td></tr>
+            </tbody>
+          </table>
         </div>
         </div>
-</div>
+      </div>
     </details>
   </section>
   <!-- ─── SECTION 12: Activity Strategy ─── -->
@@ -1864,13 +2319,16 @@ Recommend the strongest 3–5 source corpus and explain what each source contrib
     <div style="flex:1;min-width:0;">
       <div style="font-size:.67rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);">GenAI &amp; the Media</div>
       <div style="font-weight:700;font-size:.92rem;margin:2px 0;">🧠 Francis Roberts</div>
-      <select data-week-switch style="margin-top:5px;width:100%;border:1px solid var(--line);border-radius:8px;background:var(--surface2);color:var(--ink);padding:5px 8px;font-size:.78rem;font-weight:600;appearance:none;-webkit-appearance:none;" aria-label="Switch week">
-        <option value="index.html">Week 1</option>
-        <option value="week2.html" selected>Week 2</option>
-        <option disabled value="">Week 3 — coming soon</option>
-        <option disabled value="">Week 4 — coming soon</option>
-        <option disabled value="">Week 5 — coming soon</option>
-      </select>
+      <div style="display:flex;align-items:center;gap:6px;margin-top:4px;">
+        <select class="week-pill-select" data-week-switch aria-label="Switch week">
+          <option value="index.html">Week 1</option>
+          <option value="week2.html" selected>Week 2</option>
+          <option disabled value="">Week 3</option>
+          <option disabled value="">Week 4</option>
+          <option disabled value="">Week 5</option>
+        </select>
+        <span style="font-size:.74rem;font-weight:500;color:var(--muted);white-space:nowrap;">Study Dashboard</span>
+      </div>
     </div>
     <button class="mobile-close-btn" id="mobileCloseBtn" aria-label="Close navigation" style="margin-left:10px;flex-shrink:0;">×</button>
   </div>
@@ -1993,6 +2451,41 @@ Recommend the strongest 3–5 source corpus and explain what each source contrib
   const doneCount  = document.getElementById('doneCount');
   const totalCount = document.getElementById('totalCount');
 
+
+  // ── Apply done-row to checklist table rows + sort ──────────────────────
+  function updateChecklistDoneRows() {
+    const tbody = document.querySelector('.check-table tbody');
+    if (!tbody) return;
+    const trs = [...tbody.querySelectorAll('tr')];
+    // Toggle done-row first
+    trs.forEach(tr => {
+      const cb = tr.querySelector('input[data-check]');
+      if (cb) tr.classList.toggle('done-row', cb.checked);
+    });
+    // Re-query after toggling so filter reflects current DOM state
+    const allTrs = [...tbody.querySelectorAll('tr')];
+    const open = allTrs.filter(r => !r.classList.contains('done-row'));
+    const done = allTrs.filter(r => r.classList.contains('done-row'));
+    [...open, ...done].forEach(r => tbody.appendChild(r));
+  }
+
+  // ── Apply card-done classes only (no sorting — rebuildCardGroups handles order) ──
+  function updateCardDoneState() {
+    const container = document.getElementById('checklistCards');
+    if (!container) return;
+    const cards = [...container.querySelectorAll('.check-card')];
+    cards.forEach(card => {
+      const sid = card.dataset.cardId;
+      const cb = document.getElementById(sid);
+      const isDone = cb && cb.checked;
+      card.classList.toggle('card-done', isDone);
+      const cardCb = card.querySelector('.card-cb');
+      if (cardCb) cardCb.classList.toggle('cb-checked', isDone);
+    });
+    // Always rebuild groups after state change so Completed group updates
+    rebuildCardGroups();
+  }
+
   function updateProgressUI() {
     const done = checks.filter(c => c.checked).length;
     const total = checks.length;
@@ -2067,11 +2560,24 @@ Recommend the strongest 3–5 source corpus and explain what each source contrib
 
     // Remaining time — midpoint of each effort range for unchecked items
     const effortMap = {
-      's5-1':  75, 's5-2':  30, 's5-3':  45, 's5-4':  15,
-      's5-5':  35, 's5-6':  35, 's5-7':  35, 's5-8':  45,
-      's5-9':  30, 's5-10': 30, 's5-11': 30, 's5-12': 45,
-      's5-13': 45, 's5-14': 30, 's5-15': 90, 's5-16': 75,
-      's5-17': 30, 's5-18': 120,
+      's5-1':  75,  // Lecture
+      's5-2':  30,  // NPR
+      's5-3':  35,  // Anthropomorphism
+      's5-4':  35,  // Sycophancy
+      's5-5':  30,  // Activity 1 Voice Chat
+      's5-6':  45,  // Against Imaginary Friends
+      's5-7':  45,  // Prompting 101
+      's5-8':  15,  // Prompt Structure Dojo
+      's5-9':  35,  // AI Search Behaviors
+      's5-10': 30,  // Prompt Engineering
+      's5-11': 30,  // Reducing Hallucinations
+      's5-12': 30,  // RAG
+      's5-13': 45,  // Prompting for Journalists
+      's5-14': 45,  // Personalizing Newsletters
+      's5-15': 90,  // Activity 2 Gemini
+      's5-16': 75,  // Reading Memo
+      's5-17': 30,  // Peer response
+      's5-18': 120, // Assignment 1
     };
     const remainingMins = checks
       .filter(c => !c.checked && effortMap[c.id])
@@ -2105,6 +2611,18 @@ Recommend the strongest 3–5 source corpus and explain what each source contrib
     }
 
     updateDeliverables();
+    updateChecklistDoneRows();
+    updateCardDoneState();
+
+    // ── Move done rows to bottom of checklist table ─────────────────────
+    const checkTbody = document.querySelector('.check-table tbody');
+    if (checkTbody) {
+      const allTrs = [...checkTbody.querySelectorAll('tr')];
+      const openTrs = allTrs.filter(r => !r.classList.contains('done-row'));
+      const doneTrs = allTrs.filter(r => r.classList.contains('done-row'));
+      [...openTrs, ...doneTrs].forEach(r => checkTbody.appendChild(r));
+    }
+
   }
 
   // ── Celebration: banner + rockets + confetti ───────────
@@ -2413,7 +2931,12 @@ Recommend the strongest 3–5 source corpus and explain what each source contrib
   }
 
   checks.forEach(c => {
-    c.addEventListener('change', () => { saveCheck(c); updateProgressUI(); });
+    c.addEventListener('change', () => {
+      saveCheck(c);
+      updateProgressUI();
+      updateChecklistDoneRows();
+      updateCardDoneState();
+    });
   });
 
   synced.forEach(s => {
@@ -2669,6 +3192,17 @@ Recommend the strongest 3–5 source corpus and explain what each source contrib
   document.getElementById('mobileCloseBtn')?.addEventListener('click', closeMobileDrawer);
   document.getElementById('mobileBackdrop')?.addEventListener('click', closeMobileDrawer);
 
+
+  // Progress pill → jump to checklist
+  document.getElementById('pillProgress')?.addEventListener('click', () => {
+    const s5 = document.getElementById('s5');
+    if (!s5) return;
+    const det = s5.querySelector('.section-details');
+    if (det) det.open = true;
+    if (s5.classList.contains('section-hidden')) setSectionHidden('s5', false);
+    s5.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
   document.getElementById('mProgressBtn')?.addEventListener('click', () => {
     const s5 = document.getElementById('s5');
     if (s5) {
@@ -2875,18 +3409,18 @@ Recommend the strongest 3–5 source corpus and explain what each source contrib
   const PILL_LABELS = {
     's5-1':  '🎥 Week 2 lecture',
     's5-2':  '🎥 NPR bot relationships',
-    's5-3':  '🎥 Prompting 101',
-    's5-4':  '🎥 Prompt Structure Dojo',
-    's5-5':  '📖 AI search behaviors',
-    's5-6':  '📖 Anthropomorphism',
-    's5-7':  '📖 Sycophancy',
-    's5-8':  '📖 Against Imaginary Friends',
-    's5-9':  '📖 Prompt Engineering',
-    's5-10': '📖 Reducing Hallucinations',
-    's5-11': '📖 RAG',
-    's5-12': '📖 Prompting for Journalists',
-    's5-13': '📖 Newsletters case study',
-    's5-14': '✏️ Activity 1: Voice Chat',
+    's5-3':  '📖 Anthropomorphism',
+    's5-4':  '📖 Sycophancy',
+    's5-5':  '✏️ Activity 1: Voice Chat',
+    's5-6':  '📖 Against Imaginary Friends',
+    's5-7':  '🎥 Prompting 101',
+    's5-8':  '🎥 Prompt Structure Dojo',
+    's5-9':  '📖 AI search behaviors',
+    's5-10': '📖 Prompt Engineering',
+    's5-11': '📖 Reducing Hallucinations',
+    's5-12': '📖 RAG',
+    's5-13': '📖 Prompting for Journalists',
+    's5-14': '📖 Newsletters case study',
     's5-15': '✏️ Activity 2: Gemini',
     's5-16': '✏️ Reading Memo',
     's5-17': '✏️ Peer response',
@@ -2988,17 +3522,17 @@ Recommend the strongest 3–5 source corpus and explain what each source contrib
   const MAT_SYNC = {
     's5-1':  'Week 2 Lecture',
     's5-2':  'NPR Bot Relationships',
-    's5-3':  'Prompting 101',
-    's5-4':  'Prompt Structure Dojo',
-    's5-5':  'AI Search Behaviors',
-    's5-6':  'Anthropomorphism',
-    's5-7':  'Sycophancy',
-    's5-8':  'Against Imaginary Friends',
-    's5-9':  'Prompt Engineering Overview',
-    's5-10': 'Reducing Hallucinations',
-    's5-11': 'RAG',
-    's5-12': 'Prompting for Journalists',
-    's5-13': 'Personalizing Newsletters',
+    's5-3':  'Anthropomorphism',
+    's5-4':  'Sycophancy',
+    's5-6':  'Against Imaginary Friends',
+    's5-7':  'Prompting 101',
+    's5-8':  'Prompt Structure Dojo',
+    's5-9':  'AI Search Behaviors',
+    's5-10': 'Prompt Engineering Overview',
+    's5-11': 'Reducing Hallucinations',
+    's5-12': 'RAG',
+    's5-13': 'Prompting for Journalists',
+    's5-14': 'Personalizing Newsletters',
   };
 
   function updateMatTable() {
@@ -3078,6 +3612,165 @@ Recommend the strongest 3–5 source corpus and explain what each source contrib
       console.warn('Realtime error:', e.message);
     }
   }
+
+
+  // ── Mobile card group toggle ───────────────────────────────────────
+  // ── Card grouping ──────────────────────────────────────────────────
+  const CARD_META = {
+    's5-1': {day:'Mon', type:'video', effort:75, bucket:'long'},
+    's5-2': {day:'Tue', type:'video', effort:30, bucket:'short'},
+    's5-3': {day:'Tue', type:'reading', effort:35, bucket:'medium'},
+    's5-4': {day:'Tue', type:'reading', effort:35, bucket:'medium'},
+    's5-5': {day:'Tue', type:'activity', effort:30, bucket:'short'},
+    's5-6': {day:'Tue/Wed', type:'reading', effort:45, bucket:'medium'},
+    's5-7': {day:'Wed', type:'video', effort:45, bucket:'medium'},
+    's5-8': {day:'Wed', type:'video', effort:15, bucket:'short'},
+    's5-9': {day:'Wed', type:'reading', effort:35, bucket:'medium'},
+    's5-10': {day:'Wed', type:'reading', effort:30, bucket:'short'},
+    's5-11': {day:'Wed', type:'reading', effort:30, bucket:'short'},
+    's5-12': {day:'Wed', type:'reading', effort:30, bucket:'short'},
+    's5-13': {day:'Wed', type:'reading', effort:45, bucket:'medium'},
+    's5-14': {day:'Wed/Thu', type:'reading', effort:45, bucket:'medium'},
+    's5-15': {day:'Fri', type:'activity', effort:90, bucket:'long'},
+    's5-16': {day:'Fri/Sat', type:'activity', effort:75, bucket:'long'},
+    's5-17': {day:'Sat/Sun', type:'activity', effort:30, bucket:'short'},
+    's5-18': {day:'Sat/Sun', type:'assignment', effort:120, bucket:'long'},
+  };
+
+  const TYPE_LABELS = {
+    'video': '🎥 Video & Audio',
+    'reading': '📖 Readings',
+    'activity': '✏️ Activities & Submissions',
+    'assignment': '🧪 Assignments',
+  };
+
+  const EFFORT_LABELS = {
+    'short': '⚡ Short (≤30m)',
+    'medium': '🕐 Medium (31–60m)',
+    'long': '🕑 Long (60m+)',
+  };
+
+  const GROUP_MODES = ['By day', 'By type', 'By effort', 'None'];
+  let groupModeIdx = 0;
+
+  function rebuildCardGroups() {
+    const container = document.getElementById('checklistCards');
+    if (!container) return;
+
+    // Remove existing dividers
+    container.querySelectorAll('.card-day-div').forEach(d => d.remove());
+
+    // Get all cards
+    const allCards = [...container.querySelectorAll('.check-card')];
+    if (!allCards.length) return;
+
+    // Split into open and done
+    const openCards = allCards.filter(c => !c.classList.contains('card-done'));
+    const doneCards = allCards.filter(c => c.classList.contains('card-done'));
+
+    const mode = GROUP_MODES[groupModeIdx];
+
+    // Determine group key for a card
+    function getGroup(card) {
+      const sid = card.dataset.cardId;
+      const meta = CARD_META[sid];
+      if (!meta) return 'Other';
+      if (mode === 'By day') return meta.day;
+      if (mode === 'By type') return TYPE_LABELS[meta.type] || meta.type;
+      if (mode === 'By effort') return EFFORT_LABELS[meta.bucket] || meta.bucket;
+      return null;
+    }
+
+    // Sort open cards by mode
+    if (mode === 'By type') {
+      const typeOrder = ['video', 'reading', 'activity', 'assignment'];
+      openCards.sort((a, b) => {
+        const ma = CARD_META[a.dataset.cardId];
+        const mb = CARD_META[b.dataset.cardId];
+        return typeOrder.indexOf(ma?.type) - typeOrder.indexOf(mb?.type);
+      });
+    } else if (mode === 'By effort') {
+      openCards.sort((a, b) => {
+        const ma = CARD_META[a.dataset.cardId];
+        const mb = CARD_META[b.dataset.cardId];
+        return (ma?.effort || 0) - (mb?.effort || 0);
+      });
+    } else {
+      // By day or None — original order
+      openCards.sort((a, b) => {
+        const aNum = parseInt(a.dataset.cardId?.replace('s5-', '') || 0);
+        const bNum = parseInt(b.dataset.cardId?.replace('s5-', '') || 0);
+        return aNum - bNum;
+      });
+    }
+
+    // Insert open cards with group dividers
+    if (mode !== 'None') {
+      let lastGroup = null;
+      openCards.forEach(card => {
+        const group = getGroup(card);
+        if (group && group !== lastGroup) {
+          const div = document.createElement('div');
+          div.className = 'card-day-div';
+          div.textContent = group;
+          container.appendChild(div);
+          lastGroup = group;
+        }
+        container.appendChild(card);
+      });
+    } else {
+      openCards.forEach(c => container.appendChild(c));
+    }
+
+    // Always add Completed group at bottom if any done cards
+    if (doneCards.length > 0) {
+      const completedDiv = document.createElement('div');
+      completedDiv.className = 'card-day-div card-completed-div';
+      completedDiv.textContent = 'Completed ✓';
+      container.appendChild(completedDiv);
+      doneCards.forEach(c => container.appendChild(c));
+    }
+  }
+
+  const groupBtn = document.getElementById('groupToggleBtn');
+  if (groupBtn) {
+    groupBtn.addEventListener('click', () => {
+      groupModeIdx = (groupModeIdx + 1) % GROUP_MODES.length;
+      groupBtn.textContent = 'Group: ' + GROUP_MODES[groupModeIdx] + ' ▾';
+      rebuildCardGroups();
+    });
+  }
+
+  // ── Mobile card checkbox sync ──────────────────────────────────────
+  document.querySelectorAll('.card-cb').forEach(cb => {
+    const sid = cb.dataset.cb;
+    const mainCb = document.getElementById(sid);
+    
+    // Sync initial state
+    if (mainCb && mainCb.checked) {
+      cb.classList.add('cb-checked');
+      cb.closest('.check-card')?.classList.add('card-done');
+    }
+    
+    cb.addEventListener('click', () => {
+      const mainCb = document.getElementById(cb.dataset.cb);
+      if (!mainCb) return;
+      mainCb.checked = !mainCb.checked;
+      mainCb.dispatchEvent(new Event('change'));
+      cb.classList.toggle('cb-checked', mainCb.checked);
+      cb.closest('.check-card')?.classList.toggle('card-done', mainCb.checked);
+    });
+  });
+
+  // ── Sync card checkboxes when main checkboxes change ───────────────
+  checks.forEach(mainCb => {
+    mainCb.addEventListener('change', () => {
+      const cardCb = document.querySelector(`.card-cb[data-cb="${mainCb.id}"]`);
+      if (!cardCb) return;
+      cardCb.classList.toggle('cb-checked', mainCb.checked);
+      cardCb.closest('.check-card')?.classList.toggle('card-done', mainCb.checked);
+    });
+  });
 
 })();
 </script>
