@@ -1459,7 +1459,7 @@ input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); c
                 <tr><td><input type="checkbox" data-check id="s5-17"/></td><td>17</td><td>🧪 <a href="https://canvas.northwestern.edu/courses/253956/assignments/1781911" target="_blank" rel="noopener">Assignment 2 Step 1: choose Kickstarter tech product + two audience segments</a></td><td>Browse Kickstarter tech, choose unfunded product, identify 2 audience segments with rationale</td><td>Sun</td><td>Product choice drives everything — pick it early so segment thinking can develop</td><td>75m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
               </tbody>
               <tfoot>
-                <tr><td colspan="6"><strong>Total estimated active work time</strong></td><td colspan="2"><strong>About 9–12 hours</strong></td></tr>
+                <tr><td colspan="6"><strong>Total estimated active work time</strong></td><td colspan="2"><strong>About 14h 55m</strong></td></tr>
                 <tr id="remainingTimeRow"><td colspan="6" class="text-muted">Estimated remaining</td><td colspan="2" id="remainingTimeVal" class="text-muted">—</td></tr>
               </tfoot>
             </table>
@@ -2392,26 +2392,47 @@ Do not draft the final memo.</pre>
       el.style.background = barColor;
     });
 
-    // Remaining time — midpoint of each effort range for unchecked items
-    const effortMap = {
-      's5-1':  75,  // Week 3 lecture
-      's5-2':  45,  // GAIN newsroom
-      's5-3':  45,  // McKinsey
-      's5-4':  40,  // LA Times / Sora
-      's5-5':  35,  // CBS Hollywood
-      's5-6':  35,  // Guardian influencers
-      's5-7':  40,  // ElevenLabs
-      's5-8':  50,  // MIT Tech Review
-      's5-9':  45,  // Brennan Center
-      's5-10': 45,  // Vibe Coding
-      's5-11': 40,  // Data Analysis ChatGPT
-      's5-12': 40,  // Paul Bradshaw
-      's5-13': 60,  // Activity 1
-      's5-14': 120, // Activity 2
-      's5-15': 75,  // Reading Memo
-      's5-16': 30,  // Peer response
-      's5-17': 75,  // Assignment 2 Step 1
-    };
+    // Active work time — derive from the checklist table so the footer cannot drift from row efforts
+    function parseEffortMinutes(text) {
+      const raw = (text || '').replace(/–/g, '-').toLowerCase();
+      if (!raw.trim()) return 0;
+      const nums = [...raw.matchAll(/\d+(?:\.\d+)?/g)].map(m => parseFloat(m[0]));
+      if (!nums.length) return 0;
+      const usesHours = /\bh\b|hour/.test(raw);
+      const usesMinutes = /\bm\b|min/.test(raw);
+      let val = nums[0];
+      if (raw.includes('-') && nums.length >= 2) {
+        val = (nums[0] + nums[1]) / 2;
+      }
+      // Most checklist efforts are minutes; support hours just in case future weeks use h/hr/hour.
+      if (usesHours && !usesMinutes) return val * 60;
+      return val;
+    }
+
+    function formatWorkTime(mins) {
+      // Round to the nearest 5 minutes so range midpoints stay readable.
+      mins = Math.max(0, Math.round(mins / 5) * 5);
+      const h = Math.floor(mins / 60);
+      const m = mins % 60;
+      if (h && m) return `${h}h ${m}m`;
+      if (h) return `${h}h`;
+      return `${m}m`;
+    }
+
+    const effortMap = {};
+    document.querySelectorAll('.check-table tbody tr').forEach(tr => {
+      const cb = tr.querySelector('input[data-check]');
+      const cells = tr.querySelectorAll('td');
+      if (!cb || cells.length < 7) return;
+      effortMap[cb.id] = parseEffortMinutes(cells[6].textContent);
+    });
+
+    const totalMins = Object.values(effortMap).reduce((sum, mins) => sum + mins, 0);
+    const totalEl = document.querySelector('.check-table tfoot tr:first-child td:last-child strong');
+    if (totalEl && totalMins > 0) {
+      totalEl.textContent = `About ${formatWorkTime(totalMins)}`;
+    }
+
     const remainingMins = checks
       .filter(c => !c.checked && effortMap[c.id])
       .reduce((sum, c) => sum + effortMap[c.id], 0);
@@ -2422,13 +2443,13 @@ Do not draft the final memo.</pre>
         remEl.style.color = '#328c4b';
         remEl.style.fontWeight = '700';
       } else if (remainingMins > 0) {
-        const remH = Math.floor(remainingMins / 60);
-        const remM = remainingMins % 60;
-        remEl.textContent = remH > 0 ? `~${remH}h ${remM}m left` : `~${remM}m left`;
+        remEl.textContent = `~${formatWorkTime(remainingMins)} left`;
         remEl.style.color = '';
         remEl.style.fontWeight = '';
       } else {
         remEl.textContent = '—';
+        remEl.style.color = '';
+        remEl.style.fontWeight = '';
       }
     }
 

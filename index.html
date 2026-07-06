@@ -1427,7 +1427,7 @@ input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); c
                 <tr><td><input type="checkbox" data-check id="s5-18"/></td><td>18</td><td>✏️ <a href="https://canvas.northwestern.edu/courses/253956/assignments/1781924" target="_blank" rel="noopener">Peer response + final Canvas check</a></td><td>One substantive reply + confirm all posted</td><td>Sat / Sun</td><td>Wait for classmates, then verify submission status</td><td>30–45m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
               </tbody>
               <tfoot>
-                <tr><td colspan="6"><strong>Total estimated active work time</strong></td><td colspan="2"><strong>About 8.5–11.5 hours</strong></td></tr>
+                <tr><td colspan="6"><strong>Total estimated active work time</strong></td><td colspan="2"><strong>About 10h 45m</strong></td></tr>
                 <tr id="remainingTimeRow"><td colspan="6" class="text-muted">Estimated remaining</td><td colspan="2" id="remainingTimeVal" class="text-muted">—</td></tr>
               </tfoot>
             </table>
@@ -2533,13 +2533,47 @@ Recommend the strongest topic for me and explain why.</pre>
       el.style.background = barColor;
     });
 
-    // Remaining time — midpoint of each effort range for unchecked items
-    const effortMap = {
-      's5-1': 15, 's5-2': 82, 's5-3': 52, 's5-4': 12, 's5-5': 37,
-      's5-6': 20, 's5-7': 17, 's5-8': 25, 's5-9': 12, 's5-10': 40,
-      's5-11': 37, 's5-12': 30, 's5-13': 10, 's5-14': 35, 's5-15': 67,
-      's5-16': 37, 's5-17': 75, 's5-18': 37,
-    };
+    // Active work time — derive from the checklist table so the footer cannot drift from row efforts
+    function parseEffortMinutes(text) {
+      const raw = (text || '').replace(/–/g, '-').toLowerCase();
+      if (!raw.trim()) return 0;
+      const nums = [...raw.matchAll(/\d+(?:\.\d+)?/g)].map(m => parseFloat(m[0]));
+      if (!nums.length) return 0;
+      const usesHours = /\bh\b|hour/.test(raw);
+      const usesMinutes = /\bm\b|min/.test(raw);
+      let val = nums[0];
+      if (raw.includes('-') && nums.length >= 2) {
+        val = (nums[0] + nums[1]) / 2;
+      }
+      // Most checklist efforts are minutes; support hours just in case future weeks use h/hr/hour.
+      if (usesHours && !usesMinutes) return val * 60;
+      return val;
+    }
+
+    function formatWorkTime(mins) {
+      // Round to the nearest 5 minutes so range midpoints stay readable.
+      mins = Math.max(0, Math.round(mins / 5) * 5);
+      const h = Math.floor(mins / 60);
+      const m = mins % 60;
+      if (h && m) return `${h}h ${m}m`;
+      if (h) return `${h}h`;
+      return `${m}m`;
+    }
+
+    const effortMap = {};
+    document.querySelectorAll('.check-table tbody tr').forEach(tr => {
+      const cb = tr.querySelector('input[data-check]');
+      const cells = tr.querySelectorAll('td');
+      if (!cb || cells.length < 7) return;
+      effortMap[cb.id] = parseEffortMinutes(cells[6].textContent);
+    });
+
+    const totalMins = Object.values(effortMap).reduce((sum, mins) => sum + mins, 0);
+    const totalEl = document.querySelector('.check-table tfoot tr:first-child td:last-child strong');
+    if (totalEl && totalMins > 0) {
+      totalEl.textContent = `About ${formatWorkTime(totalMins)}`;
+    }
+
     const remainingMins = checks
       .filter(c => !c.checked && effortMap[c.id])
       .reduce((sum, c) => sum + effortMap[c.id], 0);
@@ -2550,13 +2584,13 @@ Recommend the strongest topic for me and explain why.</pre>
         remEl.style.color = '#328c4b';
         remEl.style.fontWeight = '700';
       } else if (remainingMins > 0) {
-        const remH = Math.floor(remainingMins / 60);
-        const remM = remainingMins % 60;
-        remEl.textContent = remH > 0 ? `~${remH}h ${remM}m left` : `~${remM}m left`;
+        remEl.textContent = `~${formatWorkTime(remainingMins)} left`;
         remEl.style.color = '';
         remEl.style.fontWeight = '';
       } else {
         remEl.textContent = '—';
+        remEl.style.color = '';
+        remEl.style.fontWeight = '';
       }
     }
 
