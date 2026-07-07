@@ -1317,18 +1317,18 @@ input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); c
           </div>
           <pre class="copybody" id="tasks3">Copy/paste straight into Google Tasks 👇
 
-🎥 Watch/read Week 3 Lecture: Generative AI Use Cases → Due Sun Jul 5
-📖 Read GAIN: Keeping Track of AI Use Cases in the Newsroom → Due Mon Jul 6
-📖 Read McKinsey: How generative AI can boost consumer marketing → Due Mon Jul 6
-📖 Read LA Times: Washed Out and Sora music video → Due Mon Jul 6
-🎥 Watch CBS: AI in Hollywood / Tilly Norwood → Due Mon Jul 6
-📖 Read Guardian: Brands using AI-generated influencers → Due Tue Jul 7
-🎥 Watch ElevenLabs voice/audio generation tutorial → Due Tue Jul 7
-📖 Read MIT Technology Review: How generative AI could reinvent play → Due Wed Jul 8
-📖 Read Brennan Center: Generative AI in Political Advertising → Due Wed Jul 8
-📖 Read GAIN: Vibe Coding for Newsrooms → Due Wed Jul 8
-🎥 Review Data Analysis with ChatGPT tutorial → Due Wed Jul 8
-📖 Read Paul Bradshaw: I tested AI tools on data analysis → Due Thu Jul 9
+🎥 Watch/read Week 3 Lecture: Generative AI Use Cases → Due Mon Jul 6
+📖 Read GAIN: Keeping Track of AI Use Cases in the Newsroom → Due Tue Jul 7
+📖 Read McKinsey: How generative AI can boost consumer marketing → Due Tue Jul 7
+📖 Read LA Times: Washed Out and Sora music video → Due Tue Jul 7
+🎥 Watch CBS: AI in Hollywood / Tilly Norwood → Due Tue Jul 7
+📖 Read Guardian: Brands using AI-generated influencers → Due Wed Jul 8
+🎥 Watch ElevenLabs voice/audio generation tutorial → Due Wed Jul 8
+📖 Read MIT Technology Review: How generative AI could reinvent play → Due Thu Jul 9
+📖 Read Brennan Center: Generative AI in Political Advertising → Due Thu Jul 9
+📖 Read GAIN: Vibe Coding for Newsrooms → Due Thu Jul 9
+🎥 Review Data Analysis with ChatGPT tutorial → Due Thu Jul 9
+📖 Read Paul Bradshaw: I tested AI tools on data analysis → Due Fri Jul 10
 🧪 Complete Activity 1: NotebookLM Podcast critique → Due Sun Jul 12
 🧪 Complete Activity 2: Vibe Coding tool + PRD + reflection → Due Sun Jul 12
 📝 Draft and post Week 3 Reading Response Memo → Due Sun Jul 12
@@ -2732,6 +2732,8 @@ Do not draft the final memo.</pre>
     });
     standalone.forEach(s => { s.checked = load(STORAGE + s.id) === '1'; });
     updateProgressUI();
+    updateChecklistDoneRows();
+    updateCardDoneState();
 
     // 2. Then fetch from Supabase and override if newer
     const rows = await sbLoadAll();
@@ -2743,6 +2745,14 @@ Do not draft the final memo.</pre>
         el.checked = checked;
         save(STORAGE + id, checked ? '1' : '0');
         changed = true;
+      }
+    });
+    // Also restore standalone checkboxes (Actions 2, 3 etc) from Supabase
+    standalone.forEach(s => {
+      const row = rows.find(r => r.id === s.id);
+      if (row && s.checked !== row.checked) {
+        s.checked = row.checked;
+        save(STORAGE + s.id, row.checked ? '1' : '0');
       }
     });
     // Sync synced checkboxes to match
@@ -2773,11 +2783,17 @@ Do not draft the final memo.</pre>
       if (src) { src.checked = s.checked; saveCheck(src); }
       else { save(STORAGE + s.id, s.checked ? '1' : '0'); }
       updateProgressUI();
+      updateChecklistDoneRows();
+      updateCardDoneState();
     });
   });
   standalone.forEach(s => {
     s.addEventListener('change', () => {
       save(STORAGE + s.id, s.checked ? '1' : '0');
+      if (SB_ENABLED) {
+        setSyncStatus('saving');
+        sbUpsert(s.id, s.checked).then(ok => setSyncStatus(ok ? 'ok' : 'err'));
+      }
     });
   });
 
@@ -3426,10 +3442,16 @@ Do not draft the final memo.</pre>
           if (!row || !row.id) return;
           if (!row.id.startsWith(`${SB_WEEK}_`)) return;
           const checkId = row.id.replace(`${SB_WEEK}_`, '');
-          const el = document.getElementById(checkId);
+          // Try checked item first, then standalone (c-first2 etc)
+          const el = document.getElementById(checkId) ||
+                     [...standalone].find(s => s.id === checkId);
           if (!el || el.checked === row.checked) return;
           el.checked = row.checked;
           save(STORAGE + checkId, row.checked ? '1' : '0');
+          if (el.dataset && el.dataset.sync) {
+            const src = document.getElementById(el.dataset.sync);
+            if (src) { src.checked = row.checked; }
+          }
           synced.filter(s => s.dataset.sync === checkId).forEach(s => {
             s.checked = row.checked;
           });
@@ -3590,20 +3612,11 @@ Do not draft the final memo.</pre>
       if (!mainCb) return;
       mainCb.checked = !mainCb.checked;
       mainCb.dispatchEvent(new Event('change'));
-      cb.classList.toggle('cb-checked', mainCb.checked);
-      cb.closest('.check-card')?.classList.toggle('card-done', mainCb.checked);
+      // Visual state handled by updateCardDoneState via the change event chain
     });
   });
 
-  // ── Sync card checkboxes when main checkboxes change ───────────────
-  checks.forEach(mainCb => {
-    mainCb.addEventListener('change', () => {
-      const cardCb = document.querySelector(`.card-cb[data-cb="${mainCb.id}"]`);
-      if (!cardCb) return;
-      cardCb.classList.toggle('cb-checked', mainCb.checked);
-      cardCb.closest('.check-card')?.classList.toggle('card-done', mainCb.checked);
-    });
-  });
+  // Card visual sync handled by updateCardDoneState() in the main change listener
 
 })();
 </script>

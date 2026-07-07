@@ -2903,6 +2903,8 @@ Recommend the strongest topic for me and explain why.</pre>
       s.checked = src ? src.checked : (load(STORAGE + s.id) === '1');
     });
     updateProgressUI();
+    updateChecklistDoneRows();
+    updateCardDoneState();
 
     // 2. Then fetch from Supabase and override if newer
     const rows = await sbLoadAll();
@@ -2944,6 +2946,8 @@ Recommend the strongest topic for me and explain why.</pre>
       if (src) { src.checked = s.checked; saveCheck(src); }
       else { save(STORAGE + s.id, s.checked ? '1' : '0'); }
       updateProgressUI();
+      updateChecklistDoneRows();
+      updateCardDoneState();
     });
   });
 
@@ -3756,20 +3760,11 @@ Recommend the strongest topic for me and explain why.</pre>
       if (!mainCb) return;
       mainCb.checked = !mainCb.checked;
       mainCb.dispatchEvent(new Event('change'));
-      cb.classList.toggle('cb-checked', mainCb.checked);
-      cb.closest('.check-card')?.classList.toggle('card-done', mainCb.checked);
+      // Visual state handled by updateCardDoneState via the change event chain
     });
   });
 
-  // ── Sync card checkboxes when main checkboxes change ───────────────
-  checks.forEach(mainCb => {
-    mainCb.addEventListener('change', () => {
-      const cardCb = document.querySelector(`.card-cb[data-cb="${mainCb.id}"]`);
-      if (!cardCb) return;
-      cardCb.classList.toggle('cb-checked', mainCb.checked);
-      cardCb.closest('.check-card')?.classList.toggle('card-done', mainCb.checked);
-    });
-  });
+  // Card visual sync handled by updateCardDoneState() in the main change listener
 
 })();
 </script>
