@@ -2457,6 +2457,124 @@ Recommend the strongest 3–5 source corpus and explain what each source contrib
   const totalCount = document.getElementById('totalCount');
 
 
+  // ── Mobile card group toggle ───────────────────────────────────────
+  // ── Card grouping ──────────────────────────────────────────────────
+  const CARD_META = {
+    's5-1': {day:'Mon', type:'video', effort:75, bucket:'long'},
+    's5-2': {day:'Tue', type:'video', effort:30, bucket:'short'},
+    's5-3': {day:'Tue', type:'reading', effort:35, bucket:'medium'},
+    's5-4': {day:'Tue', type:'reading', effort:35, bucket:'medium'},
+    's5-5': {day:'Tue', type:'activity', effort:30, bucket:'short'},
+    's5-6': {day:'Tue/Wed', type:'reading', effort:45, bucket:'medium'},
+    's5-7': {day:'Wed', type:'video', effort:45, bucket:'medium'},
+    's5-8': {day:'Wed', type:'video', effort:15, bucket:'short'},
+    's5-9': {day:'Wed', type:'reading', effort:35, bucket:'medium'},
+    's5-10': {day:'Wed', type:'reading', effort:30, bucket:'short'},
+    's5-11': {day:'Wed', type:'reading', effort:30, bucket:'short'},
+    's5-12': {day:'Wed', type:'reading', effort:30, bucket:'short'},
+    's5-13': {day:'Wed', type:'reading', effort:45, bucket:'medium'},
+    's5-14': {day:'Wed/Thu', type:'reading', effort:45, bucket:'medium'},
+    's5-15': {day:'Fri', type:'activity', effort:90, bucket:'long'},
+    's5-16': {day:'Fri/Sat', type:'activity', effort:75, bucket:'long'},
+    's5-17': {day:'Sat/Sun', type:'activity', effort:30, bucket:'short'},
+    's5-18': {day:'Sat/Sun', type:'assignment', effort:120, bucket:'long'},
+  };
+
+  const TYPE_LABELS = {
+    'video': '🎥 Video & Audio',
+    'reading': '📖 Readings',
+    'activity': '✏️ Activities & Submissions',
+    'assignment': '🧪 Assignments',
+  };
+
+  const EFFORT_LABELS = {
+    'short': '⚡ Short (≤30m)',
+    'medium': '🕐 Medium (31–60m)',
+    'long': '🕑 Long (60m+)',
+  };
+
+  const GROUP_MODES = ['By day', 'By type', 'By effort', 'None'];
+  let groupModeIdx = 0;
+
+  function rebuildCardGroups() {
+    const container = document.getElementById('checklistCards');
+    if (!container) return;
+
+    // Remove existing dividers
+    container.querySelectorAll('.card-day-div').forEach(d => d.remove());
+
+    // Get all cards
+    const allCards = [...container.querySelectorAll('.check-card')];
+    if (!allCards.length) return;
+
+    // Split into open and done
+    const openCards = allCards.filter(c => !c.classList.contains('card-done'));
+    const doneCards = allCards.filter(c => c.classList.contains('card-done'));
+
+    const mode = GROUP_MODES[groupModeIdx];
+
+    // Determine group key for a card
+    function getGroup(card) {
+      const sid = card.dataset.cardId;
+      const meta = CARD_META[sid];
+      if (!meta) return 'Other';
+      if (mode === 'By day') return meta.day;
+      if (mode === 'By type') return TYPE_LABELS[meta.type] || meta.type;
+      if (mode === 'By effort') return EFFORT_LABELS[meta.bucket] || meta.bucket;
+      return null;
+    }
+
+    // Sort open cards by mode
+    if (mode === 'By type') {
+      const typeOrder = ['video', 'reading', 'activity', 'assignment'];
+      openCards.sort((a, b) => {
+        const ma = CARD_META[a.dataset.cardId];
+        const mb = CARD_META[b.dataset.cardId];
+        return typeOrder.indexOf(ma?.type) - typeOrder.indexOf(mb?.type);
+      });
+    } else if (mode === 'By effort') {
+      openCards.sort((a, b) => {
+        const ma = CARD_META[a.dataset.cardId];
+        const mb = CARD_META[b.dataset.cardId];
+        return (ma?.effort || 0) - (mb?.effort || 0);
+      });
+    } else {
+      // By day or None — original order
+      openCards.sort((a, b) => {
+        const aNum = parseInt(a.dataset.cardId?.replace('s5-', '') || 0);
+        const bNum = parseInt(b.dataset.cardId?.replace('s5-', '') || 0);
+        return aNum - bNum;
+      });
+    }
+
+    // Insert open cards with group dividers
+    if (mode !== 'None') {
+      let lastGroup = null;
+      openCards.forEach(card => {
+        const group = getGroup(card);
+        if (group && group !== lastGroup) {
+          const div = document.createElement('div');
+          div.className = 'card-day-div';
+          div.textContent = group;
+          container.appendChild(div);
+          lastGroup = group;
+        }
+        container.appendChild(card);
+      });
+    } else {
+      openCards.forEach(c => container.appendChild(c));
+    }
+
+    // Always add Completed group at bottom if any done cards
+    if (doneCards.length > 0) {
+      const completedDiv = document.createElement('div');
+      completedDiv.className = 'card-day-div card-completed-div';
+      completedDiv.textContent = 'Completed ✓';
+      container.appendChild(completedDiv);
+      doneCards.forEach(c => container.appendChild(c));
+    }
+  }
+
   // ── Apply done-row to checklist table rows + sort ──────────────────────
   function updateChecklistDoneRows() {
     const tbody = document.querySelector('.check-table tbody');
@@ -3655,123 +3773,7 @@ Recommend the strongest 3–5 source corpus and explain what each source contrib
   }
 
 
-  // ── Mobile card group toggle ───────────────────────────────────────
-  // ── Card grouping ──────────────────────────────────────────────────
-  const CARD_META = {
-    's5-1': {day:'Mon', type:'video', effort:75, bucket:'long'},
-    's5-2': {day:'Tue', type:'video', effort:30, bucket:'short'},
-    's5-3': {day:'Tue', type:'reading', effort:35, bucket:'medium'},
-    's5-4': {day:'Tue', type:'reading', effort:35, bucket:'medium'},
-    's5-5': {day:'Tue', type:'activity', effort:30, bucket:'short'},
-    's5-6': {day:'Tue/Wed', type:'reading', effort:45, bucket:'medium'},
-    's5-7': {day:'Wed', type:'video', effort:45, bucket:'medium'},
-    's5-8': {day:'Wed', type:'video', effort:15, bucket:'short'},
-    's5-9': {day:'Wed', type:'reading', effort:35, bucket:'medium'},
-    's5-10': {day:'Wed', type:'reading', effort:30, bucket:'short'},
-    's5-11': {day:'Wed', type:'reading', effort:30, bucket:'short'},
-    's5-12': {day:'Wed', type:'reading', effort:30, bucket:'short'},
-    's5-13': {day:'Wed', type:'reading', effort:45, bucket:'medium'},
-    's5-14': {day:'Wed/Thu', type:'reading', effort:45, bucket:'medium'},
-    's5-15': {day:'Fri', type:'activity', effort:90, bucket:'long'},
-    's5-16': {day:'Fri/Sat', type:'activity', effort:75, bucket:'long'},
-    's5-17': {day:'Sat/Sun', type:'activity', effort:30, bucket:'short'},
-    's5-18': {day:'Sat/Sun', type:'assignment', effort:120, bucket:'long'},
-  };
 
-  const TYPE_LABELS = {
-    'video': '🎥 Video & Audio',
-    'reading': '📖 Readings',
-    'activity': '✏️ Activities & Submissions',
-    'assignment': '🧪 Assignments',
-  };
-
-  const EFFORT_LABELS = {
-    'short': '⚡ Short (≤30m)',
-    'medium': '🕐 Medium (31–60m)',
-    'long': '🕑 Long (60m+)',
-  };
-
-  const GROUP_MODES = ['By day', 'By type', 'By effort', 'None'];
-  let groupModeIdx = 0;
-
-  function rebuildCardGroups() {
-    const container = document.getElementById('checklistCards');
-    if (!container) return;
-
-    // Remove existing dividers
-    container.querySelectorAll('.card-day-div').forEach(d => d.remove());
-
-    // Get all cards
-    const allCards = [...container.querySelectorAll('.check-card')];
-    if (!allCards.length) return;
-
-    // Split into open and done
-    const openCards = allCards.filter(c => !c.classList.contains('card-done'));
-    const doneCards = allCards.filter(c => c.classList.contains('card-done'));
-
-    const mode = GROUP_MODES[groupModeIdx];
-
-    // Determine group key for a card
-    function getGroup(card) {
-      const sid = card.dataset.cardId;
-      const meta = CARD_META[sid];
-      if (!meta) return 'Other';
-      if (mode === 'By day') return meta.day;
-      if (mode === 'By type') return TYPE_LABELS[meta.type] || meta.type;
-      if (mode === 'By effort') return EFFORT_LABELS[meta.bucket] || meta.bucket;
-      return null;
-    }
-
-    // Sort open cards by mode
-    if (mode === 'By type') {
-      const typeOrder = ['video', 'reading', 'activity', 'assignment'];
-      openCards.sort((a, b) => {
-        const ma = CARD_META[a.dataset.cardId];
-        const mb = CARD_META[b.dataset.cardId];
-        return typeOrder.indexOf(ma?.type) - typeOrder.indexOf(mb?.type);
-      });
-    } else if (mode === 'By effort') {
-      openCards.sort((a, b) => {
-        const ma = CARD_META[a.dataset.cardId];
-        const mb = CARD_META[b.dataset.cardId];
-        return (ma?.effort || 0) - (mb?.effort || 0);
-      });
-    } else {
-      // By day or None — original order
-      openCards.sort((a, b) => {
-        const aNum = parseInt(a.dataset.cardId?.replace('s5-', '') || 0);
-        const bNum = parseInt(b.dataset.cardId?.replace('s5-', '') || 0);
-        return aNum - bNum;
-      });
-    }
-
-    // Insert open cards with group dividers
-    if (mode !== 'None') {
-      let lastGroup = null;
-      openCards.forEach(card => {
-        const group = getGroup(card);
-        if (group && group !== lastGroup) {
-          const div = document.createElement('div');
-          div.className = 'card-day-div';
-          div.textContent = group;
-          container.appendChild(div);
-          lastGroup = group;
-        }
-        container.appendChild(card);
-      });
-    } else {
-      openCards.forEach(c => container.appendChild(c));
-    }
-
-    // Always add Completed group at bottom if any done cards
-    if (doneCards.length > 0) {
-      const completedDiv = document.createElement('div');
-      completedDiv.className = 'card-day-div card-completed-div';
-      completedDiv.textContent = 'Completed ✓';
-      container.appendChild(completedDiv);
-      doneCards.forEach(c => container.appendChild(c));
-    }
-  }
 
   const groupBtn = document.getElementById('groupToggleBtn');
   if (groupBtn) {
