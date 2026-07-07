@@ -1,0 +1,3810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Francis Roberts - GenAI &amp; the Media | Week 2</title>
+<style>
+/* ─── TOKENS ─── */
+:root {
+  --ink: #1c1917;
+  --ink2: #44403c;
+  --muted: #78716c;
+  --bg: #fafaf9;
+  --surface: #ffffff;
+  --surface2: #f5f4f2;
+  --surface3: #eeece9;
+  --line: #e7e5e4;
+  --line2: #d6d3d1;
+
+  /* accent: a dusty slate-teal — grounded, not bright */
+  --accent: #3d6b6e;
+  --accent-light: #e8f1f1;
+  --accent-mid: #b1cdd0;
+
+  /* warm amber for high-priority signals */
+  --amber: #92560e;
+  --amber-light: #fdf3e3;
+  --amber-mid: #f0c57a;
+
+  /* muted sage for success/complete */
+  --sage: #3d6652;
+  --sage-light: #eaf2ed;
+  --sage-mid: #a8cfb9;
+
+  /* soft rose for danger/due */
+  --rose: #8b3a3a;
+  --rose-light: #fdf0ef;
+
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+  --shadow-sm: 0 1px 3px rgba(28,25,23,.06), 0 1px 2px rgba(28,25,23,.04);
+  --shadow-md: 0 4px 16px rgba(28,25,23,.08), 0 1px 4px rgba(28,25,23,.04);
+  --shadow-lg: 0 12px 40px rgba(28,25,23,.1), 0 2px 8px rgba(28,25,23,.06);
+
+  --sidebar-w: 272px;
+  --font: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 15px; }
+body {
+  margin: 0; font-family: var(--font);
+  background: var(--bg); color: var(--ink);
+  line-height: 1.6; -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); text-decoration: none; font-weight: 600; }
+a:hover { text-decoration: underline; }
+p { margin: 0 0 .75em; }
+p:last-child { margin-bottom: 0; }
+h2, h3, h4 { font-weight: 700; line-height: 1.25; margin: 0 0 .5em; }
+h3 { font-size: 1rem; color: var(--ink); margin-top: 1.25em; }
+h4 { font-size: .9rem; color: var(--ink2); margin-top: 1em; }
+ul, ol { margin: .4em 0 .75em; padding-left: 1.35em; }
+li { margin-bottom: .3em; }
+strong { font-weight: 700; }
+
+/* ─── LAYOUT ─── */
+.shell {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) 1fr;
+  min-height: 100vh;
+}
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+  position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 0;
+  background: #f5f3f1; border-right: 1px solid #e4e1de;
+  padding: 0;
+}
+.sidebar-inner {
+  flex: 1; display: flex; flex-direction: column;
+  padding: 12px 13px 14px;
+  gap: 10px;
+}
+.sidebar-brand {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e4e1de;
+}
+.sidebar-brand .course-label {
+  font-size: .67rem; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 2px;
+}
+.sidebar-brand h1 {
+  font-size: .92rem; font-weight: 700; color: var(--ink); margin: 0 0 1px;
+}
+.sidebar-brand .week-tag { display: none; }
+.sidebar-brand .sidebar-subtitle { display: none; }
+.sidebar-title-line {
+  display: flex; align-items: center; gap: 6px;
+  margin-top: 4px; flex-wrap: nowrap;
+}
+.sidebar-title-line .week-pill-select {
+  font-size: .74rem; font-weight: 700;
+  color: #3d6b6e; background: #f0f7f7;
+  border: 0.5px solid #b8d8d8; border-radius: 99px;
+  padding: 3px 20px 3px 9px;
+  appearance: none; -webkit-appearance: none;
+  font-family: inherit; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%235a9a9a' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 7px center;
+  max-width: 80px; flex-shrink: 0;
+}
+.sidebar-title-line .week-pill-select:focus {
+  outline: 2px solid #3d6b6e; outline-offset: 2px;
+}
+.sidebar-title-line .dash-label {
+  font-size: .74rem; font-weight: 500; color: var(--muted);
+  white-space: nowrap;
+}
+
+.week-switcher { display: none; }
+
+/* Progress block */
+.progress-block {
+  background: #ede9e6; border: 1px solid #dedad7;
+  border-radius: var(--r-md); padding: 10px 12px;
+  transition: background .4s ease, border-color .4s ease;
+}
+/* Stage-based border + background tints */
+.progress-block.progress-stage-red   { border-color: #e0a090; background: #fdf0ed; }
+.progress-block.progress-stage-amber { border-color: #e0c880; background: #fdf6e3; }
+.progress-block.progress-stage-teal  { border-color: #b8cc80; background: #f4f8e8; }
+.progress-block.progress-stage-sage  { border-color: #80bb80; background: #eaf4ea; }
+.progress-block.progress-stage-done  { border-color: #50a55a; background: #e0f2e4; }
+
+.progress-label {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: .74rem; font-weight: 700; color: var(--ink2); margin-bottom: 6px;
+}
+.progress-count { color: var(--muted); font-size: .72rem; }
+.progress-pct {
+  font-size: .72rem; font-weight: 800; margin-left: 4px;
+  transition: color .3s ease;
+}
+.progress-bar-track {
+  height: 6px; background: var(--line2); border-radius: 99px; overflow: hidden;
+  margin-bottom: 8px;
+}
+.progress-bar-fill {
+  height: 100%; width: 0; border-radius: 99px;
+  background: #c0392b;
+  transition: width .4s ease, background .4s ease;
+}
+.progress-actions { display: flex; flex-direction: column; gap: 5px; }
+
+/* Nav */
+.nav-section-label {
+  font-size: .64rem; font-weight: 700; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--muted);
+  padding: 0 4px; margin-top: 0; margin-bottom: 1px;
+}
+.nav-list { display: flex; flex-direction: column; gap: 1px; }
+.nav-entry {
+  display: grid; grid-template-columns: 18px 1fr 26px;
+  align-items: center; gap: 2px;
+  border-radius: var(--r-sm);
+  transition: background .12s;
+}
+.nav-entry:hover { background: var(--surface2); }
+.drag-handle {
+  width: 18px; height: 22px; display: flex; align-items: center; justify-content: center;
+  cursor: grab; color: var(--line2); flex-shrink: 0;
+  font-size: .7rem; opacity: 0; transition: opacity .14s, color .14s;
+  user-select: none;
+}
+.nav-entry:hover .drag-handle { opacity: 1; }
+.drag-handle:hover { color: var(--muted); }
+.drag-handle:active { cursor: grabbing; }
+.nav-entry.drag-over { background: var(--accent-light); outline: 1px dashed var(--accent-mid); }
+.nav-entry.dragging { opacity: .4; }
+.nav-link {
+  display: flex; align-items: center; gap: 5px;
+  padding: 4px 5px 4px 6px; border-radius: var(--r-sm);
+  font-size: .76rem; font-weight: 600; color: var(--muted); line-height: 1.25;
+  transition: color .14s, background .14s;
+  min-width: 0;
+}
+.nav-link:hover { color: var(--ink); text-decoration: none; background: transparent; }
+.nav-link.active { color: var(--accent); background: var(--accent-light); }
+.nav-link .nav-icon { font-size: .8rem; flex-shrink: 0; opacity: .8; }
+.nav-link .nav-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nav-eye {
+  width: 22px; height: 22px; border: 0; background: transparent;
+  border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: var(--line2); font-size: .78rem; opacity: 0; transition: opacity .14s, background .14s, color .14s;
+  flex-shrink: 0;
+}
+.nav-entry:hover .nav-eye, .nav-entry.is-hidden .nav-eye { opacity: 1; }
+.nav-eye:hover { background: var(--surface3); color: var(--muted); }
+.nav-entry.is-hidden .nav-eye { color: var(--muted); }
+.nav-entry.is-hidden .nav-link { opacity: .45; font-style: italic; }
+
+/* Sidebar controls */
+.sidebar-controls { display: flex; gap: 4px; flex-wrap: wrap; }
+
+/* Sidebar collapse (desktop) */
+.sidebar-hide-btn {
+  position: absolute; top: 12px; right: 10px;
+  width: 28px; height: 28px; border: 1px solid var(--line);
+  border-radius: 8px; background: var(--surface2);
+  color: var(--muted); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .85rem; font-weight: 700; transition: background .14s;
+}
+.sidebar-hide-btn:hover { background: var(--surface3); color: var(--ink); }
+.sidebar-restore {
+  position: fixed; top: 16px; left: 16px; z-index: 60;
+  width: 38px; height: 38px; border: 1px solid var(--line);
+  border-radius: var(--r-md); background: var(--surface);
+  color: var(--ink); cursor: pointer; display: none;
+  align-items: center; justify-content: center;
+  font-size: 1rem; box-shadow: var(--shadow-md); transition: background .14s;
+}
+.sidebar-restore:hover { background: var(--surface2); }
+body.sidebar-hidden .shell { grid-template-columns: 0 1fr; }
+body.sidebar-hidden .sidebar { overflow: hidden; padding: 0; }
+body.sidebar-hidden .sidebar-restore { display: flex; }
+body.sidebar-hidden .main { padding-left: 68px; }
+
+/* ─── MAIN ─── */
+.main {
+  min-width: 0; padding: 28px 32px 48px;
+  transition: padding-left .2s ease;
+}
+
+/* ─── HERO (sticky) ─── */
+.hero {
+  position: sticky; top: 0; z-index: 40;
+  background: linear-gradient(135deg, #f7f6f4 0%, #edf1f1 55%, #eff3ee 100%);
+  border: 1px solid var(--line); border-radius: var(--r-xl);
+  padding: 28px 32px 24px; margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
+  transition: padding .22s ease, border-radius .22s ease, box-shadow .22s ease;
+}
+.hero.is-stuck {
+  padding: 12px 24px 11px;
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-md);
+}
+.hero.is-stuck .hero-eyebrow { display: none; }
+.hero.is-stuck h2 { font-size: 1rem; margin-bottom: 0; }
+.hero.is-stuck .hero-sub { display: none; }
+.hero.is-stuck .pill-row { margin-top: 6px; }
+.hero-eyebrow {
+  font-size: .72rem; font-weight: 700; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
+  transition: opacity .15s;
+}
+.hero h2 { display: none; }
+.hero-title-mobile {
+  display: flex; align-items: center; gap: 8px;
+  margin: 0 0 6px; line-height: 1.15;
+}
+.hero-dash-label {
+  font-size: 1.7rem; font-weight: 800; color: var(--ink); white-space: nowrap;
+}
+
+.hero-sub {
+  font-size: .88rem; color: var(--muted); margin-bottom: 14px;
+  transition: opacity .15s;
+}
+.pill-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(255,255,255,.7); border: 1px solid var(--line);
+  border-radius: 99px; padding: 4px 10px;
+  font-size: .76rem; font-weight: 700; color: var(--ink2);
+  transition: background .14s;
+}
+.pill.pill-live { cursor: default; }
+.pill.pill-next { cursor: pointer; }
+.pill.pill-next:hover { background: rgba(255,255,255,.95); }
+.pill-progress-fill {
+  display: inline-block; width: 7px; height: 7px;
+  background: var(--accent); border-radius: 50%;
+}
+.pill-done .pill-progress-fill { background: var(--sage); }
+
+/* ─── BUTTONS ─── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+  border: 1px solid var(--line); background: var(--surface);
+  border-radius: var(--r-sm); padding: 6px 12px;
+  font-size: .8rem; font-weight: 700; color: var(--ink);
+  cursor: pointer; font-family: var(--font);
+  transition: background .14s, border-color .14s, color .14s;
+  white-space: nowrap;
+}
+.btn:hover { background: var(--surface2); }
+.btn.primary {
+  background: var(--accent); color: #fff; border-color: var(--accent);
+}
+.btn.primary:hover { background: #2f5557; border-color: #2f5557; }
+.btn.sm { padding: 5px 9px; font-size: .76rem; }
+.btn.ghost {
+  background: transparent; border-color: transparent; color: var(--muted);
+}
+.btn.ghost:hover { background: var(--surface2); color: var(--ink); }
+
+/* ─── CARDS / SECTIONS ─── */
+.section-card {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--r-lg); box-shadow: var(--shadow-sm);
+  margin-bottom: 14px; overflow: hidden;
+  scroll-margin-top: 90px;
+  transition: opacity .15s;
+}
+.section-card.section-hidden { display: none; }
+.section-details[open] > .section-summary { border-bottom: 1px solid var(--line); }
+.section-summary {
+  list-style: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  padding: 15px 18px; border-bottom: 1px solid transparent;
+  font-weight: 700; font-size: .94rem; color: var(--ink);
+  user-select: none; transition: background .12s;
+}
+.section-summary:hover { background: var(--surface2); }
+.section-summary::-webkit-details-marker { display: none; }
+.section-summary-left { display: flex; align-items: center; gap: 9px; min-width: 0; }
+.section-num {
+  flex-shrink: 0; width: 22px; height: 22px;
+  background: var(--surface2); border: 1px solid var(--line);
+  border-radius: 6px; display: flex; align-items: center; justify-content: center;
+  font-size: .7rem; font-weight: 800; color: var(--muted);
+}
+.section-icon { font-size: .95rem; flex-shrink: 0; }
+.section-title { font-weight: 700; font-size: .94rem; }
+.section-chev {
+  color: var(--muted); font-size: .82rem; transition: transform .18s ease;
+  flex-shrink: 0;
+}
+details[open] .section-chev { transform: rotate(90deg); }
+.section-body { padding: 18px 20px 22px; }
+
+/* ─── TABLES ─── */
+.table-wrap {
+  overflow-x: auto; border-radius: var(--r-md); border: 1px solid var(--line);
+  background: var(--surface); -webkit-overflow-scrolling: touch;
+  position: relative;
+}
+table { width: 100%; border-collapse: collapse; }
+thead th {
+  background: var(--surface2); padding: 9px 12px;
+  font-size: .76rem; font-weight: 700; color: var(--ink2);
+  text-align: left; vertical-align: middle; white-space: nowrap;
+  border-bottom: 1px solid var(--line);
+}
+tbody td {
+  padding: 11px 12px; font-size: .83rem; color: var(--ink2);
+  vertical-align: top; border-bottom: 1px solid var(--line);
+  line-height: 1.5;
+}
+tbody tr:last-child td { border-bottom: 0; }
+tbody tr:hover td { background: var(--surface2); }
+tfoot td {
+  padding: 10px 12px; font-size: .8rem; font-weight: 700;
+  background: var(--surface2); color: var(--ink2);
+  border-top: 2px solid var(--line);
+}
+.table-wide { min-width: 900px; }
+.table-xl { min-width: 1100px; }
+.tscroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+/* ─── DELIVERABLES TABLE ─── */
+.deliverable-row { transition: opacity .18s, color .18s; }
+.deliverable-row.done-row { opacity: .4; }
+.deliverable-row.done-row td { color: var(--muted); }
+.deliverable-row.done-row a { color: var(--muted); }
+
+/* ─── CHECKLIST TABLE ─── */
+.check-table { min-width: 900px; border-collapse: separate; border-spacing: 0; }
+
+/* Sticky cols 1–3: checkbox, #, task */
+.check-table th:nth-child(1),
+.check-table td:nth-child(1) {
+  position: sticky; left: 0; z-index: 2;
+  width: 44px; min-width: 44px; text-align: center;
+}
+.check-table th:nth-child(2),
+.check-table td:nth-child(2) {
+  position: sticky; left: 44px; z-index: 2;
+  width: 34px; min-width: 34px; text-align: center;
+  color: var(--muted); font-variant-numeric: tabular-nums;
+}
+.check-table th:nth-child(3),
+.check-table td:nth-child(3) {
+  position: sticky; left: 78px; z-index: 2;
+  min-width: 220px; max-width: 260px;
+  box-shadow: 3px 0 8px -2px rgba(28,25,23,.12);
+}
+/* Header row sticky backgrounds */
+.check-table thead th:nth-child(1),
+.check-table thead th:nth-child(2),
+.check-table thead th:nth-child(3) { background: #eeecea; }
+/* Body row sticky backgrounds — default */
+.check-table tbody tr td:nth-child(1),
+.check-table tbody tr td:nth-child(2),
+.check-table tbody tr td:nth-child(3) { background: #ffffff; }
+/* Body row sticky backgrounds — hover */
+.check-table tbody tr:hover td:nth-child(1),
+.check-table tbody tr:hover td:nth-child(2),
+.check-table tbody tr:hover td:nth-child(3) { background: #f5f4f2; }
+/* Body row sticky backgrounds — done/faded rows */
+.check-table tbody tr.done-row td { 
+  opacity: .45; text-decoration: none;
+}
+.check-table tbody tr.done-row td:nth-child(3) a {
+  color: var(--muted); text-decoration: line-through;
+}
+.check-table tbody tr.done-row td:nth-child(1),
+.check-table tbody tr.done-row td:nth-child(2),
+.check-table tbody tr.done-row td:nth-child(3) { background: var(--surface2, #fafaf9); }
+
+input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); cursor: pointer; }
+
+/* ─── MATERIALS TABLE ─── */
+.mat-table { min-width: 1000px; border-collapse: separate; border-spacing: 0; table-layout: auto; }
+
+/* Sticky col 1: material name */
+.mat-table th:nth-child(1),
+.mat-table td:nth-child(1) {
+  position: sticky; left: 0; z-index: 2;
+  min-width: 180px; max-width: 200px;
+  box-shadow: 3px 0 8px -2px rgba(28,25,23,.12);
+}
+.mat-table th:nth-child(2), .mat-table td:nth-child(2) { width: 80px; }
+.mat-table th:nth-child(3), .mat-table td:nth-child(3) { min-width: 160px; }
+.mat-table th:nth-child(4), .mat-table td:nth-child(4) { min-width: 180px; }
+.mat-table th:nth-child(5), .mat-table td:nth-child(5) { min-width: 180px; }
+.mat-table th:nth-child(6), .mat-table td:nth-child(6) { width: 70px; text-align: center; }
+.mat-table th:nth-child(7), .mat-table td:nth-child(7) { width: 80px; text-align: center; }
+/* Header sticky background */
+.mat-table thead th:nth-child(1) { background: #eeecea; }
+/* Body row sticky backgrounds */
+.mat-table tbody tr td:nth-child(1) { background: #ffffff; }
+.mat-table tbody tr:hover td:nth-child(1) { background: #f5f4f2; }
+
+/* ─── BADGES / TAGS ─── */
+.tag {
+  display: inline-flex; align-items: center; gap: 3px;
+  border-radius: 99px; padding: 2px 8px;
+  font-size: .72rem; font-weight: 700;
+}
+.tag-desk { background: var(--amber-light); color: var(--amber); }
+.tag-move { background: var(--sage-light); color: var(--sage); }
+.tag-flex { background: var(--accent-light); color: var(--accent); }
+.tag-ref  { background: var(--surface2); color: var(--muted); }
+.tag-req  { background: var(--rose-light); color: var(--rose); }
+.tag-opt  { background: var(--surface2); color: var(--muted); }
+.tag-green { background: var(--sage-light); color: var(--sage); }
+.tag-amber { background: var(--amber-light); color: var(--amber); }
+.tag-red   { background: var(--rose-light); color: var(--rose); }
+
+/* ─── CALLOUT / NOTE ─── */
+.callout {
+  border-left: 3px solid var(--accent); background: var(--accent-light);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0; padding: 11px 14px; margin: 12px 0;
+  font-size: .85rem; color: var(--ink2);
+}
+.callout.amber { border-color: var(--amber-mid); background: var(--amber-light); color: var(--amber); }
+.callout.sage  { border-color: var(--sage-mid);  background: var(--sage-light);  color: var(--sage); }
+
+/* ─── GRID ─── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.mini-card {
+  background: var(--surface2); border: 1px solid var(--line);
+  border-radius: var(--r-md); padding: 14px 16px;
+}
+.mini-card h4 { margin-top: 0; }
+.mini-card.accent-teal { background: var(--accent-light); border-color: var(--accent-mid); }
+.mini-card.accent-amber { background: var(--amber-light); border-color: var(--amber-mid); }
+.mini-card.accent-sage  { background: var(--sage-light);  border-color: var(--sage-mid);  }
+
+/* ─── IDEA CARDS ─── */
+.idea-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.idea-card {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--r-md); padding: 16px 18px;
+  box-shadow: var(--shadow-sm);
+}
+.idea-card h4 { margin: 0 0 8px; font-size: .9rem; color: var(--ink); }
+.idea-card p { font-size: .83rem; color: var(--ink2); margin: 0; }
+
+/* ─── COPYBOX ─── */
+.copybox {
+  border: 1px solid var(--line); border-radius: var(--r-md);
+  background: var(--surface); margin: 12px 0; overflow: hidden;
+}
+.copyhead {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  gap: 10px; padding: 11px 14px;
+  background: var(--surface2); border-bottom: 1px solid var(--line);
+}
+.copyhead-meta { min-width: 0; flex: 1; }
+.copyhead-meta strong { display: block; font-size: .85rem; color: var(--ink); }
+.copyhead-meta .meta-desc { font-size: .76rem; color: var(--muted); margin-top: 2px; }
+.copyhead-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.copybody {
+  white-space: pre-wrap; padding: 14px 16px;
+  font-family: var(--font); font-size: .82rem;
+  color: var(--ink2); line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+/* Collapse behavior for copyboxes */
+.copybox.collapsed .copybody { display: none; }
+.copybox.collapsed .copyhead { border-bottom: 0; }
+.caret-btn {
+  width: 28px; height: 28px; border: 1px solid var(--line);
+  border-radius: 8px; background: var(--surface);
+  color: var(--muted); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .8rem; font-weight: 900; transition: transform .15s ease, background .12s;
+}
+.caret-btn:hover { background: var(--surface3); color: var(--ink); }
+.copybox.collapsed .caret-btn { transform: rotate(-90deg); }
+
+/* ─── ACTIVITY PANEL ─── */
+.activity-panel {
+  background: var(--surface2); border: 1px solid var(--line);
+  border-left: 3px solid var(--accent); border-radius: 0 var(--r-md) var(--r-md) 0;
+  padding: 13px 15px; margin: 10px 0; font-size: .85rem;
+}
+
+/* ─── CHECK LINES ─── */
+.check-line {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 9px 10px; border-radius: var(--r-sm);
+  margin: 4px 0;
+}
+.check-line:hover { background: var(--surface2); }
+.check-line label { cursor: pointer; display: flex; align-items: flex-start; gap: 10px; width: 100%; }
+.check-line label span { font-size: .86rem; color: var(--ink2); line-height: 1.5; padding-top: 1px; }
+
+/* ─── TOAST ─── */
+.toast {
+  position: fixed; right: 16px; bottom: 16px; z-index: 999;
+  background: var(--ink); color: #fff;
+  padding: 9px 14px; border-radius: var(--r-sm);
+  font-size: .8rem; font-weight: 700;
+  opacity: 0; transform: translateY(8px); pointer-events: none;
+  transition: opacity .18s, transform .18s;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+
+/* ─── WORKBACK TABLE ─── */
+/* ─── COMPLETION CELEBRATION ─── */
+#confetti-canvas {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 9999;
+}
+@keyframes completion-glow {
+  0%   { box-shadow: 0 0 0 0 rgba(50,140,75,.6); }
+  50%  { box-shadow: 0 0 0 12px rgba(50,140,75,.15); }
+  100% { box-shadow: 0 0 0 0 rgba(50,140,75,0); }
+}
+.progress-block.celebrating {
+  animation: completion-glow .8s ease-out 3;
+}
+/* ─── CELEBRATION BANNER ─── */
+#celebration-banner {
+  position: fixed; top: 0; left: 50%; transform: translateX(-50%) translateY(-110%);
+  z-index: 10000; pointer-events: none;
+  background: linear-gradient(135deg, #1a6640 0%, #2d8653 60%, #3d6b6e 100%);
+  color: #fff; border-radius: 0 0 var(--r-xl) var(--r-xl);
+  padding: 18px 40px 20px; text-align: center;
+  box-shadow: 0 8px 40px rgba(26,102,64,.35), 0 2px 8px rgba(0,0,0,.15);
+  transition: transform .45s cubic-bezier(.34,1.56,.64,1);
+  min-width: 320px; max-width: 90vw;
+}
+#celebration-banner.show { transform: translateX(-50%) translateY(0); }
+#celebration-banner.hide { transform: translateX(-50%) translateY(-110%); transition: transform .35s ease-in; }
+#celebration-banner .banner-title {
+  font-size: 1.2rem; font-weight: 800; letter-spacing: -.01em;
+  margin: 0 0 4px; color: #fff;
+}
+#celebration-banner .banner-sub {
+  font-size: .82rem; font-weight: 500; opacity: .85; margin: 0;
+}
+
+/* ─── ZONE NAV GRAYOUT (in sidebar only) ─── */
+.nav-entry.zone-nav-grayed {
+  opacity: .45;
+}
+.nav-entry.zone-nav-grayed .nav-link {
+  color: var(--muted);
+  pointer-events: none;
+}
+.nav-entry.zone-nav-grayed .drag-handle,
+.nav-entry.zone-nav-grayed .nav-eye { opacity: 0; pointer-events: none; }
+
+/* ─── STATUS DOTS ─── */
+.section-card.zone-grayed {
+  opacity: .32;
+  filter: grayscale(.5);
+  pointer-events: none;
+  user-select: none;
+  transition: opacity .2s ease, filter .2s ease;
+}
+
+/* ─── WORKBACK TABLE ─── */
+.workback-table { min-width: 600px; }
+
+/* ─── CONCEPTS SECTION ─── */
+.concept-block { margin: 14px 0; }
+.concept-block h4 {
+  font-size: .88rem; font-weight: 700; color: var(--ink);
+  margin: 0 0 4px; padding-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+}
+.concept-block ul { margin: 8px 0; }
+
+/* ─── FIRST 3 ACTIONS ─── */
+.action-card {
+  display: flex; align-items: flex-start; gap: 12px;
+  background: var(--surface2); border: 1px solid var(--line);
+  border-radius: var(--r-md); padding: 14px 16px; margin-bottom: 10px;
+}
+.action-num {
+  width: 28px; height: 28px; flex-shrink: 0;
+  background: var(--accent); color: #fff; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .78rem; font-weight: 800;
+}
+.action-body { min-width: 0; }
+.action-body strong { display: block; font-size: .87rem; color: var(--ink); margin-bottom: 2px; }
+.action-body p { font-size: .8rem; color: var(--muted); margin: 0; }
+
+/* ─── ASSIGNMENT WORKBACK ─── */
+.workback-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+
+/* ─── ZONE TOGGLES ─── */
+.zone-toggles {
+  display: flex; flex-direction: column; gap: 3px; margin-bottom: 0;
+}
+.zone-btn {
+  display: flex; align-items: center; gap: 6px;
+  border: 1px solid var(--line); border-radius: var(--r-sm);
+  background: #e9e6e3; color: var(--ink2);
+  padding: 4px 9px; font-size: .74rem; font-weight: 700;
+  cursor: pointer; font-family: var(--font);
+  transition: background .14s, border-color .14s, color .14s, opacity .14s;
+  text-align: left;
+}
+.zone-btn:hover { background: #e4e1de; }
+.zone-btn.active {
+  background: var(--accent-light); border-color: var(--accent-mid); color: var(--accent);
+}
+.zone-btn.inactive {
+  background: var(--surface); border-color: var(--line);
+  color: var(--muted); opacity: .7;
+}
+.zone-btn .zone-dot {
+  width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+  background: currentColor; margin-left: auto;
+  transition: opacity .14s;
+}
+.zone-btn.inactive .zone-dot { opacity: 0; }
+
+/* ─── NAV ZONE LABELS ─── */
+.nav-zone-label {
+  display: flex; align-items: center; gap: 4px;
+  font-size: .62rem; font-weight: 800; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--muted);
+  padding: 6px 6px 2px; margin-top: 2px;
+}
+.nzl-icon { font-size: .75rem; }
+
+/* ─── ZONE SEPARATORS in main content ─── */
+.zone-header {
+  display: flex; align-items: center; gap: 10px;
+  margin: 24px 0 10px; padding: 0 2px;
+}
+.zone-header-label {
+  font-size: .7rem; font-weight: 800; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--muted);
+  white-space: nowrap;
+}
+.zone-header-line {
+  flex: 1; height: 1px; background: var(--line);
+}
+.dot-green::before { content: '●'; color: var(--sage); margin-right: 3px; }
+.dot-amber::before { content: '●'; color: #d97706; margin-right: 3px; }
+.dot-red::before   { content: '●'; color: #dc2626; margin-right: 3px; }
+
+/* ─── MOBILE NAV ─── */
+.mobile-bar { display: none; }
+.mobile-drawer { display: none; }
+.mobile-backdrop { display: none; }
+
+@media (max-width: 900px) {
+  /* Hero stays sticky on mobile — live pills are useful while scrolling */
+  .hero { position: sticky; top: 0; z-index: 40; }
+  .hero.is-stuck { padding: 10px 16px 10px; border-radius: var(--r-md); }
+  .hero.is-stuck .hero-eyebrow { display: none; }
+  .hero.is-stuck h2 { font-size: .92rem; margin-bottom: 0; }
+  .hero.is-stuck .hero-sub { display: none; }
+  .hero.is-stuck .pill-row { margin-top: 5px; }
+  /* Increase scroll margin to clear sticky hero */
+  .section-card { scroll-margin-top: 80px; }
+  .shell { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .main { padding: 14px 14px 100px; }
+  .hero { padding: 18px 18px 16px; border-radius: var(--r-lg); margin-bottom: 14px; }
+  .hero-dash-label { font-size: 1.35rem; }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .idea-grid { grid-template-columns: 1fr; }
+  .workback-cols { grid-template-columns: 1fr; }
+
+  /* Mobile bottom nav */
+  .mobile-bar {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px;
+    position: fixed; left: 10px; right: 10px; bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+    z-index: 80; padding: 6px;
+    background: rgba(255,255,255,.95); border: 1px solid var(--line);
+    border-radius: var(--r-lg); box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(14px);
+  }
+  .mobile-bar-btn {
+    border: 0; background: transparent; border-radius: 12px;
+    padding: 6px 4px; cursor: pointer; font-family: var(--font);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 2px; min-height: 48px; color: var(--muted);
+  }
+  .mobile-bar-btn:hover, .mobile-bar-btn:active { background: var(--surface2); color: var(--ink); }
+  .mobile-bar-icon { font-size: 1rem; line-height: 1; }
+  .mobile-bar-label { font-size: .68rem; font-weight: 700; }
+
+  /* Mobile drawer */
+  .mobile-backdrop {
+    display: block; position: fixed; inset: 0; z-index: 85;
+    background: rgba(28,25,23,.3); opacity: 0; pointer-events: none;
+    transition: opacity .2s;
+  }
+  body.drawer-open .mobile-backdrop { opacity: 1; pointer-events: auto; }
+  .mobile-drawer {
+    display: flex; flex-direction: column;
+    position: fixed; top: 0; left: 0; bottom: 0; z-index: 90;
+    width: min(85vw, 320px); background: var(--surface);
+    border-right: 1px solid var(--line); box-shadow: var(--shadow-lg);
+    padding: calc(16px + env(safe-area-inset-top, 0px)) 14px calc(16px + env(safe-area-inset-bottom, 0px));
+    transform: translateX(-105%); transition: transform .22s ease;
+    overflow-y: auto; gap: 14px;
+  }
+  body.drawer-open .mobile-drawer { transform: translateX(0); }
+  .mobile-drawer-head { display: flex; justify-content: space-between; align-items: flex-start; }
+  .mobile-close-btn {
+    width: 38px; height: 38px; border: 1px solid var(--line); border-radius: 10px;
+    background: var(--surface2); cursor: pointer; font-size: 1rem; color: var(--ink);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .sidebar-hide-btn { display: none; }
+  .sidebar-restore { display: none !important; }
+}
+
+
+@media (max-width: 768px) {
+  .section-body { padding: 14px 14px 18px; }
+  .hero { padding: 16px 16px 14px; }
+  .hero-dash-label { font-size: 1.28rem; }
+  .pill { font-size: .72rem; padding: 3px 8px; }
+  .pill-row { gap: 4px; }
+  .section-summary { padding: 12px 14px; }
+  .mini-card { padding: 11px 13px; }
+}
+@media (max-width: 560px) {
+  .main { padding: 10px 10px 96px; }
+  .hero-dash-label { font-size: 1.22rem; }
+  .check-table { min-width: 980px; }
+  /* In compact stuck state on small phones, hide theme pill to save space */
+  .hero.is-stuck #pillTheme { display: none; }
+  .hero.is-stuck h2 { font-size: .86rem; }
+}
+
+/* Mobile drawer nav-eye always visible */
+.mobile-drawer .nav-eye { opacity: 1; }
+.mobile-drawer .nav-entry { grid-template-columns: 1fr 26px; }
+/* Mobile drawer nav hierarchy — indent entries under zone labels */
+.mobile-drawer #mobileNavList .nav-entry { margin-left: 8px; }
+.mobile-drawer #mobileNavList .nav-link { font-size: .8rem; }
+/* Zone label dividers in drawer — stronger visual weight */
+.mobile-drawer #mobileNavList [style*="text-transform:uppercase"] {
+  margin-top: 6px;
+  border-top: 1px solid var(--line);
+  padding-top: 8px;
+}
+.text-muted { color: var(--muted); }
+.text-sm { font-size: .82rem; }
+.mt-0 { margin-top: 0; }
+.divider { border: 0; border-top: 1px solid var(--line); margin: 14px 0; }
+.section-tip {
+  background: var(--accent-light); border: 1px solid var(--accent-mid);
+  border-radius: var(--r-md); padding: 11px 14px; margin-bottom: 14px;
+  font-size: .83rem; color: var(--accent);
+}
+
+/* ─── CHECKLIST TABLE MOBILE ─── */
+/* On tablet/mobile: show only Done, #, Task columns */
+@media (max-width: 768px) {
+  .check-table {
+    min-width: 0;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  /* Hide all columns except Done (#1), # (#2), Task (#3) */
+  .check-table th:nth-child(n+4),
+  .check-table td:nth-child(n+4) {
+    display: none;
+  }
+  /* Make task column fill remaining space */
+  .check-table th:nth-child(3),
+  .check-table td:nth-child(3) {
+    width: auto;
+    max-width: none;
+    white-space: normal;
+    font-size: .82rem;
+  }
+  /* Done checkbox column */
+  .check-table th:nth-child(1),
+  .check-table td:nth-child(1) {
+    width: 36px;
+    min-width: 36px;
+  }
+  /* # column */
+  .check-table th:nth-child(2),
+  .check-table td:nth-child(2) {
+    width: 28px;
+    min-width: 28px;
+    font-size: .78rem;
+  }
+  /* Unwrap the tscroll so table fills full width */
+  .section-card .tscroll {
+    overflow-x: visible;
+  }
+  /* tfoot — stack total and remaining on mobile */
+  .check-table tfoot td {
+    font-size: .78rem;
+    padding: 6px 8px;
+  }
+}
+
+@media (max-width: 560px) {
+  .check-table th:nth-child(3),
+  .check-table td:nth-child(3) {
+    font-size: .79rem;
+  }
+}
+
+
+
+/* ─── CHECKLIST GROUP TOGGLE (all screen sizes) ─── */
+.card-group-toggle {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 4px 8px 0; margin-bottom: 6px;
+}
+.card-group-label { font-size: 11px; color: var(--muted); }
+.card-group-btn {
+  font-size: 10.5px; font-weight: 600; padding: 4px 10px;
+  border-radius: 8px; border: 0.5px solid var(--line2);
+  background: var(--surface); color: var(--ink2);
+  cursor: pointer;
+}
+.card-group-btn:hover { background: var(--surface2); }
+
+/* ─── MOBILE CHECKLIST CARDS (< 600px) ─── */
+@media (max-width: 600px) {
+  /* Hide the entire table-based checklist */
+  .check-table-wrap { display: none !important; }
+  /* Show card layout */
+  .checklist-cards { display: block !important; }
+
+  /* Hero week pill */
+  .hero-week-pill {
+    display: inline-block;
+    font-size: .72rem; font-weight: 700;
+    color: #3d6b6e; background: #f0f7f7;
+    border: 0.5px solid #b8d8d8; border-radius: 99px;
+    padding: 3px 20px 3px 9px;
+    cursor: pointer; appearance: none; -webkit-appearance: none;
+    font-family: inherit; line-height: 1.5;
+    max-width: 80px; flex-shrink: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%235a9a9a' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 7px center;
+  }
+
+  /* Card container */
+  .checklist-cards { margin: 0; }
+
+  /* Completed group divider */
+  .card-completed-div {
+    color: #3d6b6e;
+    border-top: 0.5px solid #b8d8d8;
+    margin-top: 2px;
+  }
+
+  /* Group toggle button */
+  /* card-group-toggle moved to global scope above */
+
+  /* Day divider */
+  .card-day-div {
+    font-size: 9.5px; font-weight: 700; letter-spacing: .07em;
+    text-transform: uppercase; color: var(--muted);
+    padding: 7px 14px 4px; background: var(--surface2);
+    border-bottom: 0.5px solid var(--line);
+  }
+
+  /* Card row */
+  .check-card {
+    display: grid; grid-template-columns: 30px 1fr 26px;
+    align-items: start; padding: 11px 12px 11px 11px;
+    border-bottom: 0.5px solid var(--line); background: var(--surface);
+    gap: 0;
+  }
+  .check-card.card-done { background: var(--surface2); }
+
+  /* Checkbox */
+  .check-card .card-cb {
+    width: 18px; height: 18px; border: 1.5px solid var(--line2);
+    border-radius: 4px; margin-top: 2px; display: flex;
+    align-items: center; justify-content: center; flex-shrink: 0;
+    cursor: pointer; background: var(--surface);
+  }
+  .check-card .card-cb.cb-checked {
+    background: var(--accent); border-color: var(--accent);
+  }
+  .check-card .card-cb.cb-checked::after {
+    content: ''; width: 9px; height: 6px;
+    border-left: 2px solid #fff; border-bottom: 2px solid #fff;
+    transform: rotate(-45deg) translate(1px,-1px); display: block;
+  }
+
+  /* Task body */
+  .card-body { padding: 0 8px; }
+  .card-task-name {
+    font-size: 13px; font-weight: 600; color: var(--accent);
+    line-height: 1.35; margin-bottom: 3px; text-decoration: none;
+    display: block;
+  }
+  .card-task-name:visited { color: var(--accent); }
+  .check-card.card-done .card-task-name {
+    color: var(--muted); text-decoration: line-through; font-weight: 400;
+  }
+  .card-capture {
+    font-size: 11.5px; color: var(--ink2); line-height: 1.35; margin-bottom: 5px;
+  }
+  .check-card.card-done .card-capture { color: var(--line2); }
+  .card-meta {
+    display: flex; gap: 5px; align-items: center; flex-wrap: wrap;
+  }
+  .card-meta-item { font-size: 10px; color: var(--muted); white-space: nowrap; }
+  .card-meta-sep {
+    width: 2px; height: 2px; border-radius: 50%;
+    background: var(--line2); flex-shrink: 0; margin-top: 1px;
+  }
+
+  /* Mode badge */
+  .card-mode {
+    width: 22px; height: 22px; border-radius: 6px; font-size: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 2px; flex-shrink: 0;
+  }
+  .mode-desk { background: #e4e8ed; }
+  .mode-move { background: #f0ede8; }
+  .mode-flex { background: #dce8f0; }
+}
+
+/* On tablet/desktop: hide card layout, show table */
+@media (min-width: 601px) {
+  .checklist-cards { display: none !important; }
+  .check-table-wrap { display: block; }
+}
+
+
+/* ─── MODE BADGES ─── */
+.mode-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px; border-radius: 6px; font-size: 14px;
+}
+.mode-desk { background: #e4e8ed; }
+.mode-move { background: #f0ede8; }
+.mode-flex { background: #dce8f0; }
+
+</style>
+</head>
+<body>
+
+<!-- Sidebar restore button (when collapsed on desktop) -->
+<button class="sidebar-restore" id="sidebarRestoreBtn" title="Show sidebar" aria-label="Show sidebar">›</button>
+
+<div class="shell">
+
+<!-- ─── SIDEBAR ─── -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-inner" style="position:relative;">
+    <button class="sidebar-hide-btn" id="sidebarHideBtn" title="Hide sidebar" aria-label="Hide sidebar">‹</button>
+
+    <div class="sidebar-brand">
+      <div class="course-label">GenAI &amp; the Media</div>
+      <h1>🧠 Francis Roberts</h1>
+      <div class="sidebar-title-line">
+        <select class="week-pill-select" data-week-switch aria-label="Switch week">
+          <option value="index.html">Week 1</option>
+          <option value="week2.html" selected>Week 2</option>
+          <option value="week3.html">Week 3</option>
+          <option disabled value="">Week 4</option>
+          <option disabled value="">Week 5</option>
+        </select>
+        <span class="dash-label">Study Dashboard</span>
+      </div>
+    </div>
+
+    <div class="progress-block" id="progressBlock">
+      <div class="progress-label">
+        <span>Week progress</span>
+        <span class="progress-count"><span id="doneCount">0</span> / <span id="totalCount">0</span> <span class="progress-pct" id="progressPct"></span></span>
+      </div>
+      <div class="progress-bar-track"><div class="progress-bar-fill" id="progressBar"></div></div>
+      <div class="progress-actions">
+        <button class="btn primary sm" id="nextBtn">↓ Next unchecked</button>
+        <button class="btn sm" id="resetBtn">Reset</button>
+      </div>
+    </div>
+
+    <div>
+      <div class="nav-section-label" style="margin-bottom:6px;">Zones</div>
+      <div class="zone-toggles">
+        <button class="zone-btn active" data-zone="briefing" title="Toggle Briefing sections">📋 Briefing</button>
+        <button class="zone-btn active" data-zone="execution" title="Toggle Execution sections">⚡ Execution</button>
+        <button class="zone-btn active" data-zone="reference" title="Toggle Reference sections">📚 Reference</button>
+      </div>
+    </div>
+
+    <div>
+      <div class="nav-section-label">Navigation</div>
+      <nav class="nav-list" id="navList" aria-label="Section navigation">
+        <div class="nav-zone-label"><span class="nzl-icon">📋</span>Briefing</div>
+        <div class="nav-entry" data-section="s1" data-zone="briefing">
+          <span class="drag-handle" aria-hidden="true">⠿</span>
+          <a class="nav-link" href="#s1"><span class="nav-icon">🧭</span><span class="nav-text">1. Mode & setup</span></a>
+          <button class="nav-eye" data-eye="s1" title="Hide/show section" aria-label="Toggle section visibility"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+        <div class="nav-entry" data-section="s2" data-zone="briefing">
+          <span class="drag-handle" aria-hidden="true">⠿</span>
+          <a class="nav-link" href="#s2"><span class="nav-icon">🔎</span><span class="nav-text">2. Inputs check</span></a>
+          <button class="nav-eye" data-eye="s2" aria-label="Toggle section visibility"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+        <div class="nav-entry" data-section="s8" data-zone="briefing">
+          <span class="drag-handle" aria-hidden="true">⠿</span>
+          <a class="nav-link" href="#s8"><span class="nav-icon">📆</span><span class="nav-text">3. Weekly workback plan</span></a>
+          <button class="nav-eye" data-eye="s8" aria-label="Toggle section visibility"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+        <div class="nav-entry" data-section="s15" data-zone="briefing">
+          <span class="drag-handle" aria-hidden="true">⠿</span>
+          <a class="nav-link" href="#s15"><span class="nav-icon">✅</span><span class="nav-text">4. Google Tasks list</span></a>
+          <button class="nav-eye" data-eye="s15" aria-label="Toggle section visibility"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+        <div class="nav-entry" data-section="s14" data-zone="briefing">
+          <span class="drag-handle" aria-hidden="true">⠿</span>
+          <a class="nav-link" href="#s14"><span class="nav-icon">🚀</span><span class="nav-text">5. First 3 actions</span></a>
+          <button class="nav-eye" data-eye="s14" aria-label="Toggle section visibility"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+
+        <div class="nav-zone-label"><span class="nzl-icon">⚡</span>Execution</div>
+        <div class="nav-entry" data-section="s3" data-zone="execution">
+          <span class="drag-handle" aria-hidden="true">⠿</span>
+          <a class="nav-link" href="#s3"><span class="nav-icon">📅</span><span class="nav-text">6. Deliverables</span></a>
+          <button class="nav-eye" data-eye="s3" aria-label="Toggle section visibility"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+        <div class="nav-entry" data-section="s5" data-zone="execution">
+          <span class="drag-handle" aria-hidden="true">⠿</span>
+          <a class="nav-link" href="#s5"><span class="nav-icon">📌</span><span class="nav-text">7. Weekly checklist</span></a>
+          <button class="nav-eye" data-eye="s5" aria-label="Toggle section visibility"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+        <div class="nav-entry" data-section="s6" data-zone="execution">
+          <span class="drag-handle" aria-hidden="true">⠿</span>
+          <a class="nav-link" href="#s6"><span class="nav-icon">🗂️</span><span class="nav-text">8. Study materials guide</span></a>
+          <button class="nav-eye" data-eye="s6" aria-label="Toggle section visibility"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+        <div class="nav-entry" data-section="s12" data-zone="execution">
+          <span class="drag-handle" aria-hidden="true">⠿</span>
+          <a class="nav-link" href="#s12"><span class="nav-icon">🧩</span><span class="nav-text">9. Activity guide</span></a>
+          <button class="nav-eye" data-eye="s12" aria-label="Toggle section visibility"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+        <div class="nav-entry" data-section="s4" data-zone="execution">
+          <span class="drag-handle" aria-hidden="true">⠿</span>
+          <a class="nav-link" href="#s4"><span class="nav-icon">🧪</span><span class="nav-text">10. Assignment workback</span></a>
+          <button class="nav-eye" data-eye="s4" aria-label="Toggle section visibility"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+        <div class="nav-entry" data-section="s13" data-zone="execution">
+          <span class="drag-handle" aria-hidden="true">⠿</span>
+          <a class="nav-link" href="#s13"><span class="nav-icon">💬</span><span class="nav-text">11. Peer response guide</span></a>
+          <button class="nav-eye" data-eye="s13" aria-label="Toggle section visibility"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+
+        <div class="nav-zone-label"><span class="nzl-icon">📚</span>Reference</div>
+        <div class="nav-entry" data-section="s9" data-zone="reference">
+          <span class="drag-handle" aria-hidden="true">⠿</span>
+          <a class="nav-link" href="#s9"><span class="nav-icon">🧠</span><span class="nav-text">12. Big ideas</span></a>
+          <button class="nav-eye" data-eye="s9" aria-label="Toggle section visibility"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+        <div class="nav-entry" data-section="s10" data-zone="reference">
+          <span class="drag-handle" aria-hidden="true">⠿</span>
+          <a class="nav-link" href="#s10"><span class="nav-icon">📓</span><span class="nav-text">13. Master notes</span></a>
+          <button class="nav-eye" data-eye="s10" aria-label="Toggle section visibility"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+        <div class="nav-entry" data-section="s7" data-zone="reference">
+          <span class="drag-handle" aria-hidden="true">⠿</span>
+          <a class="nav-link" href="#s7"><span class="nav-icon">🛠️</span><span class="nav-text">14. AI tool workflow</span></a>
+          <button class="nav-eye" data-eye="s7" aria-label="Toggle section visibility"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+        <div class="nav-entry" data-section="s11" data-zone="reference">
+          <span class="drag-handle" aria-hidden="true">⠿</span>
+          <a class="nav-link" href="#s11"><span class="nav-icon">🤖</span><span class="nav-text">15. NotebookLM prompts</span></a>
+          <button class="nav-eye" data-eye="s11" aria-label="Toggle section visibility"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+        <div class="nav-entry" data-section="s16" data-zone="reference">
+          <span class="drag-handle" aria-hidden="true">⠿</span>
+          <a class="nav-link" href="#s16"><span class="nav-icon">📝</span><span class="nav-text">16. Reading memo guide</span></a>
+          <button class="nav-eye" data-eye="s16" aria-label="Toggle section visibility"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+        <div class="nav-entry" data-section="s17" data-zone="reference">
+          <span class="drag-handle" aria-hidden="true">⠿</span>
+          <a class="nav-link" href="#s17"><span class="nav-icon">🌐</span><span class="nav-text">17. Outside resources</span></a>
+          <button class="nav-eye" data-eye="s17" aria-label="Toggle section visibility"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+      </nav>
+    </div>
+
+    <div>
+      <div class="nav-section-label" style="margin-bottom:6px;">View</div>
+      <div class="sidebar-controls">
+        <button class="btn sm" id="expandAllBtn">Expand all</button>
+        <button class="btn sm" id="collapseAllBtn">Collapse all</button>
+        <button class="btn sm ghost" id="resetViewBtn">Reset view</button>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ─── MAIN CONTENT ─── -->
+<main class="main">
+
+  <!-- Hero (sticky) -->
+  <div class="hero" id="hero">
+    <div class="hero-eyebrow">Francis Roberts - GenAI &amp; the Media</div>
+    <div class="hero-title-mobile">
+      <select class="hero-week-pill" data-week-switch aria-label="Switch week">
+        <option value="index.html">Week 1</option>
+        <option value="week2.html" selected>Week 2</option>
+        <option value="week3.html">Week 3</option>
+        <option disabled value="">Week 4</option>
+        <option disabled value="">Week 5</option>
+      </select>
+      <span class="hero-dash-label">Study Dashboard</span>
+    </div>
+    <p class="hero-sub">Northwestern MSC 550-6 · Theme: User Experience, Interaction, and Prompting</p>
+    <div class="pill-row">
+      <span class="pill pill-live" id="pillDue">📅 Due Sun Jul 5</span>
+      <span class="pill pill-live" id="pillProgress" style="cursor:pointer;" title="Jump to checklist"><span class="pill-progress-fill"></span> <span id="pillProgressText">0 of 18 done</span></span>
+      <span class="pill pill-next" id="pillNext" title="Jump to next task">↓ <span id="pillNextText">Loading…</span></span>
+      <span class="pill pill-live" id="pillTheme">🎯 UX &amp; Prompting</span>
+    </div>
+  </div>
+
+
+  <!-- ─── SECTION 1: Mode ─── -->
+  <section class="section-card" id="s1" data-zone="briefing">
+    <details class="section-details" open>
+      <summary class="section-summary">
+        <div class="section-summary-left">
+          <div class="section-num">1</div>
+          <span class="section-icon">🧭</span>
+          <span class="section-title">How to Approach This Week</span>
+        </div>
+        <span class="section-chev">›</span>
+      </summary>
+      <div class="section-body">
+        <p><strong>Recommended mode:</strong> Full Mode.</p>
+        <p>Week 2 combines conceptual synthesis, two hands-on AI activities, a weekly reading memo, peer response, and your first major project submission (Assignment 1). Full Mode is appropriate because the workload spans understanding, practice, and production.</p>
+        <p><strong>Central question this week:</strong> How do we use generative AI tools in ways that are useful without becoming overtrusting, passive, emotionally dependent, or poorly grounded in sources?</p>
+        <p><strong>Do first:</strong> Read Assignment 1 instructions/rubric, then watch/read the Week 2 lecture before diving into individual readings.</p>
+        <p><strong>Main bottleneck:</strong> Assignment 1 can balloon if you over-curate sources or over-test NotebookLM. Keep your corpus to 3–5 sources. Source mastery matters more than volume.</p>
+        <p><strong>What is intentionally not being overbuilt:</strong> No more than 5 NotebookLM prompts total. No extra Assignment 1 sources beyond 4–5. No elaborate slide design for Assignment 1.</p>
+</div>
+    </details>
+  </section>
+  <!-- ─── SECTION 2: Inputs check ─── -->
+  <section class="section-card" id="s2" data-zone="briefing">
+    <details class="section-details" open>
+      <summary class="section-summary">
+        <div class="section-summary-left">
+          <div class="section-num">2</div>
+          <span class="section-icon">🔎</span>
+          <span class="section-title">Inputs Check</span>
+        </div>
+        <span class="section-chev">›</span>
+      </summary>
+      <div class="section-body">
+        <div class="tscroll">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Input</th><th>Status</th><th>Priority</th><th>How to use it</th></tr></thead>
+              <tbody>
+                <tr><td>Week 2 lecture transcript</td><td><span class="tag tag-green">Available</span></td><td>Required</td><td>Core framing for UX, prompting, AI search, overreliance, sycophancy.</td></tr>
+                <tr><td>Activity 1 &amp; 2 instructions</td><td><span class="tag tag-green">Available</span></td><td>Required</td><td>Voice chat reflection (A1) and Gemini image prompting challenge (A2).</td></tr>
+                <tr><td>Assignment 1 instructions/rubric</td><td><span class="tag tag-green">Available</span></td><td>Required</td><td>Read first — sets the criteria for how to read RAG/prompting sources.</td></tr>
+                <tr><td>Human-AI interaction cluster</td><td><span class="tag tag-green">Available</span></td><td>Required</td><td>NPR, Against Imaginary Friends, anthropomorphism, sycophancy — best for memo.</td></tr>
+                <tr><td>Prompting/RAG/reliability cluster</td><td><span class="tag tag-green">Available</span></td><td>Required</td><td>RAG, hallucination, Prompting 101, journalist prompting — best for Assignment 1.</td></tr>
+                <tr><td>Prompt Structure Dojo</td><td><span class="tag tag-green">Available</span></td><td>Helpful</td><td>Interactive prompt practice — skim and practice, not full study session.</td></tr>
+                <tr><td>Assignment 1 topic + sources</td><td><span class="tag tag-red">Choose now</span></td><td>Required</td><td>Recommended: AI-generated creators and synthetic influencers.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="callout sage" style="margin-top:12px;">
+          <strong>Proceed now.</strong> Nothing material blocks the plan. Read Assignment 1 first, then the lecture.
+        </div>
+</div>
+    </details>
+  </section>
+  <!-- ─── SECTION 8: Workback Plan ─── -->
+  <section class="section-card" id="s8" data-zone="briefing">
+    <details class="section-details">
+      <summary class="section-summary">
+        <div class="section-summary-left">
+          <div class="section-num">3</div>
+          <span class="section-icon">📆</span>
+          <span class="section-title">Weekly Workback Plan</span>
+        </div>
+        <span class="section-chev">›</span>
+      </summary>
+      <div class="section-body">
+        <div class="tscroll">
+          <div class="table-wrap">
+            <table class="workback-table">
+              <thead><tr><th>Day</th><th>Target</th><th>Desk work</th><th>Move-friendly work</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Sun Jun 28</strong></td><td>Setup</td><td>Confirm materials, read Assignment 1, create folders</td><td>None</td></tr>
+                <tr><td><strong>Mon Jun 29</strong></td><td>Frame the week</td><td>Lecture + master notes skeleton</td><td>Lecture replay/TTS</td></tr>
+                <tr><td><strong>Tue Jun 30</strong></td><td>Human-AI interaction</td><td>Anthropomorphism, sycophancy, Against Imaginary Friends</td><td>NPR/audio, Activity 1 voice chat</td></tr>
+                <tr><td><strong>Wed Jul 1</strong></td><td>Prompting/RAG cluster</td><td>RAG, hallucination, prompt engineering, journalist prompting</td><td>Prompting 101 audio</td></tr>
+                <tr><td><strong>Thu Jul 2</strong></td><td>Assignment 1 build</td><td>Corpus, NotebookLM setup, test prompts</td><td>None</td></tr>
+                <tr><td><strong>Fri Jul 3</strong></td><td>Production day</td><td>Activity 2, memo draft, NotebookLM artifacts</td><td>Light review</td></tr>
+                <tr><td><strong>Sat Jul 4</strong></td><td>Recording day</td><td>Assignment 1 slides/video</td><td>Practice aloud</td></tr>
+                <tr><td><strong>Sun Jul 5</strong></td><td>Submission buffer</td><td>Final checks, peer response, uploads</td><td>None</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <h4>Minimum viable path</h4>
+        <ul class="text-sm">
+          <li>3 Assignment 1 sources, 6–8 NotebookLM tests, all three transformations</li>
+          <li>5-minute critique video</li>
+          <li>One Activity 1 voice chat (10+ minutes)</li>
+          <li>4–5 Gemini image prompt iterations for Activity 2</li>
+          <li>300-ish word memo with discussion question and outside resource</li>
+          <li>One peer response</li>
+        </ul>
+        <h4>What can wait</h4>
+        <ul class="text-sm">
+          <li>Extra Gemini iterations beyond 6–8</li>
+          <li>More than 5 Assignment 1 sources</li>
+          <li>Elaborate Assignment 1 slide design</li>
+          <li>Optional rereads</li>
+        </ul>
+</div>
+    </details>
+  </section>
+  <!-- ─── SECTION 15: Google Tasks ─── -->
+  <section class="section-card" id="s15" data-zone="briefing">
+    <details class="section-details" open>
+      <summary class="section-summary">
+        <div class="section-summary-left">
+          <div class="section-num">4</div>
+          <span class="section-icon">✅</span>
+          <span class="section-title">Google Tasks List</span>
+        </div>
+        <span class="section-chev">›</span>
+      </summary>
+      <div class="section-body">
+        <div class="copybox">
+          <div class="copyhead">
+            <div class="copyhead-meta"><strong>Google Tasks copy block — Week 2</strong></div>
+            <div class="copyhead-actions">
+              <button class="caret-btn" data-caret="tasks2" aria-label="Collapse/expand">▾</button>
+              <button class="btn sm copy-btn" data-copy="tasks2">Copy tasks</button>
+            </div>
+          </div>
+          <pre class="copybody" id="tasks2">Copy/paste straight into Google Tasks 👇
+
+✅ Confirm all Week 2 materials are saved and accessible → Due Sun Jun 28
+🧪 Read Assignment 1 instructions and rubric → Due Mon Jun 29
+🎥 Review Week 2 lecture and capture 7 key ideas → Due Mon Jun 29
+📝 Create Week 2 master notes skeleton → Due Mon Jun 29
+🧪 Complete Activity 1 voice chat experiment → Due Tue Jun 30
+🎧 Listen to or read NPR bot relationships material → Due Tue Jun 30
+📖 Read anthropomorphism source → Due Tue Jun 30
+📖 Read sycophancy source → Due Tue Jun 30
+📖 Read Against Imaginary Friends → Due Wed Jul 1
+📖 Read AI search behavior source → Due Wed Jul 1
+📖 Read RAG, hallucination, and prompt engineering sources → Due Wed Jul 1
+🎥 Review Anthropic Prompting 101 and Prompt Structure Dojo → Due Wed Jul 1
+✅ Upload Week 2 materials to course NotebookLM with W2 labels → Due Wed Jul 1
+📝 Draft Reading Memo angle, question, and outside resource direction → Due Thu Jul 2
+🧪 Create separate Assignment 1 NotebookLM notebook and source corpus → Due Thu Jul 2
+🧪 Run Assignment 1 NotebookLM tests → Due Fri Jul 3
+🧪 Generate Assignment 1 audio overview, video overview, and blog post → Due Fri Jul 3
+🧪 Complete Activity 2 Gemini Prompting Challenge → Due Fri Jul 3
+📝 Draft and submit Reading Memo → Due Sat Jul 4
+💬 Write peer response/comment → Due Sun Jul 5
+📤 Record Assignment 1 video → Due Sun Jul 5
+📤 Submit Assignment 1 video and NotebookLM link with permissions checked → Due Sun Jul 5</pre>
+        </div>
+</div>
+    </details>
+  </section>
+  <!-- ─── SECTION 14: First 3 Actions ─── -->
+  <section class="section-card" id="s14" data-zone="briefing">
+    <details class="section-details" open>
+      <summary class="section-summary">
+        <div class="section-summary-left">
+          <div class="section-num">5</div>
+          <span class="section-icon">🚀</span>
+          <span class="section-title">First 3 Actions</span>
+        </div>
+        <span class="section-chev">›</span>
+      </summary>
+      <div class="section-body">
+        <div class="action-card">
+          <div class="action-num">1</div>
+          <div class="action-body">
+            <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;">
+              <input type="checkbox" data-sync="s5-1" id="c-first1" style="margin-top:3px;width:17px;height:17px;accent-color:var(--accent);flex-shrink:0;"/>
+              <span><strong>Watch/read the Week 2 lecture.</strong><br/><span class="text-sm text-muted">Gives the week's intellectual map: UX, overreliance, anthropomorphism, sycophancy, prompting, RAG. 60–75 minutes.</span></span>
+            </label>
+          </div>
+        </div>
+        <div class="action-card">
+          <div class="action-num">2</div>
+          <div class="action-body">
+            <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;">
+              <input type="checkbox" data-sync="s5-5" id="c-first2" style="margin-top:3px;width:17px;height:17px;accent-color:var(--accent);flex-shrink:0;"/>
+              <span><strong>Complete Activity 1: Voice Chat.</strong><br/><span class="text-sm text-muted">Have a spoken conversation with ChatGPT Voice or Gemini Live and post your reflection. 30 minutes.</span></span>
+            </label>
+          </div>
+        </div>
+        <div class="action-card">
+          <div class="action-num">3</div>
+          <div class="action-body">
+            <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;">
+              <input type="checkbox" data-sync="s5-18" id="c-first3" style="margin-top:3px;width:17px;height:17px;accent-color:var(--accent);flex-shrink:0;"/>
+              <span><strong>Submit Assignment 1: NotebookLM Curation and Critique.</strong><br/><span class="text-sm text-muted">5–8 min video + shared NotebookLM link. Check sharing permissions before submitting. 120 minutes.</span></span>
+            </label>
+          </div>
+        </div>
+</div>
+    </details>
+  </section>
+
+  <!-- ─── SECTION 3: Deliverables ─── -->
+  <section class="section-card" id="s3" data-zone="execution">
+    <details class="section-details" open>
+      <summary class="section-summary">
+        <div class="section-summary-left">
+          <div class="section-num">6</div>
+          <span class="section-icon">📅</span>
+          <span class="section-title">Weekly Deliverables &amp; Deadlines</span>
+        </div>
+        <span class="section-chev">›</span>
+      </summary>
+      <div class="section-body">
+        <div class="tscroll">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Deliverable</th><th>What it is</th><th>Due</th></tr></thead>
+              <tbody>
+                <tr class="deliverable-row" data-del-sync="s5-16"><td><a href="https://canvas.northwestern.edu/courses/253956/assignments/1781925" target="_blank" rel="noopener">Reading Response Memo</a></td><td>~300-word synthesis/reflection memo with substantive question and one outside resource.</td><td>Sun Jul 5 — verify Canvas time</td></tr>
+                <tr class="deliverable-row" data-del-sync="s5-17"><td><a href="https://canvas.northwestern.edu/courses/253956/assignments/1781925" target="_blank" rel="noopener">Peer response/comment</a></td><td>One substantive response to a classmate's memo.</td><td>Sun Jul 5 — verify Canvas time</td></tr>
+                <tr class="deliverable-row" data-del-sync="s5-5"><td><a href="https://canvas.northwestern.edu/courses/253956/discussion_topics/1843958" target="_blank" rel="noopener">Activity 1: Voice Chat</a></td><td>Spoken conversation with ChatGPT Voice or Gemini Live + reflection on spoken vs written interaction.</td><td>Sun Jul 5 — verify Canvas time</td></tr>
+                <tr class="deliverable-row" data-del-sync="s5-15"><td><a href="https://canvas.northwestern.edu/courses/253956/discussion_topics/1843959" target="_blank" rel="noopener">Activity 2: Gemini Prompting Challenge</a></td><td>Iterative Gemini image generation to match target image — final image, full chat thread, reflection.</td><td>Sun Jul 5 — verify Canvas time</td></tr>
+                <tr class="deliverable-row" data-del-sync="s5-18"><td><a href="https://canvas.northwestern.edu/courses/253956/assignments/1781910" target="_blank" rel="noopener">Assignment 1: NotebookLM Curation &amp; Critique</a></td><td>5–8 minute video + NotebookLM link. Curate 3–5 sources, test, generate transformations, critique.</td><td>Sun Jul 5</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+</div>
+    </details>
+  </section>
+  <!-- ─── SECTION 5: Checklist ─── -->
+  <section class="section-card" id="s5" data-zone="execution">
+    <details class="section-details" open>
+      <summary class="section-summary">
+        <div class="section-summary-left">
+          <div class="section-num">7</div>
+          <span class="section-icon">📌</span>
+          <span class="section-title">Weekly Checklist</span>
+        </div>
+        <span class="section-chev">›</span>
+      </summary>
+      <div class="section-body">
+        <p class="text-sm text-muted">Source of truth for progress. 18 required tasks.</p>
+                  <div class="card-group-toggle" id="checklistGroupToggle">
+            <span class="card-group-label" id="checklistGroupLabel">18 required tasks</span>
+            <button class="card-group-btn" id="groupToggleBtn">Group: By day ▾</button>
+          </div>
+        <div class="check-table-wrap"><div class="table-wrap">
+            <table class="check-table table-xl">
+              <thead>
+                <tr>
+                  <th>Done</th><th>#</th><th>Task / assignment</th>
+                  <th>What to capture</th><th>Best timing</th>
+                  <th>Why this order</th><th>Effort</th><th>Mode</th>
+                </tr>
+              </thead>
+                            <tbody>
+                <tr><td><input type="checkbox" data-check id="s5-1"/></td><td>1</td><td>🎥 <a href="https://canvas.northwestern.edu/courses/253956/files?preview=25094793" target="_blank" rel="noopener">Week 2 Lecture</a></td><td>7-concept map: UX, overreliance, anthropomorphism, sycophancy, prompting, RAG, verification</td><td>Mon</td><td>Week's intellectual map — do first</td><td>75m</td><td><span class="mode-badge mode-flex">🔁</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-2"/></td><td>2</td><td>🎥 <a href="https://www.npr.org/2024/07/01/1247296788/the-benefits-and-drawbacks-of-chatbot-relationships" target="_blank" rel="noopener">If a bot relationship FEELS real,<br>should we care?</a></td><td>Artificial intimacy angle</td><td>Tue</td><td>Best move-friendly material; strong memo source</td><td>30m</td><td><span class="mode-badge mode-move">🏎️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-3"/></td><td>3</td><td>📖 <a href="https://uxmag.com/articles/the-4-degrees-of-anthropomorphism-of-generative-ai" target="_blank" rel="noopener">The 4 Degrees of<br>Anthropomorphism</a></td><td>4 degrees framework</td><td>Tue</td><td>Core framework for voice AI / companion angle</td><td>35m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-4"/></td><td>4</td><td>📖 <a href="https://www.nngroup.com/articles/sycophancy-generative-ai-chatbots/" target="_blank" rel="noopener">Sycophancy in<br>Generative-AI Chatbots</a></td><td>AI agreement/confirmation bias pattern</td><td>Tue</td><td>Strong memo + Assignment 1 critique source</td><td>35m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-5"/></td><td>5</td><td>✏️ <a href="https://canvas.northwestern.edu/courses/253956/discussion_topics/1843958" target="_blank" rel="noopener">Activity 1: Voice Chat</a></td><td>Reflection post on Canvas</td><td>Tue</td><td>Firsthand UX experience; required submission</td><td>30m</td><td><span class="mode-badge mode-move">🏎️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-6"/></td><td>6</td><td>📖 <a href="https://cacm.acm.org/research/against-imaginary-friends-why-digital-companions-are-no-solution-to-social-isolation/" target="_blank" rel="noopener">Against Imaginary Friends</a></td><td>Loneliness vs social isolation distinction</td><td>Tue/Wed</td><td>Best memo source for companionship angle</td><td>45m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-7"/></td><td>7</td><td>🎥 <a href="https://www.youtube.com/watch?v=ysPbXH0LpIE" target="_blank" rel="noopener">Prompting 101 — Anthropic</a></td><td>Prompt structure notes</td><td>Wed</td><td>Required for Activity 2 and Assignment 1 test design</td><td>45m</td><td><span class="mode-badge mode-flex">🔁</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-8"/></td><td>8</td><td>🎥 <a href="https://claude.ai/public/artifacts/b63ed621-7f35-4b6c-93d7-95cdca7a5577" target="_blank" rel="noopener">Prompt Structure Dojo — Interactive</a></td><td>Prompt structure hands-on practice</td><td>Wed</td><td>Reinforces Prompting 101 concepts interactively</td><td>15m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-9"/></td><td>9</td><td>📖 <a href="https://www.nngroup.com/articles/ai-changing-search-behaviors/" target="_blank" rel="noopener">How AI Is Changing<br>Search Behaviors</a></td><td>AI summaries + source verification implications</td><td>Wed</td><td>Supports media trust memo angle</td><td>35m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-10"/></td><td>10</td><td>📖 <a href="https://cloud.google.com/discover/what-is-prompt-engineering" target="_blank" rel="noopener">Prompt Engineering:<br>Overview and Guide</a></td><td>Prompting basics and structure</td><td>Wed</td><td>Foundation for Assignment 1 test design</td><td>30m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-11"/></td><td>11</td><td>📖 <a href="https://docs.claude.com/en/docs/test-and-evaluate/strengthen-guardrails/reduce-hallucinations" target="_blank" rel="noopener">Reducing Hallucinations</a></td><td>"I don't know" technique, citations, source restriction</td><td>Wed</td><td>Core Assignment 1 critique language</td><td>30m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-12"/></td><td>12</td><td>📖 <a href="https://cloud.google.com/use-cases/retrieval-augmented-generation" target="_blank" rel="noopener">What is RAG?</a></td><td>Retrieval, grounding, source quality</td><td>Wed</td><td>Essential Assignment 1 critique framework</td><td>30m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-13"/></td><td>13</td><td>📖 <a href="https://generative-ai-newsroom.com/prompting-techniques-and-best-practices-for-journalists-6fa806cde8ec" target="_blank" rel="noopener">Prompting Techniques<br>for Journalists</a></td><td>Validation, source grounding, evaluation criteria</td><td>Wed</td><td>Strong memo + Assignment 1 source</td><td>45m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-14"/></td><td>14</td><td>📖 <a href="https://generative-ai-newsroom.com/personalizing-newsletters-a-case-study-on-iterative-prompt-evaluation-and-improvement-a9f1141900fd" target="_blank" rel="noopener">Personalizing Newsletters:<br>Iterative Prompt Evaluation</a></td><td>Iterative evaluation criteria</td><td>Wed/Thu</td><td>Best case study for prompt iteration</td><td>45m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-15"/></td><td>15</td><td>✏️ <a href="https://canvas.northwestern.edu/courses/253956/discussion_topics/1843959" target="_blank" rel="noopener">Activity 2: Gemini Prompting Challenge</a></td><td>Final image + full Gemini chat thread</td><td>Fri</td><td>Required submission; save full Gemini thread</td><td>90m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-16"/></td><td>16</td><td>✏️ <a href="https://canvas.northwestern.edu/courses/253956/assignments/1781925" target="_blank" rel="noopener">Reading Response Memo</a></td><td>~300-word memo + question + outside resource</td><td>Fri/Sat</td><td>Main weekly synthesis submission</td><td>75m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-17"/></td><td>17</td><td>✏️ <a href="https://canvas.northwestern.edu/courses/253956/assignments/1781925" target="_blank" rel="noopener">Peer response/comment</a></td><td>One substantive reply on Canvas</td><td>Sat/Sun</td><td>Wait for classmates to post first</td><td>30m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+                <tr><td><input type="checkbox" data-check id="s5-18"/></td><td>18</td><td>🧪 <a href="https://canvas.northwestern.edu/courses/253956/assignments/1781910" target="_blank" rel="noopener">Assignment 1: NotebookLM<br>Curation and Critique</a></td><td>5–8 min video + shared NotebookLM link</td><td>Sat/Sun</td><td>Major project submission; check sharing permissions</td><td>120m</td><td><span class="mode-badge mode-desk">🖥️</span></td></tr>
+              </tbody>
+              <tfoot>
+                <tr><td colspan="6"><strong>Total estimated active work time</strong></td><td colspan="2"><strong>About 14h</strong></td></tr>
+                <tr id="remainingTimeRow"><td colspan="6" class="text-muted">Estimated remaining</td><td colspan="2" id="remainingTimeVal" class="text-muted">—</td></tr>
+              </tfoot>
+            </table>
+        </div></div>
+
+        <div class="checklist-cards" id="checklistCards">
+
+          <div class="card-day-div">Monday</div>
+          <div class="check-card" data-card-id="s5-1">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-1"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">🎥 Week 2 Lecture</div>
+              <div class="card-capture">7-concept map: UX, overreliance, anthropomorphism, sycophancy, prompting, RAG, verification</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Mon</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 75m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Week's intellectual map — do first</span>
+              </div>
+            </div>
+            <div class="card-mode mode-flex">🔁</div>
+          </div>
+          <div class="card-day-div">Tuesday</div>
+          <div class="check-card" data-card-id="s5-2">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-2"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">🎥 If a bot relationship FEELS real, should we care?</div>
+              <div class="card-capture">Artificial intimacy angle</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Tue</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 30m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Best move-friendly material; strong memo source</span>
+              </div>
+            </div>
+            <div class="card-mode mode-move">🏎️</div>
+          </div>
+          <div class="check-card" data-card-id="s5-3">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-3"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">📖 The 4 Degrees of Anthropomorphism</div>
+              <div class="card-capture">4 degrees framework</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Tue</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 35m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Core framework for voice AI / companion angle</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="check-card" data-card-id="s5-4">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-4"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">📖 Sycophancy in Generative-AI Chatbots</div>
+              <div class="card-capture">AI agreement/confirmation bias pattern</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Tue</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 35m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Strong memo + Assignment 1 critique source</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="check-card" data-card-id="s5-5">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-5"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">✏️ Activity 1: Voice Chat</div>
+              <div class="card-capture">Reflection post on Canvas</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Tue</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 30m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Firsthand UX experience; required submission</span>
+              </div>
+            </div>
+            <div class="card-mode mode-move">🏎️</div>
+          </div>
+          <div class="card-day-div">Tuesday / Wednesday</div>
+          <div class="check-card" data-card-id="s5-6">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-6"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">📖 Against Imaginary Friends</div>
+              <div class="card-capture">Loneliness vs social isolation distinction</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Tue/Wed</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 45m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Best memo source for companionship angle</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="card-day-div">Wednesday</div>
+          <div class="check-card" data-card-id="s5-7">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-7"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">🎥 Prompting 101</div>
+              <div class="card-capture">Prompt structure notes</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Wed</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 45m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Required for Activity 2 and Assignment 1 test design</span>
+              </div>
+            </div>
+            <div class="card-mode mode-flex">🔁</div>
+          </div>
+          <div class="check-card" data-card-id="s5-8">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-8"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">🎥 Prompt Structure Dojo — Interactive</div>
+              <div class="card-capture">Prompt structure hands-on practice</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Wed</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 15m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Reinforces Prompting 101 concepts interactively</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="check-card" data-card-id="s5-9">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-9"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">📖 How AI Is Changing Search Behaviors</div>
+              <div class="card-capture">AI summaries + source verification implications</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Wed</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 35m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Supports media trust memo angle</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="check-card" data-card-id="s5-10">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-10"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">📖 Prompt Engineering: Overview and Guide</div>
+              <div class="card-capture">Prompting basics and structure</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Wed</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 30m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Foundation for Assignment 1 test design</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="check-card" data-card-id="s5-11">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-11"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">📖 Reducing Hallucinations</div>
+              <div class="card-capture">"I don't know" technique, citations, source restriction</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Wed</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 30m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Core Assignment 1 critique language</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="check-card" data-card-id="s5-12">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-12"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">📖 What is RAG?</div>
+              <div class="card-capture">Retrieval, grounding, source quality</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Wed</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 30m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Essential Assignment 1 critique framework</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="check-card" data-card-id="s5-13">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-13"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">📖 Prompting Techniques for Journalists</div>
+              <div class="card-capture">Validation, source grounding, evaluation criteria</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Wed</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 45m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Strong memo + Assignment 1 source</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="card-day-div">Wednesday / Thursday</div>
+          <div class="check-card" data-card-id="s5-14">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-14"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">📖 Personalizing Newsletters: Iterative Prompt Evaluation</div>
+              <div class="card-capture">Iterative evaluation criteria</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Wed/Thu</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 45m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Best case study for prompt iteration</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="card-day-div">Friday</div>
+          <div class="check-card" data-card-id="s5-15">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-15"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">✏️ Activity 2: Gemini Prompting Challenge</div>
+              <div class="card-capture">Final image + full Gemini chat thread</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Fri</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 90m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Required submission; save full Gemini thread</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="card-day-div">Friday / Saturday</div>
+          <div class="check-card" data-card-id="s5-16">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-16"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">✏️ Reading Response Memo</div>
+              <div class="card-capture">~300-word memo + question + outside resource</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Fri/Sat</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 75m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Main weekly synthesis submission</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="card-day-div">Saturday / Sunday</div>
+          <div class="check-card" data-card-id="s5-17">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-17"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">✏️ Peer response/comment</div>
+              <div class="card-capture">One substantive reply on Canvas</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Sat/Sun</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 30m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Wait for classmates to post first</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+          <div class="check-card" data-card-id="s5-18">
+            <div class="card-cb-wrap"><div class="card-cb" data-cb="s5-18"></div></div>
+            <div class="card-body">
+              <div class="card-task-name">🧪 Assignment 1: NotebookLM Curation and Critique</div>
+              <div class="card-capture">5–8 min video + shared NotebookLM link</div>
+              <div class="card-meta">
+                <span class="card-meta-item">📅 Sat/Sun</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">⏱ 120m</span><span class="card-meta-sep"></span>
+                <span class="card-meta-item">Major project submission; check sharing permissions</span>
+              </div>
+            </div>
+            <div class="card-mode mode-desk">🖥️</div>
+          </div>
+        </div>
+      </div>
+    </details>
+  </section>
+  <!-- ─── SECTION 6: Materials ─── -->
+  <section class="section-card" id="s6" data-zone="execution">
+    <details class="section-details">
+      <summary class="section-summary">
+        <div class="section-summary-left">
+          <div class="section-num">8</div>
+          <span class="section-icon">🗂️</span>
+          <span class="section-title">Study Materials Guide</span>
+        </div>
+        <span class="section-chev">›</span>
+      </summary>
+      <div class="section-body">
+        <div class="callout">
+          <strong>Study rule:</strong> Human-AI interaction cluster (NPR, Against Imaginary Friends, anthropomorphism, sycophancy) feeds the Reading Memo. Prompting/RAG cluster (RAG, hallucination, Prompting 101, journalist prompting) feeds Assignment 1. Do not study everything equally.
+        </div>
+        <div class="tscroll" style="margin-top:12px;">
+        <div class="table-wrap">
+          <table class="mat-table">
+            <thead>
+              <tr><th>Material</th><th>Depth</th><th>Mode</th><th>How to consume it</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><a href="https://canvas.northwestern.edu/courses/253956/files?preview=25094793" target="_blank" rel="noopener">Week 2 Lecture</a> 🎥</td><td>Careful</td><td>🔁</td><td>Watch at desk or listen via TTS. Capture 7-concept map: UX, overreliance, anthropomorphism, sycophancy, prompting, RAG, verification.</td></tr>
+              <tr><td><a href="https://www.npr.org/2024/07/01/1247296788/the-benefits-and-drawbacks-of-chatbot-relationships" target="_blank" rel="noopener">If a bot relationship FEELS real, should we care?</a> 🎧</td><td>Normal</td><td>🏎️</td><td>Listen while walking/driving. Capture the artificial intimacy angle.</td></tr>
+              <tr><td><a href="https://uxmag.com/articles/the-4-degrees-of-anthropomorphism-of-generative-ai" target="_blank" rel="noopener">The 4 Degrees of Anthropomorphism</a> 📖</td><td>Careful</td><td>🖥️</td><td>Read carefully at desk or iPad. Capture the 4 degrees framework.</td></tr>
+              <tr><td><a href="https://www.nngroup.com/articles/sycophancy-generative-ai-chatbots/" target="_blank" rel="noopener">Sycophancy in Generative-AI Chatbots</a> 📖</td><td>Careful</td><td>🖥️</td><td>Read carefully at desk or iPad. Capture the AI agreement/confirmation bias pattern.</td></tr>
+              <tr><td><a href="https://www.nngroup.com/articles/ai-changing-search-behaviors/" target="_blank" rel="noopener">How AI Is Changing Search Behaviors</a> 📖</td><td>Normal</td><td>🖥️</td><td>Read at desk or iPad. Capture AI summaries + source verification implications.</td></tr>
+              <tr><td><a href="https://cacm.acm.org/research/against-imaginary-friends-why-digital-companions-are-no-solution-to-social-isolation/" target="_blank" rel="noopener">Against Imaginary Friends</a> 📖</td><td>Careful</td><td>🖥️</td><td>Read carefully at desk or iPad. Capture the loneliness vs social isolation distinction.</td></tr>
+              <tr><td><a href="https://www.youtube.com/watch?v=ysPbXH0LpIE" target="_blank" rel="noopener">Prompting 101</a> 🎥</td><td>Normal</td><td>🔁</td><td>Watch or listen via TTS. Capture prompt structure components.</td></tr>
+              <tr><td><a href="https://claude.ai/public/artifacts/b63ed621-7f35-4b6c-93d7-95cdca7a5577" target="_blank" rel="noopener">Prompt Structure Dojo</a> 🎮</td><td>Practice</td><td>🖥️</td><td>Work through interactively at desk. Practice prompt structure hands-on.</td></tr>
+              <tr><td><a href="https://cloud.google.com/discover/what-is-prompt-engineering" target="_blank" rel="noopener">Prompt Engineering: Overview and Guide</a> 📖</td><td>Normal</td><td>🖥️</td><td>Read at desk. Capture prompting basics and structure for Assignment 1 test design.</td></tr>
+              <tr><td><a href="https://docs.claude.com/en/docs/test-and-evaluate/strengthen-guardrails/reduce-hallucinations" target="_blank" rel="noopener">Reducing Hallucinations</a> 📖</td><td>Careful</td><td>🖥️</td><td>Read carefully at desk. Capture the "I don't know" technique and citation practices.</td></tr>
+              <tr><td><a href="https://cloud.google.com/use-cases/retrieval-augmented-generation" target="_blank" rel="noopener">What is RAG?</a> 📖</td><td>Careful</td><td>🖥️</td><td>Read carefully at desk. Capture retrieval, grounding, and source quality concepts.</td></tr>
+              <tr><td><a href="https://generative-ai-newsroom.com/prompting-techniques-and-best-practices-for-journalists-6fa806cde8ec" target="_blank" rel="noopener">Prompting Techniques for Journalists</a> 📖</td><td>Careful</td><td>🖥️</td><td>Read carefully at desk. Capture validation, source grounding, and evaluation criteria.</td></tr>
+              <tr><td><a href="https://generative-ai-newsroom.com/personalizing-newsletters-a-case-study-on-iterative-prompt-evaluation-and-improvement-a9f1141900fd" target="_blank" rel="noopener">Personalizing Newsletters</a> 📖</td><td>Normal</td><td>🖥️</td><td>Read at desk. Capture iterative evaluation criteria for prompt improvement.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        </div>
+      </div>
+    </details>
+  </section>
+  <!-- ─── SECTION 12: Activity Strategy ─── -->
+  <section class="section-card" id="s12" data-zone="execution">
+    <details class="section-details">
+      <summary class="section-summary">
+        <div class="section-summary-left">
+          <div class="section-num">9</div>
+          <span class="section-icon">🧩</span>
+          <span class="section-title">Activity Guide</span>
+        </div>
+        <span class="section-chev">›</span>
+      </summary>
+      <div class="section-body">
+        <h3 style="margin-top:0;">Activity 1: Voice Chat 🎙️</h3>
+        <div class="activity-panel">
+          <p><strong>What it asks:</strong> Have one or more spoken conversations with ChatGPT Voice Chat or Gemini Live and write a short reflection comparing spoken vs written AI interaction.</p>
+          <p><strong>Best approach:</strong> Use two short conversations — one practical ("Help me plan Week 2"), one reflective ("Does voice AI make users more likely to anthropomorphize?"). Connect to anthropomorphism and sycophancy readings.</p>
+          <p><strong>Reflection angles:</strong> Voice feels more immediate and social. It may increase anthropomorphism. It reduces verification friction. Written chat is better for source-checking and audit trails.</p>
+          <p class="text-muted text-sm"><strong>Minimum viable:</strong> One 10-minute conversation + 150-word reflection. <strong>Strong:</strong> Two conversations + explicit connection to anthropomorphism/sycophancy.</p>
+        </div>
+
+        <h3>Activity 2: Gemini Prompting Challenge 🎨</h3>
+        <div class="activity-panel">
+          <p><strong>What it asks:</strong> Use Gemini image generation to match a provided real image, iterating on objects, colors, style, lighting, and tone. Keep full process history. Share final image and full chat thread.</p>
+          <p><strong>Target image elements:</strong> backyard patio at sunset, circular fire pit with flames, lounge chairs with bright pillows, dining table and flowers, warm landscape lighting, pavers, gravel, planters, pink/purple sky, realistic upscale outdoor-living style.</p>
+          <p><strong>Process:</strong> Generate baseline → compare to target → fix composition → fix lighting/color → fix object placement → use doodle mask for specific mismatches → save final image and chat share link → write reflection.</p>
+          <p class="text-muted text-sm"><strong>Minimum viable:</strong> 4 iterations + final image + chat link + short reflection. <strong>Strong:</strong> 6–8 iterations with notes on what each prompt improved.</p>
+        </div>
+
+        <div class="copybox">
+          <div class="copyhead">
+            <div class="copyhead-meta">
+              <strong>Activity 2 starter prompt</strong>
+              <div class="meta-desc">Paste this into Gemini as your baseline image generation prompt.</div>
+            </div>
+            <div class="copyhead-actions">
+              <button class="caret-btn" data-caret="activity2starter" aria-label="Collapse/expand">▾</button>
+              <button class="btn sm copy-btn" data-copy="activity2starter">Copy</button>
+            </div>
+          </div>
+          <pre class="copybody" id="activity2starter">Create a realistic upscale suburban backyard patio scene at sunset. The foreground should feature a circular concrete fire pit with visible flames. Around it, place modern dark lounge chairs with bright turquoise and red patterned pillows. In the background, include a rectangular outdoor dining table with flowers, raised planters, ornamental grasses, warm garden lighting, square pavers separated by dark gravel, lush green landscaping, stucco home walls, and a pink-purple evening sky. Use realistic real-estate/lifestyle photography style, warm lighting, balanced composition, and a polished outdoor living design.</pre>
+        </div>
+</div>
+    </details>
+  </section>
+  <!-- ─── SECTION 4: Assignment workback ─── -->
+  <section class="section-card" id="s4" data-zone="execution">
+    <details class="section-details">
+      <summary class="section-summary">
+        <div class="section-summary-left">
+          <div class="section-num">10</div>
+          <span class="section-icon">🧪</span>
+          <span class="section-title">Assignment 1 Workback</span>
+        </div>
+        <span class="section-chev">›</span>
+      </summary>
+      <div class="section-body">
+        <h3 style="margin-top:0;">Assignment 1: NotebookLM Curation and Critique</h3>
+        <p><strong>Due:</strong> Sunday, July 5. <strong>Key exception:</strong> Create a <em>separate</em> Assignment 1 notebook — do not use your course NotebookLM notebook for this.</p>
+
+        <div class="callout amber">
+          <strong>Recommended topic:</strong> AI-generated creators and synthetic influencers — trust, disclosure, platform responsibility, and audience manipulation. Strong fit for your creator/platform background.
+        </div>
+
+        <div class="workback-cols">
+          <div class="mini-card accent-teal">
+            <h4>Corpus strategy (4 sources)</h4>
+            <ol class="text-sm" style="margin:0;">
+              <li>Journalism/article about a synthetic influencer or AI-generated creator</li>
+              <li>Platform/policy source about disclosure or synthetic media</li>
+              <li>Academic or policy source on trust, manipulation, or AI disclosure</li>
+              <li>Creator economy/media analysis source</li>
+            </ol>
+            <p class="text-sm text-muted" style="margin-top:6px;">Do not use more than 5 sources. Source mastery matters more than volume.</p>
+          </div>
+          <div class="mini-card accent-amber">
+            <h4>Assignment workflow</h4>
+            <ol class="text-sm" style="margin:0;">
+              <li>Select topic and sources</li>
+              <li>Create separate Assignment 1 notebook</li>
+              <li>Upload 3–5 sources</li>
+              <li>Run 6–10 test questions</li>
+              <li>Generate audio, video, and blog transformations</li>
+              <li>Critique each transformation</li>
+              <li>Create 5–7 slide outline</li>
+              <li>Record 5–8 min presentation</li>
+              <li>Submit video + NLM link with sharing permissions checked</li>
+            </ol>
+          </div>
+        </div>
+
+        <h4>Common mistakes to avoid</h4>
+        <ul class="text-sm">
+          <li>Using too many sources — harder to critique deeply</li>
+          <li>Picking too broad a topic</li>
+          <li>Trusting NotebookLM's summaries without source-checking</li>
+          <li>Failing to critique the audio/video/blog outputs specifically</li>
+          <li>Forgetting sharing permissions before submission</li>
+        </ul>
+</div>
+    </details>
+  </section>
+  <!-- ─── SECTION 13: Peer Response ─── -->
+  <section class="section-card" id="s13" data-zone="execution">
+    <details class="section-details">
+      <summary class="section-summary">
+        <div class="section-summary-left">
+          <div class="section-num">11</div>
+          <span class="section-icon">💬</span>
+          <span class="section-title">Peer Response Guide</span>
+        </div>
+        <span class="section-chev">›</span>
+      </summary>
+      <div class="section-body">
+        <p class="text-sm"><strong>Best timing:</strong> Saturday evening or Sunday morning, after classmates have posted.</p>
+        <p class="text-sm"><strong>What kind of post to choose:</strong> Pick a peer who wrote about voice AI, AI companions, AI search, hallucinations/source grounding, prompt literacy, or media trust.</p>
+        <div class="copybox">
+          <div class="copyhead">
+            <div class="copyhead-meta"><strong>Response formula</strong></div>
+            <div class="copyhead-actions">
+              <button class="caret-btn" data-caret="peerTemplate2" aria-label="Collapse/expand">▾</button>
+              <button class="btn sm copy-btn" data-copy="peerTemplate2">Copy</button>
+            </div>
+          </div>
+          <pre class="copybody" id="peerTemplate2">1. Name one specific thing they said.
+2. Connect it to one Week 2 concept (anthropomorphism, sycophancy, RAG, prompting, AI search).
+3. Add one implication for media/creator platforms.
+4. Ask a thoughtful follow-up question.</pre>
+        </div>
+        <h4>Example angles</h4>
+        <div class="grid-2">
+          <div class="mini-card">
+            <h4>Voice angle</h4>
+            <p class="text-sm">Your point about spoken AI feeling more natural made me think about anthropomorphism. I wonder whether the convenience of voice also makes it harder to maintain critical distance.</p>
+          </div>
+          <div class="mini-card">
+            <h4>Prompting angle</h4>
+            <p class="text-sm">I agree that better prompting matters, but I wonder whether we're putting too much responsibility on users instead of platforms.</p>
+          </div>
+        </div>
+</div>
+    </details>
+  </section>
+
+  <!-- ─── SECTION 9: Big Ideas ─── -->
+  <section class="section-card" id="s9" data-zone="reference">
+    <details class="section-details" open>
+      <summary class="section-summary">
+        <div class="section-summary-left">
+          <div class="section-num">12</div>
+          <span class="section-icon">🧠</span>
+          <span class="section-title">Weekly Big Ideas</span>
+        </div>
+        <span class="section-chev">›</span>
+      </summary>
+      <div class="section-body">
+        <div class="idea-grid">
+          <div class="idea-card">
+            <h4>1. AI interface design shapes trust</h4>
+            <p>The same answer feels different in search, chat, voice, or video. Interface design affects how much users slow down and verify — and how much they anthropomorphize.</p>
+          </div>
+          <div class="idea-card">
+            <h4>2. Convenience creates dependency risk</h4>
+            <p>AI is useful because it removes friction. That same friction removal can create automation bias — users accept outputs they would otherwise verify.</p>
+          </div>
+          <div class="idea-card">
+            <h4>3. Anthropomorphism is by design, not just error</h4>
+            <p>AI products are built to feel conversational, warm, responsive, and personalized. Voice makes this effect stronger. Users aren't being irrational — the product is working as intended.</p>
+          </div>
+          <div class="idea-card">
+            <h4>4. Sycophancy feels good but weakens judgment</h4>
+            <p>The problem is not only wrong facts. AI agreement can feel like validation — users may stop pushing back on AI outputs because the AI stopped pushing back on them.</p>
+          </div>
+          <div class="idea-card">
+            <h4>5. Prompting is responsible supervision</h4>
+            <p>Prompting sets task, context, criteria, evidence, format, tone, and boundaries. The strongest AI user is not the one who gets output quickly — it's the one who can judge whether output deserves trust.</p>
+          </div>
+          <div class="idea-card">
+            <h4>6. RAG helps, but doesn't solve trust</h4>
+            <p>Source-grounded tools can still omit nuance, misframe evidence, or make weak connections sound stronger. Verification remains the user's responsibility regardless of grounding.</p>
+          </div>
+        </div>
+</div>
+    </details>
+  </section>
+  <!-- ─── SECTION 10: Master Notes ─── -->
+  <section class="section-card" id="s10" data-zone="reference">
+    <details class="section-details" open>
+      <summary class="section-summary">
+        <div class="section-summary-left">
+          <div class="section-num">13</div>
+          <span class="section-icon">📓</span>
+          <span class="section-title">Master Notes</span>
+        </div>
+        <span class="section-chev">›</span>
+      </summary>
+      <div class="section-body">
+        <div class="callout"><strong>Use one concept-first master note, not source-by-source notes.</strong> These headings organize Week 2 by idea, not by reading.</div>
+
+        <div class="concept-block">
+          <h4>1. AI interfaces and search behavior</h4>
+          <ul class="text-sm">
+            <li><strong>Core point:</strong> AI is moving from a tool you visit to an interface embedded across search, browsers, phones, image tools, and voice.</li>
+            <li><strong>Key terms:</strong> AI browsers, AI Overviews, query fanout, AI search, publisher traffic, source verification.</li>
+            <li><strong>Use for memo:</strong> Media ecosystem angle — who owns attribution when AI summarizes?</li>
+            <li><strong>Use for Assignment 1:</strong> UX critique of how NotebookLM surfaces sources.</li>
+          </ul>
+        </div>
+
+        <div class="concept-block">
+          <h4>2. Overreliance and automation bias</h4>
+          <ul class="text-sm">
+            <li><strong>Core point:</strong> AI reduces friction, but lower friction can weaken verification habits.</li>
+            <li><strong>Key terms:</strong> overreliance, automation bias, errors of commission, errors of omission, miscalibrated trust.</li>
+            <li><strong>Use for memo:</strong> Responsible use angle — the tool works but the user's judgment may not.</li>
+            <li><strong>Use for Assignment 1:</strong> Does NotebookLM encourage or reduce overreliance?</li>
+          </ul>
+        </div>
+
+        <div class="concept-block">
+          <h4>3. Anthropomorphism and artificial intimacy</h4>
+          <ul class="text-sm">
+            <li><strong>Core point:</strong> Users treat AI as more human than it is, especially in voice/companion contexts. This is partly by design.</li>
+            <li><strong>Key terms:</strong> courtesy, reinforcement, roleplay, companionship, artificial intimacy.</li>
+            <li><strong>Use for Activity 1:</strong> Spoken interaction reflection — did voice feel more human?</li>
+            <li><strong>Use for memo:</strong> Voice/companionship angle.</li>
+          </ul>
+        </div>
+
+        <div class="concept-block">
+          <h4>4. Sycophancy and confirmation bias</h4>
+          <ul class="text-sm">
+            <li><strong>Core point:</strong> AI can feel supportive while mirroring user assumptions instead of challenging them. RLHF training reinforces agreeableness.</li>
+            <li><strong>Key terms:</strong> sycophancy, agreement bias, RLHF, confirmation bias.</li>
+            <li><strong>Use for memo:</strong> Trust and AI literacy — feeling validated is not the same as being right.</li>
+            <li><strong>Use for Assignment 1:</strong> Does NotebookLM push back on unsupported claims?</li>
+          </ul>
+        </div>
+
+        <div class="concept-block">
+          <h4>5. Prompting as responsible control</h4>
+          <ul class="text-sm">
+            <li><strong>Core point:</strong> Prompting is not just productivity — it's how users communicate intent, constraints, and standards. Better prompts produce more verifiable outputs.</li>
+            <li><strong>Key terms:</strong> prompt writing, prompt design, prompt engineering, reference text, examples, constraints, iteration, evaluation.</li>
+            <li><strong>Use for Activity 2:</strong> Iterative image prompting with explicit criteria.</li>
+            <li><strong>Use for Assignment 1:</strong> Test design — how well did your prompts stress-test NotebookLM?</li>
+          </ul>
+        </div>
+
+        <div class="concept-block">
+          <h4>6. RAG, source grounding, and hallucination reduction</h4>
+          <ul class="text-sm">
+            <li><strong>Core point:</strong> RAG improves source grounding but does not automatically guarantee accurate interpretation. Human verification remains necessary.</li>
+            <li><strong>Key terms:</strong> retrieval, grounding, citations, source quality, "I don't know," direct quotes, source restriction.</li>
+            <li><strong>Use for Assignment 1:</strong> Central critique framework — NotebookLM is a RAG tool. How well does it ground claims?</li>
+          </ul>
+        </div>
+
+        <div class="concept-block">
+          <h4>Key tensions</h4>
+          <ul class="text-sm">
+            <li>Voice AI lowers friction but may raise anthropomorphism and lower verification.</li>
+            <li>Sycophancy feels like good UX but weakens critical thinking.</li>
+            <li>RAG reduces hallucination risk without eliminating the need for judgment.</li>
+            <li>Prompt literacy is a user responsibility, but product design shapes whether users bother.</li>
+          </ul>
+        </div>
+
+        <h3>Dictation template</h3>
+        <div class="copybox">
+          <div class="copyhead">
+            <div class="copyhead-meta"><strong>Post-reading dictation template</strong></div>
+            <div class="copyhead-actions">
+              <button class="caret-btn" data-caret="dictation2" aria-label="Collapse/expand">▾</button>
+              <button class="btn sm copy-btn" data-copy="dictation2">Copy</button>
+            </div>
+          </div>
+          <pre class="copybody" id="dictation2">Material:
+Main concept:
+Best example:
+Connection to creator/media/AI work:
+Question this raises:
+Memo use? Assignment 1 use? yes/no/maybe</pre>
+        </div>
+</div>
+    </details>
+  </section>
+  <!-- ─── SECTION 7: AI Tool Workflow ─── -->
+  <section class="section-card" id="s7" data-zone="reference">
+    <details class="section-details">
+      <summary class="section-summary">
+        <div class="section-summary-left">
+          <div class="section-num">14</div>
+          <span class="section-icon">🛠️</span>
+          <span class="section-title">AI Tool Workflow</span>
+        </div>
+        <span class="section-chev">›</span>
+      </summary>
+      <div class="section-body">
+        <div class="grid-2" style="margin-bottom:14px;">
+          <div class="mini-card">
+            <h4>ChatGPT</h4>
+            <p class="text-sm">Planning, synthesis, memo structure, Assignment 1 strategy. Do not use for final submissions without revision.</p>
+          </div>
+          <div class="mini-card">
+            <h4>NotebookLM (Course notebook)</h4>
+            <p class="text-sm">Upload W2 sources with W2_ labels. Use for course study. Run 3 required prompts only.</p>
+          </div>
+          <div class="mini-card">
+            <h4>NotebookLM (Assignment 1 notebook)</h4>
+            <p class="text-sm">Separate notebook for Assignment 1 only. 3–5 sources. Test questions, transformations, critique evidence.</p>
+          </div>
+          <div class="mini-card">
+            <h4>Gemini</h4>
+            <p class="text-sm">Activity 2 image generation and iterative prompting. Save full chat thread for submission.</p>
+          </div>
+          <div class="mini-card">
+            <h4>Claude</h4>
+            <p class="text-sm">Dashboard HTML only. Not for factual/course QA.</p>
+          </div>
+          <div class="mini-card">
+            <h4>ChatGPT Voice / Gemini Live</h4>
+            <p class="text-sm">Activity 1 only. Write a recap after each conversation. Do not rely on voice for detailed verification.</p>
+          </div>
+        </div>
+        <div class="callout amber"><strong>Skip this week:</strong> Extra NotebookLM prompts beyond the 3 required + 2 optional, elaborate Assignment 1 slide design, more than 5 Assignment 1 sources.</div>
+</div>
+    </details>
+  </section>
+  <!-- ─── SECTION 11: NotebookLM ─── -->
+  <section class="section-card" id="s11" data-zone="reference">
+    <details class="section-details" open>
+      <summary class="section-summary">
+        <div class="section-summary-left">
+          <div class="section-num">15</div>
+          <span class="section-icon">🤖</span>
+          <span class="section-title">NotebookLM Prompts</span>
+        </div>
+        <span class="section-chev">›</span>
+      </summary>
+      <div class="section-body">
+        <p class="text-sm"><strong>Course NotebookLM:</strong> Use your existing course notebook. Add W2_ labels to all sources. Run the 3 required prompts below.</p>
+        <p class="text-sm"><strong>Assignment 1 NotebookLM:</strong> Create a <em>separate</em> notebook for Assignment 1 only — title: <em>Assignment 1 — NotebookLM Curation and Critique — Synthetic Creators</em>.</p>
+        <div class="callout" style="margin-bottom:16px;">
+          <strong>Restrained prompt discipline:</strong> 3 required prompts for course study + 2 optional prompts for Assignment 1 support. Do not overbuild.
+        </div>
+
+        <div class="copybox">
+          <div class="copyhead">
+            <div class="copyhead-meta">
+              <strong>Required Prompt 1: Overall Understanding + Synthesis</strong>
+              <div class="meta-desc">Use in Course NotebookLM after uploading all Week 2 sources.</div>
+            </div>
+            <div class="copyhead-actions">
+              <button class="caret-btn" data-caret="nlm2-1" aria-label="Collapse/expand">▾</button>
+              <button class="btn sm copy-btn" data-copy="nlm2-1">Copy</button>
+            </div>
+          </div>
+          <pre class="copybody" id="nlm2-1">Using only the Week 2 sources in this notebook, create one integrated study workflow with four outputs:
+
+1. Written Study Guide
+2. Written Master Notes
+3. Text-forward Video Overview guidance
+4. Audio Overview guidance
+
+Use these Week 2 note headings:
+- AI interfaces and search behavior
+- Overreliance and automation bias
+- Anthropomorphism and artificial intimacy
+- Sycophancy and confirmation bias
+- Prompting as responsible control
+- RAG and source grounding
+- Hallucination reduction and verification
+- Prompt iteration and evaluation
+- Responsible use in media, journalism, and creator platforms
+
+For the Written Study Guide: teach the week in plain English. Explain core concepts, key terms, frameworks, examples, source connections, and what matters most for the required work.
+
+For the Written Master Notes: go deeper using the same headings. Organize by concept, not source. Synthesize across readings, lecture, activities, and assignments. Flag memo and assignment relevance only when required.
+
+For the Video Overview: make it text-forward and study-oriented. Use readable on-screen text — concept names, definitions, frameworks, bullets, key terms.
+
+For the Audio Overview: make it conversational and walking-friendly. End with a fast verbal review checklist.
+
+Do not draft my Reading Memo. Help me understand and prepare.</pre>
+        </div>
+
+        <div class="copybox">
+          <div class="copyhead">
+            <div class="copyhead-meta">
+              <strong>Required Prompt 2: Master Notes Builder</strong>
+              <div class="meta-desc">Use in Course NotebookLM after Prompt 1.</div>
+            </div>
+            <div class="copyhead-actions">
+              <button class="caret-btn" data-caret="nlm2-2" aria-label="Collapse/expand">▾</button>
+              <button class="btn sm copy-btn" data-copy="nlm2-2">Copy</button>
+            </div>
+          </div>
+          <pre class="copybody" id="nlm2-2">Build deeper concept-first master notes for Week 2 using these headings:
+- AI interfaces and search behavior
+- Overreliance and automation bias
+- Anthropomorphism and artificial intimacy
+- Sycophancy and confirmation bias
+- Prompting as responsible control
+- RAG and source grounding
+- Hallucination reduction and verification
+- Prompt iteration and evaluation
+- Responsible use in media, journalism, and creator platforms
+
+For each section include:
+1. Plain-English definition
+2. Key terms
+3. Main source connections
+4. Useful examples
+5. Why it matters
+6. Relevance to the Reading Memo
+7. Relevance to Assignment 1 (only where useful)
+8. Risks, omissions, or misunderstandings to avoid
+
+Synthesize across sources. Do not summarize each source one by one.</pre>
+        </div>
+
+        <div class="copybox">
+          <div class="copyhead">
+            <div class="copyhead-meta">
+              <strong>Required Prompt 3: Memo Angle Finder</strong>
+              <div class="meta-desc">Use in Course NotebookLM after lecture + human-AI interaction cluster.</div>
+            </div>
+            <div class="copyhead-actions">
+              <button class="caret-btn" data-caret="nlm2-3" aria-label="Collapse/expand">▾</button>
+              <button class="btn sm copy-btn" data-copy="nlm2-3">Copy</button>
+            </div>
+          </div>
+          <pre class="copybody" id="nlm2-3">Using only the Week 2 sources, identify 3 strong Reading Memo angles. The memo should synthesize and reflect, not summarize.
+
+For each angle include:
+1. Main claim
+2. Why it works
+3. Course source connections
+4. Possible connection to my work in media, creator platforms, communication, or AI
+5. Risks or oversimplifications to avoid
+6. A substantive discussion question
+7. Why that question matters this week
+
+Do not draft the final memo. Recommend the strongest angle and explain why.</pre>
+        </div>
+
+        <div class="copybox">
+          <div class="copyhead">
+            <div class="copyhead-meta">
+              <strong>Optional Prompt 4: Assignment 1 Critique Support</strong>
+              <div class="meta-desc">Use in the SEPARATE Assignment 1 NotebookLM notebook only.</div>
+            </div>
+            <div class="copyhead-actions">
+              <button class="caret-btn" data-caret="nlm2-4" aria-label="Collapse/expand">▾</button>
+              <button class="btn sm copy-btn" data-copy="nlm2-4">Copy</button>
+            </div>
+          </div>
+          <pre class="copybody" id="nlm2-4">I am using this notebook for Assignment 1: NotebookLM Curation and Critique.
+
+Using only the sources in this notebook, help me prepare a critique of NotebookLM. Do not write the final presentation. Instead, help me evaluate:
+
+1. What NotebookLM explains accurately
+2. What it oversimplifies
+3. What it omits
+4. Where it is overconfident
+5. Whether its citations make claims easy to verify
+6. How well the audio overview, video overview, and blog post preserve nuance
+7. What the tool is good for
+8. What the tool is risky or inappropriate for
+9. What a user might misunderstand if they relied only on NotebookLM
+
+Organize as evidence I can use in a 5–8 minute critique presentation.</pre>
+        </div>
+
+        <div class="copybox">
+          <div class="copyhead">
+            <div class="copyhead-meta">
+              <strong>Optional Prompt 5: Assignment 1 Topic / Corpus Selector</strong>
+              <div class="meta-desc">Use before finalizing Assignment 1 sources.</div>
+            </div>
+            <div class="copyhead-actions">
+              <button class="caret-btn" data-caret="nlm2-5" aria-label="Collapse/expand">▾</button>
+              <button class="btn sm copy-btn" data-copy="nlm2-5">Copy</button>
+            </div>
+          </div>
+          <pre class="copybody" id="nlm2-5">Help me evaluate possible Assignment 1 corpus options on the topic of AI-generated creators and synthetic influencers.
+
+For each possible source, assess:
+1. What perspective it adds
+2. Whether it helps make the topic complex
+3. What claims or tensions it would help NotebookLM analyze
+4. What bias or limitation the source may have
+5. Whether the full 3–5 source corpus is balanced enough for a critical NotebookLM test
+
+Recommend the strongest 3–5 source corpus and explain what each source contributes.</pre>
+        </div>
+</div>
+    </details>
+  </section>
+  <!-- ─── SECTION 16: Memo Angles ─── -->
+  <section class="section-card" id="s16" data-zone="reference">
+    <details class="section-details">
+      <summary class="section-summary">
+        <div class="section-summary-left">
+          <div class="section-num">16</div>
+          <span class="section-icon">📝</span>
+          <span class="section-title">Reading Memo Guide</span>
+        </div>
+        <span class="section-chev">›</span>
+      </summary>
+      <div class="section-body">
+        <div class="callout"><strong>Memo goal:</strong> Synthesize Week 2, connect to your work/media use, include a substantive question, and include one outside resource. Do not summarize each reading one by one.</div>
+
+        <div class="mini-card accent-teal" style="margin-bottom:12px;">
+          <h4>Strongest angle: Prompting as responsible supervision</h4>
+          <p class="text-sm"><strong>Main claim:</strong> Prompting is not just a productivity technique — it is a form of responsible AI supervision that reconnects users to their own judgment.</p>
+          <p class="text-sm"><strong>Source connections:</strong> Prompting 101, RAG, journalist prompting, sycophancy, hallucination reduction, Week 2 lecture.</p>
+          <p class="text-sm"><strong>Professional connection:</strong> Creator platforms increasingly rely on AI-assisted workflows, so prompt literacy becomes part of platform responsibility.</p>
+          <p class="text-sm"><strong>Discussion question:</strong> Should prompt literacy be treated as a core form of media literacy?</p>
+          <p class="text-sm"><strong>Rough structure:</strong> (1) Open with voice chat observation. (2) State the concern: ease leads to overreliance, anthropomorphism, sycophancy. (3) Pivot: prompting and RAG offer ways to restore control, but only if users verify. (4) Connect to media/creator platforms. (5) End with question + outside resource.</p>
+        </div>
+
+        <div class="mini-card" style="margin-bottom:12px;">
+          <h4>Angle 2: Voice AI reduces critical distance</h4>
+          <p class="text-sm"><strong>Main claim:</strong> Voice makes AI feel more human and helpful, but it can also increase anthropomorphism and reduce source-checking.</p>
+          <p class="text-sm"><strong>Source connections:</strong> Activity 1, NPR, anthropomorphism, sycophancy, Against Imaginary Friends.</p>
+          <p class="text-sm"><strong>Discussion question:</strong> Should voice AI interfaces include more reminders that users are interacting with a system rather than a person?</p>
+        </div>
+
+        <div class="mini-card">
+          <h4>Angle 3: AI search changes the media trust chain</h4>
+          <p class="text-sm"><strong>Main claim:</strong> AI summaries shift user attention away from original sources, creating new questions about attribution, context, and publisher value.</p>
+          <p class="text-sm"><strong>Source connections:</strong> AI search, RAG, source grounding, media economics.</p>
+          <p class="text-sm"><strong>Discussion question:</strong> If AI gives users answers without source visits, who becomes responsible for preserving context and attribution?</p>
+        </div>
+</div>
+    </details>
+  </section>
+  <!-- ─── SECTION 17: Outside Resources ─── -->
+  <section class="section-card" id="s17" data-zone="reference">
+    <details class="section-details">
+      <summary class="section-summary">
+        <div class="section-summary-left">
+          <div class="section-num">17</div>
+          <span class="section-icon">🌐</span>
+          <span class="section-title">Outside Resources</span>
+        </div>
+        <span class="section-chev">›</span>
+      </summary>
+      <div class="section-body">
+        <div class="tscroll">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Direction</th><th>Best for</th><th>Search terms</th></tr></thead>
+              <tbody>
+                <tr><td>Sycophancy research</td><td>Memo on AI agreement/confirmation bias — safest choice</td><td>LLM sycophancy human feedback research; AI sycophancy confirmation bias</td></tr>
+                <tr><td>AI companions/loneliness research</td><td>Voice/companionship memo angle</td><td>AI companions loneliness social isolation study; artificial intimacy research</td></tr>
+                <tr><td>AI search + publishers</td><td>Media trust/attribution memo angle</td><td>AI overviews publisher traffic study; generative AI search attribution journalism</td></tr>
+                <tr><td>RAG evaluation research</td><td>Assignment 1 critique support</td><td>RAG citation accuracy hallucination evaluation; retrieval augmented generation accuracy</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="callout sage" style="margin-top:12px;">
+          <strong>Safest/strongest direction:</strong> sycophancy research. It directly supports Week 2 and the recommended memo angle. Look for academic papers with named researchers and clear methodology. Avoid generic AI blog posts.
+        </div>
+        <p class="text-sm text-muted" style="margin-top:10px;"><strong>Avoid:</strong> vendor marketing posts, unsourced LinkedIn takes, generic hype pieces, or sources that don't connect to media, communication, education, or platform trust.</p>
+</div>
+    </details>
+  </section>
+
+</main>
+</div>
+
+<!-- Mobile drawer -->
+<div class="mobile-backdrop" id="mobileBackdrop"></div>
+<div class="mobile-drawer" id="mobileDrawer" aria-label="Mobile navigation" role="dialog">
+  <div class="mobile-drawer-head">
+    <div style="flex:1;min-width:0;">
+      <div style="font-size:.67rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);">GenAI &amp; the Media</div>
+      <div style="font-weight:700;font-size:.92rem;margin:2px 0;">🧠 Francis Roberts</div>
+      <div style="display:flex;align-items:center;gap:6px;margin-top:4px;">
+        <select class="week-pill-select" data-week-switch aria-label="Switch week">
+          <option value="index.html">Week 1</option>
+          <option value="week2.html" selected>Week 2</option>
+          <option value="week3.html">Week 3</option>
+          <option disabled value="">Week 4</option>
+          <option disabled value="">Week 5</option>
+        </select>
+        <span style="font-size:.74rem;font-weight:500;color:var(--muted);white-space:nowrap;">Study Dashboard</span>
+      </div>
+    </div>
+    <button class="mobile-close-btn" id="mobileCloseBtn" aria-label="Close navigation" style="margin-left:10px;flex-shrink:0;">×</button>
+  </div>
+
+  <div class="progress-block" id="mProgressBlock">
+    <div class="progress-label">
+      <span>Progress</span>
+      <span class="progress-count"><span class="m-done">0</span> / <span class="m-total">0</span></span>
+    </div>
+    <div class="progress-bar-track"><div class="progress-bar-fill m-bar"></div></div>
+    <div style="display:flex;gap:6px;margin-top:8px;">
+      <button class="btn primary sm" id="mobileNextBtn">Next unchecked</button>
+      <button class="btn sm" id="mobileResetBtn">Reset</button>
+    </div>
+  </div>
+
+  <div>
+    <div style="font-size:.64rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Zones</div>
+    <div style="display:flex;flex-direction:column;gap:3px;">
+      <button class="zone-btn active" data-zone="briefing">📋 Briefing</button>
+      <button class="zone-btn active" data-zone="execution">⚡ Execution</button>
+      <button class="zone-btn active" data-zone="reference">📚 Reference</button>
+    </div>
+  </div>
+
+  <nav id="mobileNavList" style="display:flex;flex-direction:column;gap:1px;" aria-label="Mobile section navigation">
+    <div style="font-size:.64rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:4px 6px 2px;">📋 Briefing</div>
+    <div class="nav-entry" data-section="s1" data-zone="briefing" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s1" style="font-size:.8rem;"><span class="nav-icon">🧭</span><span class="nav-text">1. How to approach this week</span></a><button class="nav-eye" data-eye="s1" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div class="nav-entry" data-section="s2" data-zone="briefing" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s2" style="font-size:.8rem;"><span class="nav-icon">🔎</span><span class="nav-text">2. Inputs check</span></a><button class="nav-eye" data-eye="s2" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div class="nav-entry" data-section="s8" data-zone="briefing" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s8" style="font-size:.8rem;"><span class="nav-icon">📆</span><span class="nav-text">3. Weekly workback plan</span></a><button class="nav-eye" data-eye="s8" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div class="nav-entry" data-section="s15" data-zone="briefing" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s15" style="font-size:.8rem;"><span class="nav-icon">✅</span><span class="nav-text">4. Google Tasks list</span></a><button class="nav-eye" data-eye="s15" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div class="nav-entry" data-section="s14" data-zone="briefing" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s14" style="font-size:.8rem;"><span class="nav-icon">🚀</span><span class="nav-text">5. First 3 actions</span></a><button class="nav-eye" data-eye="s14" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div style="font-size:.64rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:6px 6px 2px;">⚡ Execution</div>
+    <div class="nav-entry" data-section="s3" data-zone="execution" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s3" style="font-size:.8rem;"><span class="nav-icon">📅</span><span class="nav-text">6. Deliverables</span></a><button class="nav-eye" data-eye="s3" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div class="nav-entry" data-section="s5" data-zone="execution" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s5" style="font-size:.8rem;"><span class="nav-icon">📌</span><span class="nav-text">7. Weekly checklist</span></a><button class="nav-eye" data-eye="s5" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div class="nav-entry" data-section="s6" data-zone="execution" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s6" style="font-size:.8rem;"><span class="nav-icon">🗂️</span><span class="nav-text">8. Study materials guide</span></a><button class="nav-eye" data-eye="s6" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div class="nav-entry" data-section="s12" data-zone="execution" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s12" style="font-size:.8rem;"><span class="nav-icon">🧩</span><span class="nav-text">9. Activity guide</span></a><button class="nav-eye" data-eye="s12" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div class="nav-entry" data-section="s4" data-zone="execution" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s4" style="font-size:.8rem;"><span class="nav-icon">🧪</span><span class="nav-text">10. Assignment workback</span></a><button class="nav-eye" data-eye="s4" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div class="nav-entry" data-section="s13" data-zone="execution" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s13" style="font-size:.8rem;"><span class="nav-icon">💬</span><span class="nav-text">11. Peer response guide</span></a><button class="nav-eye" data-eye="s13" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div style="font-size:.64rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:6px 6px 2px;">📚 Reference</div>
+    <div class="nav-entry" data-section="s9" data-zone="reference" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s9" style="font-size:.8rem;"><span class="nav-icon">🧠</span><span class="nav-text">12. Big ideas</span></a><button class="nav-eye" data-eye="s9" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div class="nav-entry" data-section="s10" data-zone="reference" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s10" style="font-size:.8rem;"><span class="nav-icon">📓</span><span class="nav-text">13. Master notes</span></a><button class="nav-eye" data-eye="s10" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div class="nav-entry" data-section="s7" data-zone="reference" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s7" style="font-size:.8rem;"><span class="nav-icon">🛠️</span><span class="nav-text">14. AI tool workflow</span></a><button class="nav-eye" data-eye="s7" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div class="nav-entry" data-section="s11" data-zone="reference" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s11" style="font-size:.8rem;"><span class="nav-icon">🤖</span><span class="nav-text">15. NotebookLM prompts</span></a><button class="nav-eye" data-eye="s11" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div class="nav-entry" data-section="s16" data-zone="reference" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s16" style="font-size:.8rem;"><span class="nav-icon">📝</span><span class="nav-text">16. Reading memo guide</span></a><button class="nav-eye" data-eye="s16" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div class="nav-entry" data-section="s17" data-zone="reference" style="grid-template-columns:1fr 26px;"><a class="nav-link" href="#s17" style="font-size:.8rem;"><span class="nav-icon">🌐</span><span class="nav-text">17. Outside resources</span></a><button class="nav-eye" data-eye="s17" aria-label="Toggle section"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+  </nav>
+
+  <div>
+    <div style="font-size:.64rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">View</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+      <button class="btn sm" id="mExpand">Expand all</button>
+      <button class="btn sm" id="mCollapse">Collapse all</button>
+    </div>
+  </div>
+</div>
+
+<!-- Mobile bottom nav -->
+<nav class="mobile-bar" aria-label="Quick navigation">
+  <button class="mobile-bar-btn" id="mMenuBtn" type="button">
+    <span class="mobile-bar-icon">☰</span>
+    <span class="mobile-bar-label">Menu</span>
+  </button>
+  <button class="mobile-bar-btn" id="mProgressBtn" type="button">
+    <span class="mobile-bar-icon">📌</span>
+    <span class="mobile-bar-label">Checklist</span>
+  </button>
+  <button class="mobile-bar-btn" id="mDoneBtn" type="button">
+    <span class="mobile-bar-icon">☑️</span>
+    <span class="mobile-bar-label">Done</span>
+  </button>
+  <button class="mobile-bar-btn" id="mTopBtn" type="button">
+    <span class="mobile-bar-icon">↑</span>
+    <span class="mobile-bar-label">Top</span>
+  </button>
+</nav>
+
+<!-- Toast -->
+<div class="toast" id="toast" aria-live="polite"></div>
+
+<!-- Celebration banner -->
+<div id="celebration-banner" aria-live="polite" aria-atomic="true">
+  <p class="banner-title">Week 2 Complete 🎉</p>
+  <p class="banner-sub">Great job Francis!</p>
+</div>
+
+<!-- Supabase JS client for Realtime -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
+<!-- Confetti canvas — must be before script -->
+<canvas id="confetti-canvas"></canvas>
+
+<!-- ─── SCRIPT ─── -->
+<script>
+(function () {
+  'use strict';
+
+  const STORAGE = 'fr_genai_w2_v2_';
+  const HIDDEN_KEY = STORAGE + 'hidden';
+  const SIDEBAR_KEY = STORAGE + 'sidebar';
+  const OPEN_PREFIX = STORAGE + 'open_';
+  const INNER_PREFIX = STORAGE + 'inner_';
+
+  // ── Utils ──────────────────────────────────────────────
+  function toast(msg, dur = 1800) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(el._t);
+    el._t = setTimeout(() => el.classList.remove('show'), dur);
+  }
+
+  function save(k, v) { try { localStorage.setItem(k, v); } catch(e){} }
+  function load(k) { try { return localStorage.getItem(k); } catch(e){ return null; } }
+
+  // ── Checklist ──────────────────────────────────────────
+  const checks = [...document.querySelectorAll('[data-check]')];
+  const synced = [...document.querySelectorAll('[data-sync]')];
+  const progressBar = document.getElementById('progressBar');
+  const doneCount  = document.getElementById('doneCount');
+  const totalCount = document.getElementById('totalCount');
+
+
+  // ── Apply done-row to checklist table rows + sort ──────────────────────
+  function updateChecklistDoneRows() {
+    const tbody = document.querySelector('.check-table tbody');
+    if (!tbody) return;
+    const trs = [...tbody.querySelectorAll('tr')];
+    // Toggle done-row first
+    trs.forEach(tr => {
+      const cb = tr.querySelector('input[data-check]');
+      if (cb) tr.classList.toggle('done-row', cb.checked);
+    });
+    // Re-query after toggling so filter reflects current DOM state
+    const allTrs = [...tbody.querySelectorAll('tr')];
+    // Sort each group numerically by s5-N so unchecking restores original position
+    function rowNum(r) {
+      const id = r.querySelector('input[data-check]')?.id || '';
+      return parseInt(id.replace('s5-', '') || '999');
+    }
+    const open = allTrs.filter(r => !r.classList.contains('done-row')).sort((a,b) => rowNum(a) - rowNum(b));
+    const done = allTrs.filter(r => r.classList.contains('done-row')).sort((a,b) => rowNum(a) - rowNum(b));
+    [...open, ...done].forEach(r => tbody.appendChild(r));
+  }
+
+  // ── Apply card-done classes only (no sorting — rebuildCardGroups handles order) ──
+  function updateCardDoneState() {
+    const container = document.getElementById('checklistCards');
+    if (!container) return;
+    const cards = [...container.querySelectorAll('.check-card')];
+    cards.forEach(card => {
+      const sid = card.dataset.cardId;
+      const cb = document.getElementById(sid);
+      const isDone = cb && cb.checked;
+      card.classList.toggle('card-done', isDone);
+      const cardCb = card.querySelector('.card-cb');
+      if (cardCb) cardCb.classList.toggle('cb-checked', isDone);
+    });
+    // Always rebuild groups after state change so Completed group updates
+    rebuildCardGroups();
+  }
+
+  function updateProgressUI() {
+    const done = checks.filter(c => c.checked).length;
+    const total = checks.length;
+    const pct = total ? Math.round(done / total * 100) : 0;
+    const pctStr = pct + '%';
+
+    // Shared color interpolation — traffic-light scale used everywhere
+    const STOPS = [
+      [0,   204, 102, 85],
+      [10,  210, 120, 80],
+      [20,  214, 140, 80],
+      [30,  218, 160, 85],
+      [40,  220, 185, 90],
+      [50,  210, 200, 100],
+      [60,  190, 205, 105],
+      [70,  160, 200, 105],
+      [80,  120, 185, 100],
+      [90,  80,  165, 90],
+      [100, 50,  140, 75],
+    ];
+    function progressColor(p) {
+      let r = STOPS[0][1], g = STOPS[0][2], b = STOPS[0][3];
+      for (let i = 0; i < STOPS.length - 1; i++) {
+        const [t0,r0,g0,b0] = STOPS[i];
+        const [t1,r1,g1,b1] = STOPS[i+1];
+        if (p >= t0 && p <= t1) {
+          const ratio = (p - t0) / (t1 - t0);
+          r = Math.round(r0 + (r1-r0)*ratio);
+          g = Math.round(g0 + (g1-g0)*ratio);
+          b = Math.round(b0 + (b1-b0)*ratio);
+          break;
+        } else if (p > t1) { r=r1; g=g1; b=b1; }
+      }
+      return `rgb(${r},${g},${b})`;
+    }
+    const barColor = pct > 0 ? progressColor(pct) : 'var(--line2)';
+
+    // Bar width + color
+    if (progressBar) {
+      progressBar.style.width = pctStr;
+      progressBar.style.background = barColor;
+    }
+
+    // Percentage label — exact same color as bar
+    const pctEl = document.getElementById('progressPct');
+    if (pctEl) {
+      pctEl.textContent = pct > 0 ? `· ${pctStr}` : '';
+      pctEl.style.color = pct > 0 ? barColor : 'var(--muted)';
+    }
+
+    // Progress block border stage
+    const block = document.getElementById('progressBlock');
+    if (block) {
+      block.classList.remove('progress-stage-red','progress-stage-amber','progress-stage-teal','progress-stage-sage','progress-stage-done');
+      if      (pct === 100) block.classList.add('progress-stage-done');
+      else if (pct >= 80)   block.classList.add('progress-stage-sage');
+      else if (pct >= 60)   block.classList.add('progress-stage-teal');
+      else if (pct >= 40)   block.classList.add('progress-stage-amber');
+      else if (pct >= 10)   block.classList.add('progress-stage-red');
+    }
+
+    // Counts
+    if (doneCount) doneCount.textContent = done;
+    if (totalCount) totalCount.textContent = total;
+    document.querySelectorAll('.m-done').forEach(el => el.textContent = done);
+    document.querySelectorAll('.m-total').forEach(el => el.textContent = total);
+    // Mobile bar — same color as main bar
+    document.querySelectorAll('.m-bar').forEach(el => {
+      el.style.width = pctStr;
+      el.style.background = barColor;
+    });
+
+    // Active work time — derive from the checklist table so the footer cannot drift from row efforts
+    function parseEffortMinutes(text) {
+      const raw = (text || '').replace(/–/g, '-').toLowerCase();
+      if (!raw.trim()) return 0;
+      const nums = [...raw.matchAll(/\d+(?:\.\d+)?/g)].map(m => parseFloat(m[0]));
+      if (!nums.length) return 0;
+      const usesHours = /\bh\b|hour/.test(raw);
+      const usesMinutes = /\bm\b|min/.test(raw);
+      let val = nums[0];
+      if (raw.includes('-') && nums.length >= 2) {
+        val = (nums[0] + nums[1]) / 2;
+      }
+      // Most checklist efforts are minutes; support hours just in case future weeks use h/hr/hour.
+      if (usesHours && !usesMinutes) return val * 60;
+      return val;
+    }
+
+    function formatWorkTime(mins) {
+      // Round to the nearest 5 minutes so range midpoints stay readable.
+      mins = Math.max(0, Math.round(mins / 5) * 5);
+      const h = Math.floor(mins / 60);
+      const m = mins % 60;
+      if (h && m) return `${h}h ${m}m`;
+      if (h) return `${h}h`;
+      return `${m}m`;
+    }
+
+    const effortMap = {};
+    document.querySelectorAll('.check-table tbody tr').forEach(tr => {
+      const cb = tr.querySelector('input[data-check]');
+      const cells = tr.querySelectorAll('td');
+      if (!cb || cells.length < 7) return;
+      effortMap[cb.id] = parseEffortMinutes(cells[6].textContent);
+    });
+
+    const totalMins = Object.values(effortMap).reduce((sum, mins) => sum + mins, 0);
+    const totalEl = document.querySelector('.check-table tfoot tr:first-child td:last-child strong');
+    if (totalEl && totalMins > 0) {
+      totalEl.textContent = `About ${formatWorkTime(totalMins)}`;
+    }
+
+    const remainingMins = checks
+      .filter(c => !c.checked && effortMap[c.id])
+      .reduce((sum, c) => sum + effortMap[c.id], 0);
+    const remEl = document.getElementById('remainingTimeVal');
+    if (remEl) {
+      if (pct === 100) {
+        remEl.textContent = '🎉 All done!';
+        remEl.style.color = '#328c4b';
+        remEl.style.fontWeight = '700';
+      } else if (remainingMins > 0) {
+        remEl.textContent = `~${formatWorkTime(remainingMins)} left`;
+        remEl.style.color = '';
+        remEl.style.fontWeight = '';
+      } else {
+        remEl.textContent = '—';
+        remEl.style.color = '';
+        remEl.style.fontWeight = '';
+      }
+    }
+
+    // Completion celebration
+    if (pct === 100) {
+      const block = document.getElementById('progressBlock');
+      if (block) {
+        block.classList.remove('celebrating');
+        void block.offsetWidth; // reflow to restart animation
+        block.classList.add('celebrating');
+      }
+      launchConfetti();
+    }
+
+    updateDeliverables();
+    updateChecklistDoneRows();
+    updateCardDoneState();
+
+    // ── Move done rows to bottom of checklist table ─────────────────────
+    const checkTbody = document.querySelector('.check-table tbody');
+    if (checkTbody) {
+      const allTrs = [...checkTbody.querySelectorAll('tr')];
+      const openTrs = allTrs.filter(r => !r.classList.contains('done-row'));
+      const doneTrs = allTrs.filter(r => r.classList.contains('done-row'));
+      [...openTrs, ...doneTrs].forEach(r => checkTbody.appendChild(r));
+    }
+
+  }
+
+  // ── Celebration: banner + rockets + confetti ───────────
+  function launchConfetti() {
+    const canvas = document.getElementById('confetti-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const W = canvas.width, H = canvas.height;
+    const colors = ['#328c4b','#50a55a','#78b964','#d2c864','#e67e22','#f0c57a','#cc6655','#3d6b6e','#b1cdd0','#ffffff','#a8cfb9'];
+
+    // ── 1. Banner ──────────────────────────────────────────
+    const banner = document.getElementById('celebration-banner');
+    if (banner) {
+      banner.classList.remove('hide');
+      banner.classList.add('show');
+      setTimeout(() => {
+        banner.classList.remove('show');
+        banner.classList.add('hide');
+      }, 3500);
+    }
+
+    // ── Particle system ────────────────────────────────────
+    // Two types: 'rocket' (shoots upward, explodes at peak) and 'confetti'
+    const particles = [];
+
+    function addBurst(cx, cy, count) {
+      for (let i = 0; i < count; i++) {
+        const angle = (Math.PI * 2 * i / count) + (Math.random() - .5) * .5;
+        const speed = Math.random() * 8 + 2;
+        particles.push({
+          type: 'confetti',
+          x: cx, y: cy,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          w: Math.random() * 9 + 4, h: Math.random() * 5 + 2,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rot: Math.random() * Math.PI * 2, rotV: (Math.random() - .5) * .25,
+          gravity: .15, drag: .97, opacity: 1,
+        });
+      }
+    }
+
+    // Schedule rockets first — 6 rockets staggered over 0–1300ms
+    const rocketXPositions = [.12, .28, .44, .56, .72, .88];
+    rocketXPositions.forEach((rx, i) => {
+      setTimeout(() => {
+        const targetY = H * (.1 + Math.random() * .35);
+        particles.push({
+          type: 'rocket',
+          x: rx * W + (Math.random() - .5) * 30,
+          y: H,
+          vx: (Math.random() - .5) * 1.5,
+          vy: -(22 + Math.random() * 8),
+          targetY,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          opacity: 1,
+          exploded: false,
+          w: 4, h: 4,
+          gravity: .4,
+          drag: 1,
+          rot: 0, rotV: 0,
+        });
+      }, i * 220);
+    });
+
+    // Corner cannons fire after rockets have launched — 1500ms
+    setTimeout(() => {
+      for (let i = 0; i < 65; i++) {
+        const angle = -Math.PI / 4 + (Math.random() - .5) * .9;
+        const speed = Math.random() * 10 + 5;
+        particles.push({ type: 'confetti', x: 0, y: H, vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed, w: Math.random()*8+4, h: Math.random()*5+2, color: colors[Math.floor(Math.random()*colors.length)], rot: 0, rotV: (Math.random()-.5)*.3, gravity: .16, drag: .97, opacity: 1 });
+      }
+      for (let i = 0; i < 65; i++) {
+        const angle = -Math.PI * 3/4 + (Math.random() - .5) * .9;
+        const speed = Math.random() * 10 + 5;
+        particles.push({ type: 'confetti', x: W, y: H, vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed, w: Math.random()*8+4, h: Math.random()*5+2, color: colors[Math.floor(Math.random()*colors.length)], rot: 0, rotV: (Math.random()-.5)*.3, gravity: .16, drag: .97, opacity: 1 });
+      }
+    }, 1500);
+
+    // Screen bursts follow corner cannons — 1700ms onwards
+    const burstPoints = [[.2,.25],[.8,.2],[.5,.12],[.15,.6],[.85,.55],[.5,.45]];
+    burstPoints.forEach(([rx, ry], i) => {
+      setTimeout(() => addBurst(rx*W, ry*H, 50), 1700 + i * 180);
+    });
+
+    // ── Draw loop ──────────────────────────────────────────
+    let tick = 0, rafId;
+    const toAdd = []; // rockets that explode mid-frame get burst added here
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      tick++;
+
+      // Add any pending burst particles
+      while (toAdd.length) particles.push(toAdd.pop());
+
+      let anyVisible = false;
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+
+        if (p.type === 'rocket') {
+          // Update position — vy is negative (upward), gravity slows it down
+          p.vy += p.gravity;
+          p.x  += p.vx;
+          p.y  += p.vy;
+
+          // Draw FIRST so rocket is always visible while it travels
+          if (p.opacity > 0) {
+            anyVisible = true;
+            ctx.save();
+            ctx.globalAlpha = p.opacity;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = p.opacity * .55;
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = p.opacity * .25;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y + 8, 3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          }
+
+          // Explode only when rocket has actually slowed to near-zero or passed target
+          if (!p.exploded && p.vy >= -1) {
+            p.exploded = true;
+            p.opacity  = 0;
+            const bx = p.x, by = p.y;
+            for (let j = 0; j < 60; j++) {
+              const angle = (Math.PI * 2 * j / 60) + (Math.random() - .5) * .5;
+              const speed = Math.random() * 9 + 2;
+              toAdd.push({ type: 'confetti', x: bx, y: by, vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed, w: Math.random()*10+4, h: Math.random()*5+2, color: colors[Math.floor(Math.random()*colors.length)], rot: Math.random()*Math.PI*2, rotV: (Math.random()-.5)*.25, gravity: .14, drag: .97, opacity: 1 });
+            }
+          }
+
+        } else {
+          // Standard confetti particle
+          p.vx *= p.drag; p.vy *= p.drag;
+          p.vy += p.gravity;
+          p.x += p.vx; p.y += p.vy;
+          p.rot += p.rotV;
+          if (tick > 90) p.opacity -= .011;
+          if (p.opacity <= 0) continue;
+          anyVisible = true;
+          ctx.save();
+          ctx.globalAlpha = Math.max(0, p.opacity);
+          ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+          ctx.restore();
+        }
+      }
+
+      if ((anyVisible || tick < 300) && tick < 600) {
+        rafId = requestAnimationFrame(draw);
+      } else {
+        ctx.clearRect(0, 0, W, H);
+      }
+    }
+
+    cancelAnimationFrame(rafId);
+    draw();
+  }
+
+  function updateDeliverables() {
+    const rows = [...document.querySelectorAll('[data-del-sync]')];
+    rows.forEach(row => {
+      const src = document.getElementById(row.dataset.delSync);
+      row.classList.toggle('done-row', !!(src && src.checked));
+    });
+    const tbody = document.querySelector('#s3 tbody');
+    if (!tbody) return;
+    const open = rows.filter(r => !r.classList.contains('done-row'));
+    const done = rows.filter(r => r.classList.contains('done-row'));
+    [...open, ...done].forEach(r => tbody.appendChild(r));
+  }
+
+  // ── Supabase sync ──────────────────────────────────────
+  const SB_URL = 'https://rehhlaznyrsokjtbncen.supabase.co';
+  const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlaGhsYXpueXJzb2tqdGJuY2VuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI2MTYxMTQsImV4cCI6MjA5ODE5MjExNH0.3dK_jo9ekSk8EMR5_CT_bTWJYcJ6oGRPJNNtB2FNmmg';
+  const SB_HEADERS = {
+    'Content-Type': 'application/json',
+    'apikey': SB_KEY,
+    'Authorization': 'Bearer ' + SB_KEY,
+  };
+
+  // Disable Supabase sync when running from file:// (browsers block cross-origin fetch)
+  const SB_ENABLED = window.location.protocol !== 'file:';
+
+  // Show a subtle sync indicator in the progress block
+  function setSyncStatus(state) {
+    let el = document.getElementById('syncStatus');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'syncStatus';
+      el.style.cssText = 'font-size:.68rem;color:var(--muted);text-align:right;margin-top:4px;min-height:14px;transition:opacity .2s;';
+      document.getElementById('progressBlock')?.appendChild(el);
+    }
+    if (state === 'saving')  { el.textContent = '↑ Saving…';  el.style.opacity = '1'; }
+    else if (state === 'ok') { el.textContent = '✓ Synced';   el.style.opacity = '1'; setTimeout(() => el.style.opacity = '0', 1500); }
+    else if (state === 'err'){ el.textContent = '⚠ Offline — saved locally'; el.style.opacity = '1'; }
+    else                     { el.style.opacity = '0'; }
+  }
+
+  const SB_WEEK = 'w2'; // change this for each new week
+
+  async function sbUpsert(id, checked) {
+    if (!SB_ENABLED) return false;
+    try {
+      const body = JSON.stringify({ id: `${SB_WEEK}_${id}`, checked, updated_at: new Date().toISOString() });
+      const res = await fetch(`${SB_URL}/rest/v1/checklist_state?on_conflict=id`, {
+        method: 'POST',
+        headers: { ...SB_HEADERS, 'Prefer': 'resolution=merge-duplicates,return=minimal' },
+        body,
+      });
+      const text = await res.text();
+      if (!res.ok) console.warn('Supabase upsert failed:', res.status, text);
+      else console.log('Supabase upsert ok:', `${SB_WEEK}_${id}`, checked);
+      return res.ok;
+    } catch(e) { console.warn('Supabase upsert error:', e.message); return false; }
+  }
+
+  async function sbLoadAll() {
+    if (!SB_ENABLED) return null;
+    try {
+      const url = `${SB_URL}/rest/v1/checklist_state?select=id,checked&id=like.${SB_WEEK}_*`;
+      const res = await fetch(url, { headers: SB_HEADERS });
+      const text = await res.text();
+      if (!res.ok) { console.warn('Supabase load failed:', res.status, text); return null; }
+      const rows = JSON.parse(text);
+      // Filter client-side to this week's rows and strip the prefix
+      const weekRows = rows
+        .filter(r => r.id.startsWith(`${SB_WEEK}_`))
+        .map(r => ({ id: r.id.replace(`${SB_WEEK}_`, ''), checked: r.checked }));
+      console.log('Supabase loaded:', weekRows.length, 'rows for', SB_WEEK);
+      return weekRows;
+    } catch(e) { console.warn('Supabase load error:', e.message); return null; }
+  }
+
+  async function sbResetAll() {
+    if (!SB_ENABLED) return false;
+    try {
+      const rows = checks.map(c => ({ id: `${SB_WEEK}_${c.id}`, checked: false, updated_at: new Date().toISOString() }));
+      const res = await fetch(`${SB_URL}/rest/v1/checklist_state?on_conflict=id`, {
+        method: 'POST',
+        headers: { ...SB_HEADERS, 'Prefer': 'resolution=merge-duplicates,return=minimal' },
+        body: JSON.stringify(rows),
+      });
+      if (!res.ok) console.warn('Supabase reset failed:', res.status, await res.text());
+      return res.ok;
+    } catch(e) { console.warn('Supabase reset error:', e.message); return false; }
+  }
+
+  function saveCheck(c) {
+    // 1. Save to localStorage immediately (instant, no lag)
+    save(STORAGE + c.id, c.checked ? '1' : '0');
+    const val = c.checked;
+    synced.filter(s => s.dataset.sync === c.id).forEach(s => {
+      s.checked = val;
+      save(STORAGE + s.id, val ? '1' : '0');
+    });
+    // 2. Sync to Supabase in background (only when hosted, not file://)
+    if (SB_ENABLED) {
+      setSyncStatus('saving');
+      sbUpsert(c.id, c.checked).then(ok => setSyncStatus(ok ? 'ok' : 'err'));
+    }
+  }
+
+  async function loadChecks() {
+    // 1. Apply localStorage first so UI is instant
+    checks.forEach(c => { c.checked = load(STORAGE + c.id) === '1'; });
+    synced.forEach(s => {
+      const src = document.getElementById(s.dataset.sync);
+      s.checked = src ? src.checked : (load(STORAGE + s.id) === '1');
+    });
+    updateProgressUI();
+    updateChecklistDoneRows();
+    updateCardDoneState();
+
+    // 2. Then fetch from Supabase — it is authoritative for cross-device state
+    const rows = await sbLoadAll();
+    if (!rows) return; // null = error, skip
+    if (rows.length === 0) { setSyncStatus('ok'); return; } // no rows yet — nothing to restore
+    let changed = false;
+    rows.forEach(({ id, checked }) => {
+      const el = document.getElementById(id);
+      if (el && el.checked !== checked) {
+        el.checked = checked;
+        save(STORAGE + id, checked ? '1' : '0');
+        changed = true;
+      }
+    });
+    // Sync synced checkboxes to match
+    synced.forEach(s => {
+      const src = document.getElementById(s.dataset.sync);
+      if (src) s.checked = src.checked;
+    });
+    if (changed) {
+      updateProgressUI();
+      updateChecklistDoneRows();
+      updateCardDoneState();
+    }
+    setSyncStatus('ok');
+  }
+
+  checks.forEach(c => {
+    c.addEventListener('change', () => {
+      saveCheck(c);
+      updateProgressUI();
+      updateChecklistDoneRows();
+      updateCardDoneState();
+    });
+  });
+
+  synced.forEach(s => {
+    s.addEventListener('change', () => {
+      const src = document.getElementById(s.dataset.sync);
+      if (src) { src.checked = s.checked; saveCheck(src); }
+      else { save(STORAGE + s.id, s.checked ? '1' : '0'); }
+      updateProgressUI();
+      updateChecklistDoneRows();
+      updateCardDoneState();
+    });
+  });
+
+  // ── Next unchecked ─────────────────────────────────────
+  function goNext() {
+    const next = checks.find(c => !c.checked);
+    if (!next) { toast('All done!'); return; }
+    const card = next.closest('.section-card');
+    if (card) {
+      const det = card.querySelector('.section-details');
+      if (det) det.open = true;
+      if (card.classList.contains('section-hidden')) {
+        setSectionHidden(card.id, false);
+      }
+    }
+    next.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => next.focus(), 350);
+    closeMobileDrawer();
+  }
+
+  document.getElementById('nextBtn')?.addEventListener('click', goNext);
+  document.getElementById('mobileNextBtn')?.addEventListener('click', goNext);
+
+  // ── Reset checks ───────────────────────────────────────
+  function resetChecks() {
+    if (!confirm('Reset all checklist progress?')) return;
+    checks.forEach(c => { c.checked = false; save(STORAGE + c.id, '0'); });
+    synced.forEach(s => { s.checked = false; save(STORAGE + s.id, '0'); });
+    updateProgressUI();
+    if (SB_ENABLED) {
+      setSyncStatus('saving');
+      sbResetAll().then(ok => setSyncStatus(ok ? 'ok' : 'err'));
+    }
+    toast('Progress reset');
+  }
+  document.getElementById('resetBtn')?.addEventListener('click', resetChecks);
+  document.getElementById('mobileResetBtn')?.addEventListener('click', resetChecks);
+
+  // ── Section open/close persistence ────────────────────
+  const allDetails = [...document.querySelectorAll('.section-details')];
+
+  function saveOpen(det) {
+    const card = det.closest('.section-card[id]');
+    if (card) save(OPEN_PREFIX + card.id, det.open ? '1' : '0');
+  }
+  function loadOpen() {
+    allDetails.forEach(det => {
+      const card = det.closest('.section-card[id]');
+      if (!card) return;
+      const saved = load(OPEN_PREFIX + card.id);
+      if (saved === '1') det.open = true;
+      if (saved === '0') det.open = false;
+    });
+  }
+  allDetails.forEach(det => det.addEventListener('toggle', () => saveOpen(det)));
+
+  // ── Expand / Collapse all ──────────────────────────────
+  function expandAll() {
+    allDetails.forEach(det => { det.open = true; saveOpen(det); });
+    document.querySelectorAll('.copybox.collapsed').forEach(b => {
+      b.classList.remove('collapsed');
+      const id = b.querySelector('pre')?.id;
+      if (id) save(INNER_PREFIX + id, '0');
+    });
+    getHidden().forEach(id => setSectionHidden(id, false));
+    toast('Expanded all');
+  }
+  function collapseAll() {
+    allDetails.forEach(det => { det.open = false; saveOpen(det); });
+    document.querySelectorAll('.copybox:not(.collapsed)').forEach(b => {
+      b.classList.add('collapsed');
+      const id = b.querySelector('pre')?.id;
+      if (id) save(INNER_PREFIX + id, '1');
+    });
+    toast('Collapsed all');
+  }
+
+  document.getElementById('expandAllBtn')?.addEventListener('click', expandAll);
+  document.getElementById('collapseAllBtn')?.addEventListener('click', collapseAll);
+  document.getElementById('mExpand')?.addEventListener('click', expandAll);
+  document.getElementById('mCollapse')?.addEventListener('click', collapseAll);
+
+  function resetView() {
+    allDetails.forEach(det => {
+      const card = det.closest('.section-card[id]');
+      if (card) localStorage.removeItem(OPEN_PREFIX + card.id);
+    });
+    document.querySelectorAll('.copybox').forEach(b => {
+      b.classList.remove('collapsed');
+      const id = b.querySelector('pre')?.id;
+      if (id) localStorage.removeItem(INNER_PREFIX + id);
+    });
+    save(HIDDEN_KEY, '[]');
+    localStorage.removeItem(ORDER_KEY);
+    localStorage.removeItem(ZONE_KEY);
+
+    // Restore correct order in main content
+    const main = document.querySelector('.main');
+    if (main) {
+      const correctOrder = ['s1','s2','s8','s15','s14','s3','s5','s6','s12','s4','s13','s9','s10','s7','s11','s16','s17'];
+      correctOrder.forEach(id => {
+        const card = document.getElementById(id);
+        if (card) main.appendChild(card);
+      });
+    }
+
+    // Restore nav entries after their correct zone labels
+    // Strategy: move each entry to just before the NEXT zone label or end of nav
+    const navList = document.getElementById('navList');
+    if (navList) {
+      const zoneOrder = {
+        briefing:  ['s1','s2','s8','s15','s14'],
+        execution: ['s3','s5','s6','s12','s4','s13'],
+        reference: ['s9','s10','s7','s11','s16','s17'],
+      };
+      // Find the three zone label divs
+      const zoneDivs = [...navList.querySelectorAll('.nav-zone-label')];
+      const briefingLabel = zoneDivs.find(d => d.textContent.includes('Briefing'));
+      const executionLabel = zoneDivs.find(d => d.textContent.includes('Execution'));
+      const referenceLabel = zoneDivs.find(d => d.textContent.includes('Reference'));
+
+      // Re-insert briefing entries after briefing label, before execution label
+      zoneOrder.briefing.forEach(id => {
+        const entry = navList.querySelector(`.nav-entry[data-section="${id}"]`);
+        if (entry && executionLabel) navList.insertBefore(entry, executionLabel);
+      });
+      // Re-insert execution entries after execution label, before reference label
+      zoneOrder.execution.forEach(id => {
+        const entry = navList.querySelector(`.nav-entry[data-section="${id}"]`);
+        if (entry && referenceLabel) navList.insertBefore(entry, referenceLabel);
+      });
+      // Re-insert reference entries at end of nav
+      zoneOrder.reference.forEach(id => {
+        const entry = navList.querySelector(`.nav-entry[data-section="${id}"]`);
+        if (entry) navList.appendChild(entry);
+      });
+    }
+
+    applyHidden();
+    applyZones();
+    loadOpen();
+    toast('View reset');
+  }
+  document.getElementById('resetViewBtn')?.addEventListener('click', resetView);
+
+  // ── Section hide/show ──────────────────────────────────
+  function getHidden() {
+    try { return JSON.parse(load(HIDDEN_KEY) || '[]'); } catch(e){ return []; }
+  }
+  function saveHidden(arr) { save(HIDDEN_KEY, JSON.stringify(arr)); }
+
+  function setSectionHidden(id, hidden) {
+    const card = document.getElementById(id);
+    if (!card) return;
+    card.classList.toggle('section-hidden', hidden);
+    const arr = getHidden().filter(i => i !== id);
+    if (hidden) arr.push(id);
+    saveHidden(arr);
+    updateNavHidden();
+  }
+
+  function applyHidden() {
+    // Only handles individually hidden sections (eye icon toggles)
+    // Zone grayout is handled separately by applyZones
+    const hidden = getHidden();
+    document.querySelectorAll('.section-card[id]').forEach(card => {
+      card.classList.toggle('section-hidden', hidden.includes(card.id));
+    });
+    updateNavHidden();
+  }
+
+  function updateNavHidden() {
+    const hidden = getHidden();
+    document.querySelectorAll('.nav-entry[data-section]').forEach(entry => {
+      entry.classList.toggle('is-hidden', hidden.includes(entry.dataset.section));
+    });
+  }
+
+  document.querySelectorAll('[data-eye]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault(); e.stopPropagation();
+      const id = btn.dataset.eye;
+      const hidden = getHidden();
+      const isHidden = hidden.includes(id);
+      if (isHidden) {
+        setSectionHidden(id, false);
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        setSectionHidden(id, true);
+      }
+    });
+  });
+
+  // ── Copybox inner collapse ─────────────────────────────
+  document.querySelectorAll('[data-caret]').forEach(btn => {
+    const id = btn.dataset.caret;
+    const box = btn.closest('.copybox');
+    if (!box) return;
+    const savedCollapsed = load(INNER_PREFIX + id) === '1';
+    if (savedCollapsed) box.classList.add('collapsed');
+    box.querySelector('.copyhead')?.addEventListener('click', e => {
+      if (e.target.closest('.copy-btn')) return;
+      const collapsed = box.classList.toggle('collapsed');
+      save(INNER_PREFIX + id, collapsed ? '1' : '0');
+    });
+  });
+
+  // ── Copy buttons ───────────────────────────────────────
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const id = btn.dataset.copy;
+      const el = document.getElementById(id);
+      if (!el) return;
+      navigator.clipboard.writeText(el.textContent).then(() => {
+        toast('Copied to clipboard');
+      }).catch(() => {
+        const r = document.createRange();
+        r.selectNodeContents(el);
+        const s = window.getSelection();
+        s.removeAllRanges();
+        s.addRange(r);
+        document.execCommand('copy');
+        s.removeAllRanges();
+        toast('Copied');
+      });
+    });
+  });
+
+  // ── Sidebar desktop collapse ───────────────────────────
+  function setSidebarHidden(hidden) {
+    document.body.classList.toggle('sidebar-hidden', hidden);
+    save(SIDEBAR_KEY, hidden ? '1' : '0');
+  }
+  document.getElementById('sidebarHideBtn')?.addEventListener('click', () => setSidebarHidden(true));
+  document.getElementById('sidebarRestoreBtn')?.addEventListener('click', () => setSidebarHidden(false));
+  if (load(SIDEBAR_KEY) === '1') setSidebarHidden(true);
+
+  // ── Mobile drawer ──────────────────────────────────────
+  function openMobileDrawer() { document.body.classList.add('drawer-open'); }
+  function closeMobileDrawer() { document.body.classList.remove('drawer-open'); }
+
+  document.getElementById('mMenuBtn')?.addEventListener('click', openMobileDrawer);
+  document.getElementById('mobileCloseBtn')?.addEventListener('click', closeMobileDrawer);
+  document.getElementById('mobileBackdrop')?.addEventListener('click', closeMobileDrawer);
+
+
+  // Progress pill → jump to checklist
+  document.getElementById('pillProgress')?.addEventListener('click', () => {
+    const s5 = document.getElementById('s5');
+    if (!s5) return;
+    const det = s5.querySelector('.section-details');
+    if (det) det.open = true;
+    if (s5.classList.contains('section-hidden')) setSectionHidden('s5', false);
+    s5.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  document.getElementById('mProgressBtn')?.addEventListener('click', () => {
+    const s5 = document.getElementById('s5');
+    if (s5) {
+      const det = s5.querySelector('.section-details');
+      if (det) det.open = true;
+      s5.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+
+  document.getElementById('mDoneBtn')?.addEventListener('click', () => {
+    const next = checks.find(c => !c.checked);
+    if (!next) { toast('All done! 🎉'); return; }
+    next.checked = true;
+    next.dispatchEvent(new Event('change'));
+    toast('✓ Marked done');
+  });
+
+  document.getElementById('mTopBtn')?.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // Close drawer when a nav link in drawer is clicked
+  document.querySelectorAll('.mobile-drawer .nav-link').forEach(a => {
+    a.addEventListener('click', () => {
+      const href = a.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        const target = document.querySelector(href);
+        if (target) {
+          const det = target.querySelector('.section-details');
+          if (det) det.open = true;
+          if (target.classList.contains('section-hidden')) {
+            setSectionHidden(target.id, false);
+          }
+        }
+      }
+      closeMobileDrawer();
+    });
+  });
+
+  // ── Nav active state (intersection observer) ───────────
+  const navLinks = [...document.querySelectorAll('#navList .nav-link[href^="#"]')];
+  const sections = navLinks.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + entry.target.id));
+      }
+    });
+  }, { rootMargin: '-30% 0px -65% 0px', threshold: 0 });
+  sections.forEach(s => observer.observe(s));
+
+  // Make nav links open closed sections before jumping
+  navLinks.forEach(a => {
+    a.addEventListener('click', e => {
+      const id = (a.getAttribute('href') || '').replace('#', '');
+      const card = document.getElementById(id);
+      if (!card) return;
+      if (card.classList.contains('section-hidden')) {
+        e.preventDefault();
+        setSectionHidden(id, false);
+        setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
+        return;
+      }
+      const det = card.querySelector('.section-details');
+      if (det && !det.open) det.open = true;
+    });
+  });
+
+  // ── Drag to reorder sections ───────────────────────────
+  const ORDER_KEY = STORAGE + 'order';
+
+  function saveOrder() {
+    const ids = [...document.querySelectorAll('#navList .nav-entry[data-section]')]
+      .map(e => e.dataset.section);
+    save(ORDER_KEY, JSON.stringify(ids));
+  }
+
+  function applyOrder() {
+    const saved = load(ORDER_KEY);
+    if (!saved) return;
+    let ids;
+    try { ids = JSON.parse(saved); } catch(e) { return; }
+    if (!Array.isArray(ids) || !ids.length) return;
+
+    const navList = document.getElementById('navList');
+    const main = document.querySelector('.main');
+    if (!navList || !main) return;
+
+    ids.forEach(id => {
+      // Reorder nav entry
+      const entry = navList.querySelector(`.nav-entry[data-section="${id}"]`);
+      if (entry) navList.appendChild(entry);
+      // Reorder main section card
+      const card = document.getElementById(id);
+      // Find the first non-card element after all section-cards to use as anchor
+      if (card) {
+        // Append card before the first non-section-card child we encounter
+        // Actually just move it — append to main so it ends up after previously appended
+        const viewBar = main.querySelector('.hero');
+        const hero = main.querySelector('.hero');
+        if (card !== hero && card !== viewBar) main.appendChild(card);
+      }
+    });
+  }
+
+  function initDrag() {
+    const navList = document.getElementById('navList');
+    if (!navList) return;
+    let dragSrc = null;
+
+    navList.addEventListener('dragstart', e => {
+      const entry = e.target.closest('.nav-entry[data-section]');
+      if (!entry) return;
+      dragSrc = entry;
+      entry.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', entry.dataset.section);
+    });
+
+    navList.addEventListener('dragend', e => {
+      document.querySelectorAll('.nav-entry').forEach(el => {
+        el.classList.remove('dragging', 'drag-over');
+      });
+      dragSrc = null;
+    });
+
+    navList.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      const entry = e.target.closest('.nav-entry[data-section]');
+      if (!entry || entry === dragSrc) return;
+      document.querySelectorAll('.nav-entry').forEach(el => el.classList.remove('drag-over'));
+      entry.classList.add('drag-over');
+    });
+
+    navList.addEventListener('dragleave', e => {
+      const entry = e.target.closest('.nav-entry[data-section]');
+      if (entry) entry.classList.remove('drag-over');
+    });
+
+    navList.addEventListener('drop', e => {
+      e.preventDefault();
+      const target = e.target.closest('.nav-entry[data-section]');
+      if (!target || !dragSrc || target === dragSrc) return;
+      target.classList.remove('drag-over');
+
+      // Determine position relative to target
+      const rect = target.getBoundingClientRect();
+      const midY = rect.top + rect.height / 2;
+      const insertBefore = e.clientY < midY;
+
+      if (insertBefore) {
+        navList.insertBefore(dragSrc, target);
+      } else {
+        navList.insertBefore(dragSrc, target.nextSibling);
+      }
+
+      // Reorder main section cards to match
+      const main = document.querySelector('.main');
+      if (main) {
+        const ids = [...navList.querySelectorAll('.nav-entry[data-section]')]
+          .map(el => el.dataset.section);
+        // Collect all section cards in a map
+        const cardMap = {};
+        ids.forEach(id => {
+          const card = document.getElementById(id);
+          if (card) cardMap[id] = card;
+        });
+        // Re-insert in order — find insertion anchor (after view-bar)
+        const viewBar = main.querySelector('.hero');
+        let anchor = viewBar ? viewBar.nextSibling : main.firstChild;
+        ids.forEach(id => {
+          if (cardMap[id]) {
+            main.insertBefore(cardMap[id], anchor);
+          }
+        });
+      }
+
+      saveOrder();
+      toast('Order saved');
+    });
+
+    // Make nav entries draggable
+    document.querySelectorAll('.nav-entry[data-section]').forEach(entry => {
+      entry.setAttribute('draggable', 'true');
+    });
+  }
+
+  // ── Sticky hero ────────────────────────────────────────
+  const hero = document.getElementById('hero');
+  if (hero) {
+    // Use a sentinel div placed just before the hero to detect when it sticks
+    const sentinel = document.createElement('div');
+    sentinel.style.cssText = 'position:absolute;top:0;left:0;width:1px;height:1px;pointer-events:none;';
+    hero.parentElement.insertBefore(sentinel, hero);
+    const stickyObs = new IntersectionObserver(([entry]) => {
+      hero.classList.toggle('is-stuck', !entry.isIntersecting);
+    }, { threshold: 0, rootMargin: '0px 0px 0px 0px' });
+    stickyObs.observe(sentinel);
+  }
+
+  // ── Live pills ─────────────────────────────────────────
+  // Label map: checkbox id → short readable label with emoji
+  const PILL_LABELS = {
+    's5-1':  '🎥 Week 2 lecture',
+    's5-2':  '🎥 NPR bot relationships',
+    's5-3':  '📖 Anthropomorphism',
+    's5-4':  '📖 Sycophancy',
+    's5-5':  '✏️ Activity 1: Voice Chat',
+    's5-6':  '📖 Against Imaginary Friends',
+    's5-7':  '🎥 Prompting 101',
+    's5-8':  '🎥 Prompt Structure Dojo',
+    's5-9':  '📖 AI search behaviors',
+    's5-10': '📖 Prompt Engineering',
+    's5-11': '📖 Reducing Hallucinations',
+    's5-12': '📖 RAG',
+    's5-13': '📖 Prompting for Journalists',
+    's5-14': '📖 Newsletters case study',
+    's5-15': '✏️ Activity 2: Gemini',
+    's5-16': '✏️ Reading Memo',
+    's5-17': '✏️ Peer response',
+    's5-18': '🧪 Assignment 1',
+  };
+
+  function updateLivePills() {
+    const done  = checks.filter(c => c.checked).length;
+    const total = checks.length;
+    const next  = checks.find(c => !c.checked);
+    const pct   = total ? Math.round(done / total * 100) : 0;
+
+    // Progress pill — dot color matches bar exactly
+    const pillProgressText = document.getElementById('pillProgressText');
+    const pillProgress = document.getElementById('pillProgress');
+    if (pillProgressText) pillProgressText.textContent = `${done} of ${total} done`;
+    if (pillProgress) {
+      const dot = pillProgress.querySelector('.pill-progress-fill');
+      if (dot) {
+        // Reuse same stop logic as updateProgressUI
+        const STOPS = [[0,204,102,85],[10,210,120,80],[20,214,140,80],[30,218,160,85],[40,220,185,90],[50,210,200,100],[60,190,205,105],[70,160,200,105],[80,120,185,100],[90,80,165,90],[100,50,140,75]];
+        let r=STOPS[0][1],g=STOPS[0][2],b=STOPS[0][3];
+        for(let i=0;i<STOPS.length-1;i++){const[t0,r0,g0,b0]=STOPS[i];const[t1,r1,g1,b1]=STOPS[i+1];if(pct>=t0&&pct<=t1){const ratio=(pct-t0)/(t1-t0);r=Math.round(r0+(r1-r0)*ratio);g=Math.round(g0+(g1-g0)*ratio);b=Math.round(b0+(b1-b0)*ratio);break;}else if(pct>t1){r=r1;g=g1;b=b1;}}
+        dot.style.background = pct > 0 ? `rgb(${r},${g},${b})` : 'var(--muted)';
+      }
+      pillProgress.classList.toggle('pill-done', pct === 100);
+    }
+
+    // Next pill
+    const pillNext = document.getElementById('pillNext');
+    const pillNextText = document.getElementById('pillNextText');
+    if (pillNext && pillNextText) {
+      if (!next) {
+        pillNextText.textContent = 'All done! 🎉';
+        pillNext.style.cursor = 'default';
+        pillNext.onclick = null;
+      } else {
+        const label = PILL_LABELS[next.id] || 'Next task';
+        pillNextText.textContent = label;
+        pillNext.onclick = () => goNext();
+      }
+    }
+  }
+
+  // Hook into existing updateProgressUI to also fire updateLivePills
+  const _origUpdateProgress = updateProgressUI;
+  // Re-define updateProgressUI to also call live pills
+  // (can't easily wrap after the fact, so we call updateLivePills
+  //  at the end of each check event instead)
+  checks.forEach(c => c.addEventListener('change', updateLivePills));
+  synced.forEach(s => s.addEventListener('change', updateLivePills));
+
+  // ── Zone toggles ───────────────────────────────────────
+  const ZONE_KEY = STORAGE + 'zones';
+
+  function getZoneState() {
+    try { return JSON.parse(load(ZONE_KEY) || '{}'); } catch(e) { return {}; }
+  }
+  function saveZoneState(state) { save(ZONE_KEY, JSON.stringify(state)); }
+
+  function applyZones() {
+    const state = getZoneState();
+    const hidden = getHidden();
+    ['briefing','execution','reference'].forEach(zone => {
+      const zoneOff = state[zone] === false;
+      // Hide/show section cards in dashboard entirely
+      document.querySelectorAll(`.section-card[data-zone="${zone}"]`).forEach(el => {
+        const individuallyHidden = hidden.includes(el.id);
+        el.classList.toggle('section-hidden', zoneOff || individuallyHidden);
+        el.classList.remove('zone-grayed'); // clean up old grayout if present
+      });
+      // Gray out nav entries in both sidebar and mobile drawer — never hide
+      document.querySelectorAll(`.nav-entry[data-zone="${zone}"]`).forEach(el => {
+        el.classList.toggle('zone-nav-grayed', zoneOff);
+        el.style.display = ''; // always visible, grayed when zone is off
+      });
+      // Update ALL zone buttons with this zone (sidebar + drawer)
+      document.querySelectorAll(`.zone-btn[data-zone="${zone}"]`).forEach(btn => {
+        btn.classList.toggle('active', !zoneOff);
+        btn.classList.toggle('inactive', zoneOff);
+      });
+    });
+  }
+
+  document.querySelectorAll('.zone-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const zone = btn.dataset.zone;
+      const state = getZoneState();
+      const currentlyVisible = state[zone] !== false;
+      state[zone] = !currentlyVisible;
+      saveZoneState(state);
+      applyZones();
+      toast(`${currentlyVisible ? 'Hid' : 'Showed'} ${zone} zone`);
+    });
+  });
+
+  // ── Section 6 mat-table sync with Section 5 checkboxes ────────────
+  // Map checklist IDs to material link text (partial match) in Section 6
+  const MAT_SYNC = {
+    's5-1':  'Week 2 Lecture',
+    's5-2':  'NPR Bot Relationships',
+    's5-3':  'Anthropomorphism',
+    's5-4':  'Sycophancy',
+    's5-6':  'Against Imaginary Friends',
+    's5-7':  'Prompting 101',
+    's5-8':  'Prompt Structure Dojo',
+    's5-9':  'AI Search Behaviors',
+    's5-10': 'Prompt Engineering Overview',
+    's5-11': 'Reducing Hallucinations',
+    's5-12': 'RAG',
+    's5-13': 'Prompting for Journalists',
+    's5-14': 'Personalizing Newsletters',
+  };
+
+  function updateMatTable() {
+    const matTable = document.querySelector('#s6 tbody');
+    if (!matTable) return;
+    const rows = [...matTable.querySelectorAll('tr')];
+
+    rows.forEach(row => {
+      const linkEl = row.querySelector('td:first-child a');
+      if (!linkEl) return;
+      const linkText = linkEl.textContent.trim();
+
+      // Find matching checkbox
+      const matchId = Object.keys(MAT_SYNC).find(id =>
+        linkText.includes(MAT_SYNC[id]) || MAT_SYNC[id].split(' ').slice(0,3).every(w => linkText.includes(w))
+      );
+      if (!matchId) return;
+
+      const chk = document.getElementById(matchId);
+      const done = chk && chk.checked;
+      row.classList.toggle('done-row', done);
+    });
+
+    // Re-sort: unchecked first, checked last
+    const open = rows.filter(r => !r.classList.contains('done-row'));
+    const done = rows.filter(r => r.classList.contains('done-row'));
+    [...open, ...done].forEach(r => matTable.appendChild(r));
+  }
+
+  // Hook mat table update into check events
+  checks.forEach(c => c.addEventListener('change', updateMatTable));
+
+  // ── Week switcher ──────────────────────────────────────
+  document.querySelectorAll('[data-week-switch]').forEach(sel => {
+    sel.addEventListener('change', () => { if (sel.value) window.location.href = sel.value; });
+  });
+
+  // ── Init ───────────────────────────────────────────────
+  loadChecks();
+  loadOpen();
+  applyZones();
+  applyOrder();
+  initDrag();
+  updateLivePills();
+  updateMatTable();
+
+  // ── Supabase Realtime ───────────────────────────────────
+  if (SB_ENABLED && window.supabase) {
+    try {
+      const sbClient = window.supabase.createClient(SB_URL, SB_KEY);
+      sbClient
+        .channel('checklist_sync_w2')
+        .on('postgres_changes', {
+          event: '*',
+          schema: 'public',
+          table: 'checklist_state',
+        }, payload => {
+          const row = payload.new;
+          if (!row || !row.id) return;
+          if (!row.id.startsWith(`${SB_WEEK}_`)) return;
+          const checkId = row.id.replace(`${SB_WEEK}_`, '');
+          const el = document.getElementById(checkId);
+          if (!el || el.checked === row.checked) return;
+          el.checked = row.checked;
+          save(STORAGE + checkId, row.checked ? '1' : '0');
+          synced.filter(s => s.dataset.sync === checkId).forEach(s => {
+            s.checked = row.checked;
+          });
+          updateProgressUI();
+          updateChecklistDoneRows();
+          updateCardDoneState();
+          updateLivePills();
+          updateMatTable();
+        })
+        .subscribe(status => {
+          if (status === 'SUBSCRIBED') setSyncStatus('ok');
+        });
+    } catch(e) {
+      console.warn('Realtime error:', e.message);
+    }
+  }
+
+
+  // ── Mobile card group toggle ───────────────────────────────────────
+  // ── Card grouping ──────────────────────────────────────────────────
+  const CARD_META = {
+    's5-1': {day:'Mon', type:'video', effort:75, bucket:'long'},
+    's5-2': {day:'Tue', type:'video', effort:30, bucket:'short'},
+    's5-3': {day:'Tue', type:'reading', effort:35, bucket:'medium'},
+    's5-4': {day:'Tue', type:'reading', effort:35, bucket:'medium'},
+    's5-5': {day:'Tue', type:'activity', effort:30, bucket:'short'},
+    's5-6': {day:'Tue/Wed', type:'reading', effort:45, bucket:'medium'},
+    's5-7': {day:'Wed', type:'video', effort:45, bucket:'medium'},
+    's5-8': {day:'Wed', type:'video', effort:15, bucket:'short'},
+    's5-9': {day:'Wed', type:'reading', effort:35, bucket:'medium'},
+    's5-10': {day:'Wed', type:'reading', effort:30, bucket:'short'},
+    's5-11': {day:'Wed', type:'reading', effort:30, bucket:'short'},
+    's5-12': {day:'Wed', type:'reading', effort:30, bucket:'short'},
+    's5-13': {day:'Wed', type:'reading', effort:45, bucket:'medium'},
+    's5-14': {day:'Wed/Thu', type:'reading', effort:45, bucket:'medium'},
+    's5-15': {day:'Fri', type:'activity', effort:90, bucket:'long'},
+    's5-16': {day:'Fri/Sat', type:'activity', effort:75, bucket:'long'},
+    's5-17': {day:'Sat/Sun', type:'activity', effort:30, bucket:'short'},
+    's5-18': {day:'Sat/Sun', type:'assignment', effort:120, bucket:'long'},
+  };
+
+  const TYPE_LABELS = {
+    'video': '🎥 Video & Audio',
+    'reading': '📖 Readings',
+    'activity': '✏️ Activities & Submissions',
+    'assignment': '🧪 Assignments',
+  };
+
+  const EFFORT_LABELS = {
+    'short': '⚡ Short (≤30m)',
+    'medium': '🕐 Medium (31–60m)',
+    'long': '🕑 Long (60m+)',
+  };
+
+  const GROUP_MODES = ['By day', 'By type', 'By effort', 'None'];
+  let groupModeIdx = 0;
+
+  function rebuildCardGroups() {
+    const container = document.getElementById('checklistCards');
+    if (!container) return;
+
+    // Remove existing dividers
+    container.querySelectorAll('.card-day-div').forEach(d => d.remove());
+
+    // Get all cards
+    const allCards = [...container.querySelectorAll('.check-card')];
+    if (!allCards.length) return;
+
+    // Split into open and done
+    const openCards = allCards.filter(c => !c.classList.contains('card-done'));
+    const doneCards = allCards.filter(c => c.classList.contains('card-done'));
+
+    const mode = GROUP_MODES[groupModeIdx];
+
+    // Determine group key for a card
+    function getGroup(card) {
+      const sid = card.dataset.cardId;
+      const meta = CARD_META[sid];
+      if (!meta) return 'Other';
+      if (mode === 'By day') return meta.day;
+      if (mode === 'By type') return TYPE_LABELS[meta.type] || meta.type;
+      if (mode === 'By effort') return EFFORT_LABELS[meta.bucket] || meta.bucket;
+      return null;
+    }
+
+    // Sort open cards by mode
+    if (mode === 'By type') {
+      const typeOrder = ['video', 'reading', 'activity', 'assignment'];
+      openCards.sort((a, b) => {
+        const ma = CARD_META[a.dataset.cardId];
+        const mb = CARD_META[b.dataset.cardId];
+        return typeOrder.indexOf(ma?.type) - typeOrder.indexOf(mb?.type);
+      });
+    } else if (mode === 'By effort') {
+      openCards.sort((a, b) => {
+        const ma = CARD_META[a.dataset.cardId];
+        const mb = CARD_META[b.dataset.cardId];
+        return (ma?.effort || 0) - (mb?.effort || 0);
+      });
+    } else {
+      // By day or None — original order
+      openCards.sort((a, b) => {
+        const aNum = parseInt(a.dataset.cardId?.replace('s5-', '') || 0);
+        const bNum = parseInt(b.dataset.cardId?.replace('s5-', '') || 0);
+        return aNum - bNum;
+      });
+    }
+
+    // Insert open cards with group dividers
+    if (mode !== 'None') {
+      let lastGroup = null;
+      openCards.forEach(card => {
+        const group = getGroup(card);
+        if (group && group !== lastGroup) {
+          const div = document.createElement('div');
+          div.className = 'card-day-div';
+          div.textContent = group;
+          container.appendChild(div);
+          lastGroup = group;
+        }
+        container.appendChild(card);
+      });
+    } else {
+      openCards.forEach(c => container.appendChild(c));
+    }
+
+    // Always add Completed group at bottom if any done cards
+    if (doneCards.length > 0) {
+      const completedDiv = document.createElement('div');
+      completedDiv.className = 'card-day-div card-completed-div';
+      completedDiv.textContent = 'Completed ✓';
+      container.appendChild(completedDiv);
+      doneCards.forEach(c => container.appendChild(c));
+    }
+  }
+
+  const groupBtn = document.getElementById('groupToggleBtn');
+  if (groupBtn) {
+    groupBtn.addEventListener('click', () => {
+      groupModeIdx = (groupModeIdx + 1) % GROUP_MODES.length;
+      groupBtn.textContent = 'Group: ' + GROUP_MODES[groupModeIdx] + ' ▾';
+      rebuildCardGroups();
+    });
+  }
+
+  // ── Mobile card checkbox sync ──────────────────────────────────────
+  document.querySelectorAll('.card-cb').forEach(cb => {
+    const sid = cb.dataset.cb;
+    const mainCb = document.getElementById(sid);
+    
+    // Sync initial state
+    if (mainCb && mainCb.checked) {
+      cb.classList.add('cb-checked');
+      cb.closest('.check-card')?.classList.add('card-done');
+    }
+    
+    cb.addEventListener('click', () => {
+      const mainCb = document.getElementById(cb.dataset.cb);
+      if (!mainCb) return;
+      mainCb.checked = !mainCb.checked;
+      mainCb.dispatchEvent(new Event('change'));
+      // Visual state handled by updateCardDoneState via the change event chain
+    });
+  });
+
+  // Card visual sync handled by updateCardDoneState() in the main change listener
+
+})();
+</script>
+</body>
+</html>
