@@ -861,6 +861,21 @@ input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); c
 }
 
 
+
+/* ─── CHECKLIST GROUP TOGGLE (all screen sizes) ─── */
+.card-group-toggle {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 4px 8px 0; margin-bottom: 6px;
+}
+.card-group-label { font-size: 11px; color: var(--muted); }
+.card-group-btn {
+  font-size: 10.5px; font-weight: 600; padding: 4px 10px;
+  border-radius: 8px; border: 0.5px solid var(--line2);
+  background: var(--surface); color: var(--ink2);
+  cursor: pointer;
+}
+.card-group-btn:hover { background: var(--surface2); }
+
 /* ─── MOBILE CHECKLIST CARDS (< 600px) ─── */
 @media (max-width: 600px) {
   /* Hide the entire table-based checklist */
@@ -893,18 +908,7 @@ input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); c
   }
 
   /* Group toggle button */
-  .card-group-toggle {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 9px 14px 8px; border-bottom: 0.5px solid var(--line);
-    background: var(--surface2);
-  }
-  .card-group-label { font-size: 11px; color: var(--muted); }
-  .card-group-btn {
-    font-size: 10.5px; font-weight: 600; padding: 4px 10px;
-    border-radius: 8px; border: 0.5px solid var(--line2);
-    background: var(--surface); color: var(--ink2);
-    display: flex; align-items: center; gap: 4px; cursor: pointer;
-  }
+  /* card-group-toggle moved to global scope above */
 
   /* Day divider */
   .card-day-div {
@@ -1429,6 +1433,10 @@ input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); c
       <div class="section-body">
 
         <p class="text-sm text-muted">Source of truth for progress. 17 required tasks.</p>
+                  <div class="card-group-toggle" id="checklistGroupToggle">
+            <span class="card-group-label" id="checklistGroupLabel">17 required tasks</span>
+            <button class="card-group-btn" id="groupToggleBtn">Group: By day ▾</button>
+          </div>
         <div class="check-table-wrap"><div class="tscroll">
           <div class="table-wrap">
             <table class="check-table table-xl">
@@ -1466,10 +1474,7 @@ input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); c
           </div>
         </div></div>
         <div class="checklist-cards" id="checklistCards">
-          <div class="card-group-toggle">
-            <span class="card-group-label">17 required tasks</span>
-            <button class="card-group-btn" id="groupToggleBtn">Group: By day ▾</button>
-          </div>
+
           <div class="card-day-div">Sunday</div>
           <div class="check-card" data-card-id="s5-1"><div class="card-cb-wrap"><div class="card-cb" data-cb="s5-1"></div></div><div class="card-body"><a href="https://www.dropbox.com/scl/fi/p0pm0edp9r6u3z4fscc48/Week3_Video.mp4?rlkey=pmd0v81uchdplyuvno684w20y&dl=0" target="_blank" rel="noopener" class="card-task-name">🎥 Week 3 Lecture: Generative AI Use Cases</a><div class="card-capture">Domain/modality map across journalism, marketing, Hollywood, influencers, voice, data, games</div><div class="card-meta"><span class="card-meta-item">📅 Sun</span><span class="card-meta-sep"></span><span class="card-meta-item">⏱ 75m</span><span class="card-meta-sep"></span><span class="card-meta-item">Professor's frame — do first</span></div></div><div class="card-mode mode-flex">🔁</div></div>
           <div class="card-day-div">Sunday / Monday</div>
@@ -2267,8 +2272,13 @@ Do not draft the final memo.</pre>
     });
     // Re-query after toggling so filter reflects current DOM state
     const allTrs = [...tbody.querySelectorAll('tr')];
-    const open = allTrs.filter(r => !r.classList.contains('done-row'));
-    const done = allTrs.filter(r => r.classList.contains('done-row'));
+    // Sort each group numerically by s5-N so unchecking restores original position
+    function rowNum(r) {
+      const id = r.querySelector('input[data-check]')?.id || '';
+      return parseInt(id.replace('s5-', '') || '999');
+    }
+    const open = allTrs.filter(r => !r.classList.contains('done-row')).sort((a,b) => rowNum(a) - rowNum(b));
+    const done = allTrs.filter(r => r.classList.contains('done-row')).sort((a,b) => rowNum(a) - rowNum(b));
     [...open, ...done].forEach(r => tbody.appendChild(r));
   }
 
@@ -2735,7 +2745,23 @@ Do not draft the final memo.</pre>
     updateChecklistDoneRows();
     updateCardDoneState();
 
-    // 2. Then fetch from Supabase and override if newer
+    // 2. Push any locally-checked items to Supabase (in case they never synced)
+    if (SB_ENABLED) {
+      const locallyChecked = checks.filter(c => c.checked);
+      if (locallyChecked.length > 0) {
+        const pushRows = locallyChecked.map(c => ({
+          id: `${SB_WEEK}_${c.id}`, checked: true,
+          updated_at: new Date().toISOString()
+        }));
+        fetch(`${SB_URL}/rest/v1/checklist_state?on_conflict=id`, {
+          method: 'POST',
+          headers: { ...SB_HEADERS, 'Prefer': 'resolution=merge-duplicates,return=minimal' },
+          body: JSON.stringify(pushRows),
+        }).catch(() => {}); // fire and forget — don't block the load
+      }
+    }
+
+    // 3. Then fetch from Supabase and override if newer
     const rows = await sbLoadAll();
     if (!rows || rows.length === 0) return;
     let changed = false;
