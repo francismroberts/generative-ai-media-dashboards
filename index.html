@@ -2837,9 +2837,9 @@ Recommend the strongest topic for me and explain why.</pre>
     if (!SB_ENABLED) return false;
     try {
       const body = JSON.stringify({ id: `${SB_WEEK}_${id}`, checked, updated_at: new Date().toISOString() });
-      const res = await fetch(`${SB_URL}/rest/v1/checklist_state`, {
+      const res = await fetch(`${SB_URL}/rest/v1/checklist_state?on_conflict=id`, {
         method: 'POST',
-        headers: { ...SB_HEADERS, 'Prefer': 'resolution=merge-duplicates' },
+        headers: { ...SB_HEADERS, 'Prefer': 'resolution=merge-duplicates,return=minimal' },
         body,
       });
       const text = await res.text();
@@ -2852,7 +2852,7 @@ Recommend the strongest topic for me and explain why.</pre>
   async function sbLoadAll() {
     if (!SB_ENABLED) return null;
     try {
-      const url = `${SB_URL}/rest/v1/checklist_state?select=id,checked`;
+      const url = `${SB_URL}/rest/v1/checklist_state?select=id,checked&id=like.${SB_WEEK}_%`;
       const res = await fetch(url, { headers: SB_HEADERS });
       const text = await res.text();
       if (!res.ok) { console.warn('Supabase load failed:', res.status, text); return null; }
@@ -2870,9 +2870,9 @@ Recommend the strongest topic for me and explain why.</pre>
     if (!SB_ENABLED) return false;
     try {
       const rows = checks.map(c => ({ id: `${SB_WEEK}_${c.id}`, checked: false, updated_at: new Date().toISOString() }));
-      const res = await fetch(`${SB_URL}/rest/v1/checklist_state`, {
+      const res = await fetch(`${SB_URL}/rest/v1/checklist_state?on_conflict=id`, {
         method: 'POST',
-        headers: { ...SB_HEADERS, 'Prefer': 'resolution=merge-duplicates' },
+        headers: { ...SB_HEADERS, 'Prefer': 'resolution=merge-duplicates,return=minimal' },
         body: JSON.stringify(rows),
       });
       if (!res.ok) console.warn('Supabase reset failed:', res.status, await res.text());
@@ -2921,7 +2921,11 @@ Recommend the strongest topic for me and explain why.</pre>
       const src = document.getElementById(s.dataset.sync);
       if (src) s.checked = src.checked;
     });
-    if (changed) updateProgressUI();
+    if (changed) {
+      updateProgressUI();
+      updateChecklistDoneRows();
+      updateCardDoneState();
+    }
     setSyncStatus('ok');
   }
 
@@ -3595,6 +3599,8 @@ Recommend the strongest topic for me and explain why.</pre>
             s.checked = row.checked;
           });
           updateProgressUI();
+          updateChecklistDoneRows();
+          updateCardDoneState();
           updateLivePills();
           updateMatTable();
         })
