@@ -3822,7 +3822,7 @@ Recommend the strongest 3–5 source corpus and explain what each source contrib
         if (group && group !== lastGroup) {
           const hdr = document.createElement('tr');
           hdr.className = 'table-group-header';
-          hdr.innerHTML = \`<td colspan="8" style="font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:8px 10px 4px;background:var(--surface2);border-bottom:0.5px solid var(--line);">\${group}</td>\`;
+          hdr.innerHTML = '<td colspan="8" style="font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:8px 10px 4px;background:var(--surface2);border-bottom:0.5px solid var(--line);">' + group + '</td>';
           tbody.appendChild(hdr);
           lastGroup = group;
         }
